@@ -1,5 +1,6 @@
-package com.konami.ailens
+package com.konami.ailens.ble
 
+import com.konami.ailens.ble.command.BLECommand
 import java.util.concurrent.locks.ReentrantLock
 import kotlin.concurrent.withLock
 
