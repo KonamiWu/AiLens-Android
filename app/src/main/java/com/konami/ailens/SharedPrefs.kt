@@ -2,6 +2,7 @@ package com.konami.ailens
 
 import android.content.Context
 import android.content.SharedPreferences
+import android.media.session.MediaSession
 import android.util.Base64
 import com.google.gson.Gson
 
@@ -13,16 +14,17 @@ data class DeviceInfo(
 object SharedPrefs {
     private const val PREFS_NAME = "YourAppPrefs"
     private const val KEY_DEVICE_INFO = "deviceInfo"
-
+    private val tokenManager = TokenManager()
     private fun getPrefs(context: Context): SharedPreferences =
         context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
 
-    fun saveDeviceInfo(context: Context, deviceInfo: DeviceInfo) {
+    fun saveDeviceInfo(context: Context, mac: String, userId: UInt, deviceToken: ByteArray) {
+
         val prefs = getPrefs(context)
         val gson = Gson()
         val jsonMap = mapOf(
-            "mac" to deviceInfo.mac,
-            "retrieveToken" to Base64.encodeToString(deviceInfo.retrieveToken, Base64.NO_WRAP)
+            "mac" to mac,
+            "retrieveToken" to Base64.encodeToString(tokenManager.getRetrieveToken(mac, userId, deviceToken), Base64.NO_WRAP)
         )
         val jsonStr = gson.toJson(jsonMap)
         prefs.edit().putString(KEY_DEVICE_INFO, jsonStr).apply()

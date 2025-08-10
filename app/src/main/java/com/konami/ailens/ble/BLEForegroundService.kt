@@ -1,27 +1,38 @@
-package com.konami.ailens
+package com.konami.ailens.ble
 
 import android.Manifest
 import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.Service
-import android.app.Service.START_STICKY
 import android.content.Intent
 import android.os.IBinder
 import androidx.annotation.RequiresPermission
 import androidx.core.app.NotificationCompat
+import com.konami.ailens.PermissionHelper
 
 class BLEForegroundService : Service() {
     override fun onCreate() {
         super.onCreate()
+        // 建立單例，不做任何需要權限的動作
         BLEService.init(applicationContext)
     }
 
     @RequiresPermission(Manifest.permission.BLUETOOTH_CONNECT)
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         startForeground(NOTIFICATION_ID, createNotification())
-        BLEService.instance.retrieve()
-        BLEService.instance.scan()
+
+        val hasPerm = PermissionHelper.hasAllPermissions(this)
+        when (intent?.action) {
+            ACTION_START_BLE -> if (hasPerm) {
+                BLEService.instance.retrieve()
+                BLEService.instance.startScan()
+            }
+            ACTION_STOP_SCAN -> if (hasPerm) {
+                BLEService.instance.stopScan()
+            }
+            else -> { }
+        }
         return START_STICKY
     }
 
@@ -42,7 +53,8 @@ class BLEForegroundService : Service() {
     }
 
     companion object {
-        const val TAG = "BLEForegroundService"
         const val NOTIFICATION_ID = 1001
+        const val ACTION_START_BLE = "com.konami.ailens.action.START_BLE"
+        const val ACTION_STOP_SCAN = "com.konami.ailens.action.STOP_SCAN"
     }
 }

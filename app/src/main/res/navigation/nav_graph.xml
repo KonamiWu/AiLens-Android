@@ -7,17 +7,37 @@
 
     <fragment
         android:id="@+id/DeviceFragment"
-        android:name="com.konami.ailens.DeviceFragment"
+        android:name="com.konami.ailens.device.DeviceFragment"
         tools:layout="@layout/fragment_device">
 
         <action
-            android:id="@+id/action_FirstFragment_to_SecondFragment"
-            app:destination="@id/SecondFragment" />
+            android:id="@+id/action_DeviceFragment_to_FunctionFragment"
+            app:destination="@id/FunctionFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"/>
+
     </fragment>
+
     <fragment
-        android:id="@+id/SecondFragment"
-        android:name="com.konami.ailens.SecondFragment"
-        android:label="@string/second_fragment_label"
-        tools:layout="@layout/fragment_second">
+        android:id="@+id/FunctionFragment"
+        android:name="com.konami.ailens.function.FunctionFragment"
+        tools:layout="@layout/fragment_function">
+
+        <action
+            android:id="@+id/action_FunctionFragment_to_FaceDetectionFragment"
+            app:destination="@id/FaceDetectionFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"/>
+
     </fragment>
+
+    <fragment
+        android:id="@+id/FaceDetectionFragment"
+        android:name="com.konami.ailens.facedetection.FaceDetectionFragment"
+        tools:layout="@layout/fragment_face_detection"/>
+
 </navigation>
