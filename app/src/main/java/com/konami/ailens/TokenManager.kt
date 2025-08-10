@@ -6,7 +6,7 @@ import java.nio.ByteBuffer
 import java.nio.ByteOrder
 import androidx.core.content.edit
 
-class TokenManager(private val context: Context) {
+class TokenManager {
 
     private val fixBytes = byteArrayOf(
         0x10, 0x01, 0xEB.toByte(), 0xE9.toByte(), 0xBE.toByte(), 0xF7.toByte(), 0xFA.toByte(), 0x4B,
@@ -26,7 +26,7 @@ class TokenManager(private val context: Context) {
         return token.toByteArray()
     }
 
-    fun saveRetrieveToken(uuid: String, userId: UInt, deviceToken: ByteArray) {
+    fun getRetrieveToken(mac: String, userId: UInt, deviceToken: ByteArray) : ByteArray{
         val retrieveToken = mutableListOf<Byte>()
         retrieveToken.addAll(deviceToken.toList())
         retrieveToken.addAll(userId.toLittleEndianBytes().toList())
@@ -34,18 +34,7 @@ class TokenManager(private val context: Context) {
         val crc8 = crc8Maxim(retrieveToken.toByteArray())
         retrieveToken.add(crc8)
 
-        val sharedPref = context.getSharedPreferences("MetaGlassesPrefs", Context.MODE_PRIVATE)
-        val base64Token = Base64.encodeToString(retrieveToken.toByteArray(), Base64.NO_WRAP)
-        sharedPref.edit {
-            putString("lastDeviceUUID", uuid)
-                .putString("lastRetrieveToken", base64Token)
-        }
-    }
-
-    fun getRetrieveToken(): ByteArray? {
-        val sharedPref = context.getSharedPreferences("MetaGlassesPrefs", Context.MODE_PRIVATE)
-        val base64Token = sharedPref.getString("lastRetrieveToken", null) ?: return null
-        return Base64.decode(base64Token, Base64.DEFAULT)
+        return retrieveToken.toByteArray()
     }
 
     private fun getTokenPrefix(cloudToken: UInt): ByteArray {
@@ -69,13 +58,16 @@ class TokenManager(private val context: Context) {
     polynomial 0x31, starting with 0x00 initial_crc
      */
     private fun crc8Maxim(data: ByteArray): Byte {
-        var crc: Int = 0x00
-        for (byte in data) {
-            crc = crc xor (byte.toInt() and 0xFF)
+        var crc = 0x00
+        for (b in data) {
+            crc = (crc xor (b.toInt() and 0xFF)) and 0xFF
             for (i in 0 until 8) {
-                crc = if ((crc and 0x80) != 0) ((crc shl 1) xor 0x31) else crc shl 1
+                crc = if ((crc and 0x80) != 0) {
+                    ((crc shl 1) xor 0x31) and 0xFF
+                } else {
+                    (crc shl 1) and 0xFF
+                }
             }
-            crc = crc and 0xFF
         }
         return crc.toByte()
     }

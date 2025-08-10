@@ -47,4 +47,12 @@ dependencies {
     androidTestImplementation(libs.androidx.espresso.core)
 
     implementation(libs.gson)
+
+    implementation(libs.camerax.core)
+    implementation(libs.camerax.camera2)
+    implementation(libs.camerax.lifecycle)
+    implementation(libs.camerax.view)
+
+    implementation(libs.mlkit.face.detection)
+    implementation(libs.onnxruntime.android)
 }
