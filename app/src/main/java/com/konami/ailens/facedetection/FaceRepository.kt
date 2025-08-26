@@ -1,5 +1,7 @@
 package com.konami.ailens.facedetection
 
+import android.util.Log
+
 data class Person(val name: String, val emb: FloatArray)
 
 class FaceRepository {

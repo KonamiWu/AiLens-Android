@@ -1,32 +1,28 @@
 package com.konami.ailens.facedetection
 
 import android.app.Application
+import android.graphics.Bitmap
 import android.graphics.Matrix
 import android.graphics.RectF
 import android.os.SystemClock
-import android.util.Log
-import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
 import androidx.lifecycle.viewModelScope
-import androidx.navigation.fragment.findNavController
 import com.konami.ailens.ble.BLEService
 import com.konami.ailens.ble.DeviceSession
 import com.konami.ailens.ble.HeadTracker
 import com.konami.ailens.ble.command.ClearCanvasCommand
 import com.konami.ailens.ble.command.DrawRectCommand
+import com.konami.ailens.ble.command.DrawTextBLECommand
 import com.konami.ailens.ble.command.OpenCanvasCommand
 import com.konami.ailens.ble.command.SubscribeIMUCommand
-import com.konami.ailens.function.FunctionAdapter
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 import kotlin.collections.listOf
+import kotlin.collections.map
 
 class FaceDetectionViewModel(application: Application) : AndroidViewModel(application) {
     private val tracker = HeadTracker(
@@ -55,7 +51,8 @@ class FaceDetectionViewModel(application: Application) : AndroidViewModel(applic
 
     init {
         viewModelScope.launch(Dispatchers.IO) {
-            AssetFaceLoader.loadToRepository(application, repo, recognizer, margin = 0.25f)
+//            AssetFaceLoader.loadToRepository(application, repo, recognizer)
+            AssetFaceLoader.loadEmbeddingsFromAssets(application, repo)
             _ready.emit(true)
         }
 
@@ -63,55 +60,6 @@ class FaceDetectionViewModel(application: Application) : AndroidViewModel(applic
         val session = BLEService.instance.getSession(aiLens.device.address)!!
         session.add(OpenCanvasCommand(session))
         session.add(SubscribeIMUCommand(session))
-        collectBLEImu()
-    }
-
-    private fun collectBLEImu() {
-        val aiLens = BLEService.instance.lastDevice.value!!
-        val session = BLEService.instance.getSession(aiLens.device.address)!!
-
-        viewModelScope.launch {
-            launch {
-                val accelFlow = MutableStateFlow(HeadTracker.Vector3(0.0, 0.0, 0.0))
-                val magFlow = MutableStateFlow(HeadTracker.Vector3(0.0, 0.0, 0.0))
-
-                session.imuFlow.collect { data ->
-                    when (data.type) {
-                        DeviceSession.IMUType.GYROS -> {
-                            tracker.onGyro(data.x, data.y, data.z)
-                        }
-
-                        DeviceSession.IMUType.ACCEL -> {
-                            accelFlow.value = HeadTracker.Vector3(data.x.toDouble(), data.y.toDouble(), data.z.toDouble())
-                        }
-
-                        DeviceSession.IMUType.MAGNE -> {
-                            magFlow.value = HeadTracker.Vector3(data.x.toDouble(), data.y.toDouble(), data.z.toDouble())
-                        }
-
-                        DeviceSession.IMUType.ALGO -> { /* 忽略 */
-                        }
-                    }
-                }
-
-                launch {
-                    combine(accelFlow, magFlow) { accel, mag -> accel to mag }
-                        .collect { (accel, mag) ->
-                            tracker.onAccelAndMag(accel, mag)
-                        }
-                }
-            }
-        }
-
-        viewModelScope.launch {
-            launch {
-                combine(tracker.dxFlow, tracker.dyFlow) { x, y -> x to y }.collect { (xf, yf) ->
-                    lastSentX = xf.toInt()
-                    lastSentY = yf.toInt()
-                }
-            }
-        }
-
     }
 
     fun updateFaceResult(faceResult: List<FaceAnalyzer.RecognizedFace>) {
@@ -121,25 +69,32 @@ class FaceDetectionViewModel(application: Application) : AndroidViewModel(applic
 
         lastDrawMs = now
 
+        var isTheSame = areFaceListsEqualByName(this.faceResult, faceResult)
+        if (isTheSame)
+            return
         this.faceResult = faceResult
+
         val aiLens = BLEService.instance.lastDevice.value!!
         val session = BLEService.instance.getSession(aiLens.device.address)!!
 
         session.add(ClearCanvasCommand(session))
-        session.add(DrawRectCommand(session, 0, 0, 639, 479, 1, false))
+
+        var result = ""
+        var unknown = 0
         faceResult.forEach {
-            val rect = RectF(it.box)
-            val cmd = DrawRectCommand(
-                session = session,
-                x = (rect.left + lastSentX).toInt(),
-                y = (rect.top  + lastSentY).toInt(),
-                width = rect.width().toInt(),
-                height = rect.height().toInt(),
-                lineWidth = 1,
-                fill = true
-            )
-            session.add(cmd)
+            val name = it.name
+            if (name == "unknown") {
+                unknown ++
+            } else {
+                result += name
+                result += "\n"
+            }
         }
+
+        if (unknown != 0)
+            result += "Unknown: %d".format(result)
+        val command = DrawTextBLECommand(session, result, 0, 0, 100, 100)
+        session.add(command)
     }
 
     fun resetCenter() {
@@ -148,5 +103,12 @@ class FaceDetectionViewModel(application: Application) : AndroidViewModel(applic
 
     fun recalibrate() {
         tracker.restartCalibration()
+    }
+
+    private fun areFaceListsEqualByName(list1: List<FaceAnalyzer.RecognizedFace>, list2: List<FaceAnalyzer.RecognizedFace>): Boolean {
+        if (list1.size != list2.size) return false
+        val names1 = list1.map { it.name }.sorted()
+        val names2 = list2.map { it.name }.sorted()
+        return names1 == names2
     }
 }

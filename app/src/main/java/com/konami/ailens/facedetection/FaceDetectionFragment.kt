@@ -4,13 +4,18 @@ package com.konami.ailens.facedetection
 import android.graphics.Bitmap
 import android.os.Bundle
 import android.util.Log
+import android.util.Size
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.camera.core.AspectRatio
 import androidx.camera.core.CameraSelector
 import androidx.camera.core.ImageAnalysis
 import androidx.camera.core.Preview
+import androidx.camera.core.resolutionselector.AspectRatioStrategy
+import androidx.camera.core.resolutionselector.ResolutionSelector
+import androidx.camera.core.resolutionselector.ResolutionStrategy
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.view.PreviewView
 import androidx.core.content.ContextCompat
@@ -67,6 +72,14 @@ class FaceDetectionFragment : Fragment() {
             }
         }
 
+//        viewLifecycleOwner.lifecycleScope.launch {
+//            viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
+//                viewModel.imageFlow.collect {
+//                    binding.imageView.setImageBitmap(it)
+//                }
+//            }
+//        }
+
         return binding.root
 
     }
@@ -82,6 +95,11 @@ class FaceDetectionFragment : Fragment() {
                         overlayView.updateResult(it)
                         viewModel.transformMatrix = overlayView.transformMatrix
                         viewModel.updateFaceResult(it)
+
+                        if (it.isNotEmpty()) {
+                            val image = it.first().face112
+                            binding.imageView.setImageBitmap(image)
+                        }
                     }
                 }
             }
@@ -97,9 +115,27 @@ class FaceDetectionFragment : Fragment() {
                 it.setSurfaceProvider(binding.previewView.surfaceProvider)
             }
 
+            val resSelector = ResolutionSelector.Builder()
+                // 先指定偏好的長寬比（16:9 或 4:3；臉部多半 16:9 比較友善）
+                .setAspectRatioStrategy(
+                    AspectRatioStrategy(
+                        AspectRatio.RATIO_4_3,
+                        AspectRatioStrategy.FALLBACK_RULE_AUTO
+                    )
+                )
+                // 再指定偏好的解析度與回退規則（先找 >= 1280x720，找不到就找最接近）
+                .setResolutionStrategy(
+                    ResolutionStrategy(
+                        Size(1280, 720),
+                        ResolutionStrategy.FALLBACK_RULE_CLOSEST_HIGHER_THEN_LOWER
+                    )
+                )
+                .build()
+
 
             val analysis = ImageAnalysis.Builder()
                 .setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST)
+//                .setResolutionSelector(resSelector)
                 .build().also {
                     it.setAnalyzer(
                         ContextCompat.getMainExecutor(requireContext()),

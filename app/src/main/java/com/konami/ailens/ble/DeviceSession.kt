@@ -295,7 +295,6 @@ class DeviceSession(
             val z = bb.float
 
             val value = IMUSample(type, ts, x, y, z)
-//            Log.e("TAG", "value = ${value}")
             _imuFlow.tryEmit(IMUSample(type, ts, x, y, z))
             i += 21
         }

@@ -76,29 +76,47 @@ fun Bitmap.cropWithMargin(box: Rect, margin: Float): Bitmap {
 //    return Bitmap.createBitmap(this, box.left, box.top, box.width(), box.height())
 }
 
+//fun Bitmap.toFace112(): Bitmap {
+//    val targetSize = 112
+//
+//    val scale = min(
+//        targetSize.toFloat() / width,
+//        targetSize.toFloat() / height
+//    )
+//
+//    val scaledWidth = (width * scale).toInt()
+//    val scaledHeight = (height * scale).toInt()
+//
+//    val dx = (targetSize - scaledWidth) / 2f
+//    val dy = (targetSize - scaledHeight) / 2f
+//
+//    val matrix = Matrix().apply {
+//        postScale(scale, scale)
+//        postTranslate(dx, dy)
+//    }
+//
+//    val output = Bitmap.createBitmap(targetSize, targetSize, Bitmap.Config.ARGB_8888)
+//    val canvas = Canvas(output)
+//    canvas.drawColor(Color.BLACK) // 補黑邊
+//    canvas.drawBitmap(this, matrix, null)
+//
+//    return output
+//}
+
 fun Bitmap.toFace112(): Bitmap {
-    val targetSize = 112
+    val target = 112
+    val scale = min(target / width.toFloat(), target / height.toFloat())
+    val newW = (width * scale).toInt()
+    val newH = (height * scale).toInt()
+    val left = (target - newW) / 2f
+    val top  = (target - newH) / 2f
 
-    val scale = min(
-        targetSize.toFloat() / width,
-        targetSize.toFloat() / height
-    )
+    val out = Bitmap.createBitmap(target, target, Bitmap.Config.ARGB_8888)
+    val canvas = Canvas(out)
+    canvas.drawColor(Color.BLACK)
 
-    val scaledWidth = (width * scale).toInt()
-    val scaledHeight = (height * scale).toInt()
-
-    val dx = (targetSize - scaledWidth) / 2f
-    val dy = (targetSize - scaledHeight) / 2f
-
-    val matrix = Matrix().apply {
-        postScale(scale, scale)
-        postTranslate(dx, dy)
-    }
-
-    val output = Bitmap.createBitmap(targetSize, targetSize, Bitmap.Config.ARGB_8888)
-    val canvas = Canvas(output)
-    canvas.drawColor(Color.BLACK) // 補黑邊
-    canvas.drawBitmap(this, matrix, null)
-
-    return output
+    val paint = Paint(Paint.ANTI_ALIAS_FLAG or Paint.FILTER_BITMAP_FLAG or Paint.DITHER_FLAG)
+    val dst = RectF(left, top, left + newW, top + newH)
+    canvas.drawBitmap(this, null, dst, paint)
+    return out
 }

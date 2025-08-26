@@ -47,51 +47,55 @@ class FaceAnalyzer(
     private val recognizer by lazy { OnnxFaceRecognizer(appContext) }
     private var frameId = 0
 
-    private val frameFlow = MutableSharedFlow<Sample>(extraBufferCapacity = 1)
+    private val frameFlow = MutableSharedFlow<Sample?>(extraBufferCapacity = 1)
 
     private val _faceResultsFlow = MutableSharedFlow<List<RecognizedFace>>()
     val faceResultsFlow = _faceResultsFlow.asSharedFlow()
 
-    private val minScore = 0.7f
+    private val minScore = 0.6f
 
     init {
         CoroutineScope(Dispatchers.Default).launch {
             frameFlow.collect { sample ->
-                val results = mutableListOf<RecognizedFace>()
-                sample.faceBoxes.forEach { faceBox ->
-                    try {
-                        val correctedImage = sample.image.rotateAndMirror(sample.rotation, useFrontCamera)
-                        val finalBox = if (useFrontCamera) {
-                            val mirroredLeft = correctedImage.width - faceBox.right
-                            val mirroredRight = correctedImage.width - faceBox.left
-                            Rect(mirroredLeft, faceBox.top, mirroredRight, faceBox.bottom)
-                        } else {
-                            faceBox
-                        }
-                        finalBox.inset(-(finalBox.width() * 0.1).toInt(), -(finalBox.height() * 0.1).toInt())
-                        val crop = Bitmap.createBitmap(
-                            correctedImage,
-                            finalBox.left.coerceAtLeast(0),
-                            finalBox.top.coerceAtLeast(0),
-                            finalBox.width().coerceAtMost(correctedImage.width - finalBox.left),
-                            finalBox.height().coerceAtMost(correctedImage.height - finalBox.top)
-                        ).toFace112()
-
-                        val emb = recognizer.embed(crop)
-                        val timeNs = measureNanoTime {
-                            val name = repo.findBest(emb, minScore = minScore)
-                            if (name != null) {
-                                results.add(RecognizedFace(faceBox, name, crop))
+                if (sample != null) {
+                    val results = mutableListOf<RecognizedFace>()
+                    sample.faceBoxes.forEach { faceBox ->
+                        try {
+                            val correctedImage = sample.image.rotateAndMirror(sample.rotation, useFrontCamera)
+                            val finalBox = if (useFrontCamera) {
+                                val mirroredLeft = correctedImage.width - faceBox.right
+                                val mirroredRight = correctedImage.width - faceBox.left
+                                Rect(mirroredLeft, faceBox.top, mirroredRight, faceBox.bottom)
                             } else {
-                                results.add(RecognizedFace(faceBox, "Unknown", crop))
+                                faceBox
                             }
-                        }
+                            finalBox.inset(-(finalBox.width() * 0.1).toInt(), -(finalBox.height() * 0.1).toInt())
+                            val crop = Bitmap.createBitmap(
+                                correctedImage,
+                                finalBox.left.coerceAtLeast(0),
+                                finalBox.top.coerceAtLeast(0),
+                                finalBox.width().coerceAtMost(correctedImage.width - finalBox.left),
+                                finalBox.height().coerceAtMost(correctedImage.height - finalBox.top)
+                            ).toFace112()
 
-                    } catch (t: Throwable) {
-                        Log.e("FaceAnalyzer", "recognize failed", t)
+                            val emb = recognizer.embed(crop)
+                            val timeNs = measureNanoTime {
+                                val name = repo.findBest(emb, minScore = minScore)
+                                if (name != null) {
+                                    results.add(RecognizedFace(faceBox, name, crop))
+                                } else {
+                                    results.add(RecognizedFace(faceBox, "Unknown", crop))
+                                }
+                            }
+
+                        } catch (t: Throwable) {
+                            Log.e("FaceAnalyzer", "recognize failed", t)
+                        }
                     }
+                    _faceResultsFlow.emit(results)
+                } else {
+                    _faceResultsFlow.emit(listOf())
                 }
-                _faceResultsFlow.emit(results)
             }
         }
     }
@@ -116,13 +120,17 @@ class FaceAnalyzer(
         )
 
         detector.process(inputImage).addOnSuccessListener { faces ->
-            if (faces.isNotEmpty() && (++frameId % 5 == 0)) {
-                try {
-                    val bitmap = imageProxy.toBitmap()
-                    val boxes = faces.map { it.boundingBox }
-                    frameFlow.tryEmit(Sample(bitmap, boxes, rotation))
-                } catch (e: Exception) {
-                    Log.e("FaceAnalyzer", "bitmap conversion failed", e)
+            if (++frameId % 5 == 0) {
+                if (faces.isNotEmpty()) {
+                    try {
+                        val bitmap = imageProxy.toBitmap()
+                        val boxes = faces.map { it.boundingBox }
+                        frameFlow.tryEmit(Sample(bitmap, boxes, rotation))
+                    } catch (e: Exception) {
+                        Log.e("FaceAnalyzer", "bitmap conversion failed", e)
+                    }
+                } else {
+                    frameFlow.tryEmit(null)
                 }
             }
         }.addOnFailureListener { e ->
