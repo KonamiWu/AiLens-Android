@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
+    kotlin("plugin.serialization") version "1.9.0"
 }
 
 android {
@@ -57,4 +58,7 @@ dependencies {
     implementation(libs.onnxruntime.android)
     implementation(libs.opencv)
 
+    implementation(libs.socketio)
+    implementation(libs.okhttp)
+    implementation(libs.kotlinx.serialization.json)
 }

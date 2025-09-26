@@ -154,25 +154,25 @@ class BLEService private constructor(private val context: Context) {
         session.connect()
     }
 
-    fun addCommand(address: String, command: BLECommand) {
-        sessions[address]?.add(command)
-    }
-
-    fun stopCommands(address: String) {
-        sessions[address]?.stopCommands()
-    }
-
-    fun sendRaw(address: String, bytes: ByteArray) {
-        sessions[address]?.sendRaw(bytes)
-    }
-
-    fun setStreamNotifyOn(address: String) {
-        sessions[address]?.setStreamNotifyOn()
-    }
-
-    fun setOnStreamData(address: String, cb: (ByteArray) -> Unit) {
-        sessions[address]?.onStreamData = cb
-    }
+//    fun addCommand(address: String, command: BLECommand) {
+//        sessions[address]?.add(command)
+//    }
+//
+//    fun stopCommands(address: String) {
+//        sessions[address]?.stopCommands()
+//    }
+//
+//    fun sendRaw(address: String, bytes: ByteArray) {
+//        sessions[address]?.sendRaw(bytes)
+//    }
+//
+//    fun setStreamNotifyOn(address: String) {
+//        sessions[address]?.setStreamNotifyOn()
+//    }
+//
+//    fun setOnStreamData(address: String, cb: (ByteArray) -> Unit) {
+//        sessions[address]?.onStreamData = cb
+//    }
 
     private fun setDeviceState(address: String, newState: AiLens.State) {
         val updated = _devices.value.map {

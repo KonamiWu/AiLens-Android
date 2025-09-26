@@ -51,8 +51,8 @@ class DeviceViewModel(app: Application) : AndroidViewModel(app) {
     }
 
     // 透過 Service 橋接指令
-    fun send(address: String, cmd: BLECommand) = ble.addCommand(address, cmd)
-    fun sendRaw(address: String, bytes: ByteArray) = ble.sendRaw(address, bytes)
-    fun stopCommands(address: String) = ble.stopCommands(address)
-    fun enableStream(address: String) = ble.setStreamNotifyOn(address)
+//    fun send(address: String, cmd: BLECommand) = ble.addCommand(address, cmd)
+//    fun sendRaw(address: String, bytes: ByteArray) = ble.sendRaw(address, bytes)
+//    fun stopCommands(address: String) = ble.stopCommands(address)
+//    fun enableStream(address: String) = ble.setStreamNotifyOn(address)
 }

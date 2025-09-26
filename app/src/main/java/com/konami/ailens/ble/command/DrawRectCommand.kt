@@ -4,16 +4,15 @@ import com.konami.ailens.ble.CRC32
 import com.konami.ailens.ble.DeviceSession
 
 class DrawRectCommand(
-    session: DeviceSession,
     private val x: Int,
     private val y: Int,
     private val width: Int,
     private val height: Int,
     private val lineWidth: Int,
     private val fill: Boolean
-) : BaseBLECommand(session) {
+) : VoidCommand() {
 
-    override fun getData(): ByteArray {
+    private fun getData(): ByteArray {
         // ---- payload (draw body) ----
         val payload = rectPayload()
         val crc2 = uint32ToBytes(CRC32.calculate(payload, 0))
@@ -88,4 +87,8 @@ class DrawRectCommand(
         ((value ushr 16) and 0xFF).toByte(),
         ((value ushr 24) and 0xFF).toByte()
     )
+
+    override fun execute(session: DeviceSession) {
+        session.sendRaw(getData())
+    }
 }

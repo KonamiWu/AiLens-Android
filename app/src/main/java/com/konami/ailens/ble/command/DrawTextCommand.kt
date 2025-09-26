@@ -6,15 +6,14 @@ import java.nio.ByteBuffer
 import java.nio.ByteOrder
 
 class DrawTextCommand(
-    session: DeviceSession,
     private val text: String,
     private val x: Int,
     private val y: Int,
     private val width: Int,
     private val height: Int
-) : BaseBLECommand(session) {
+) : VoidCommand() {
 
-    override fun getData() = buildPacket()
+    private fun getData() = buildPacket()
 
     // ---------- Build whole packet ----------
     private fun buildPacket(): ByteArray {
@@ -86,5 +85,9 @@ class DrawTextCommand(
         val bb = ByteBuffer.allocate(4).order(ByteOrder.LITTLE_ENDIAN)
         bb.putInt(v)
         return bb.array().toList()
+    }
+
+    override fun execute(session: DeviceSession) {
+        session.sendRaw(getData())
     }
 }

@@ -1,0 +1,30 @@
+package com.konami.ailens.agent
+
+enum class SocketEvent(val value: String) {
+    Connect("connect"),
+    Disconnect("disconnect"),
+    Message("message"),
+    AudioStream("audio_stream"),
+    GeminiResponse("gemini_response"),
+    GeminiAudio("gemini_audio"),
+    GeminiSessionOpen("gemini_session_opened"),
+    GeminiInputTranscript("gemini_input_transcript"),
+    GeminiOutputTranscript("gemini_output_transcript"),
+    GeminiTurnComplete("gemini_turn_complete"),
+    GeminiError("gemini_error"),
+    DeviceToolCall("device_tool_call"),
+    TranslationConnected("translation_connected"),
+    TranslationStarted("translation_started"),
+    TranslationPartial("translation_partial"),
+    TranslationFinal("translation_final"),
+    TranslationAudio("translation_audio"),
+    TranslationSourceTranscript("translation_source_transcript"),
+    TranslationDestinationTranscript("translation_destination_transcript"),
+    TranslationComplete("translation_complete"),
+    TranslationStopped("translation_stopped"),
+    TranslationError("translation_error"),
+    InputTranscript("input_transcript"),
+    SourceText("source_text"),
+    StartTranslation("start_translation"),
+    StopTranslation("stop_translation");
+}

@@ -4,14 +4,13 @@ import com.konami.ailens.ble.CRC32
 import com.konami.ailens.ble.DeviceSession
 
 class ClearCanvasCommand(
-    session: DeviceSession,
     val x: UShort = 0u,
     val y: UShort = 0u,
     val width: UShort = 640u,
     val height: UShort = 480u,
-) : BaseBLECommand(session) {
+) : VoidCommand() {
 
-    override fun getData(): ByteArray {
+    fun getData(): ByteArray {
         val payload = cleanPayload()
         val crc2 = uint32ToBytes(CRC32.calculate(payload, 0))
 
@@ -90,6 +89,10 @@ class ClearCanvasCommand(
             (value shr 16 and 0xFF).toByte(),
             (value shr 24 and 0xFF).toByte()
         )
+    }
+
+    override fun execute(session: DeviceSession) {
+        session.sendRaw(getData())
     }
 }
 

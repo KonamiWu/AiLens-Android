@@ -20,7 +20,6 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
-import org.json.JSONObject
 import org.opencv.core.Core
 import org.opencv.core.CvType
 import org.opencv.core.Mat
@@ -32,6 +31,7 @@ import com.konami.ailens.ble.command.DrawTextCommand
 import com.konami.ailens.ble.command.OpenCanvasCommand
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.channels.Channel
+import org.json.JSONObject
 
 data class RecognizedFace(
     val imageWidth: Int,
@@ -234,14 +234,14 @@ class FaceDetectionViewModel(application: Application) : AndroidViewModel(applic
         val aiLens = BLEService.instance.lastDevice.value ?: return
         val session = BLEService.instance.getSession(aiLens.device.address) ?: return
 
-        session.add(OpenCanvasCommand(session))
+        session.add(OpenCanvasCommand())
     }
 
     private fun sendToGlass(results: List<RecognizedFace>) {
         val aiLens = BLEService.instance.lastDevice.value ?: return
         val session = BLEService.instance.getSession(aiLens.device.address) ?: return
 
-        session.add(ClearCanvasCommand(session))
+        session.add(ClearCanvasCommand())
 
         if (results.isEmpty())
             return
@@ -257,21 +257,21 @@ class FaceDetectionViewModel(application: Application) : AndroidViewModel(applic
         if (unknownCount != 0)
             resultString += ("Unknown %d".format(unknownCount))
 //        Log.e("TAG", "resultString = ${resultString}")
-        session.add(DrawTextCommand(session, resultString, 0, 0, 100, 100))
+        session.add(DrawTextCommand(resultString, 0, 0, 100, 100))
     }
 
     private fun closeCanvas() {
         val aiLens = BLEService.instance.lastDevice.value ?: return
         val session = BLEService.instance.getSession(aiLens.device.address) ?: return
 
-        session.add(CloseCanvasCommand(session))
+        session.add(CloseCanvasCommand())
     }
 
     private fun loadEmbeddingsFromAssets(context: Context) {
         val am = context.assets
         am.open("embedding/people_avg.json").use { input ->
             val json = input.readBytes().toString(Charsets.UTF_8)
-            val obj = JSONObject(json)
+            val obj = org.json.JSONObject(json)
             val names = obj.keys()
             while (names.hasNext()) {
                 val name = names.next()

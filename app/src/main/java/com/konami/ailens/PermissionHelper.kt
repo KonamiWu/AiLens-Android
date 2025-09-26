@@ -14,7 +14,11 @@ object PermissionHelper {
     fun getAllRequiredPermissions(): Array<String> {
         val permissions = mutableListOf<String>()
 
+        // Camera
         permissions += Manifest.permission.CAMERA
+
+        // Microphone
+        permissions += Manifest.permission.RECORD_AUDIO
 
         if (Build.VERSION.SDK_INT >= 33) {
             permissions += Manifest.permission.POST_NOTIFICATIONS
@@ -25,7 +29,9 @@ object PermissionHelper {
             permissions += Manifest.permission.BLUETOOTH_CONNECT
             permissions += Manifest.permission.ACCESS_FINE_LOCATION
         } else {
+            // Older Android still may need coarse + fine for BLE scan
             permissions += Manifest.permission.ACCESS_FINE_LOCATION
+            permissions += Manifest.permission.ACCESS_COARSE_LOCATION
         }
         return permissions.toTypedArray()
     }
@@ -50,4 +56,3 @@ object PermissionHelper {
         }
     }
 }
-
