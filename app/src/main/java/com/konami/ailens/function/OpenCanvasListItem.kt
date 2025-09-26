@@ -6,6 +6,6 @@ import com.konami.ailens.ble.command.OpenCanvasCommand
 class OpenCanvasListItem(val session: DeviceSession): ListItem {
     override val title: String = "Open Canvas"
     override fun execute() {
-        OpenCanvasCommand(session).executeBLE()
+        OpenCanvasCommand().execute(session)
     }
 }

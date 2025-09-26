@@ -12,6 +12,6 @@ class DrawRectListItem(private val session: DeviceSession,
                        private val fill: Boolean): ListItem {
     override val title: String = "Draw Rect"
     override fun execute() {
-        DrawRectCommand(session, x, y, width, height, lineWidth, fill).executeBLE()
+        DrawRectCommand(x, y, width, height, lineWidth, fill).execute(session)
     }
 }

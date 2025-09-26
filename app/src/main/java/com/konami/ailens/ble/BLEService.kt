@@ -10,11 +10,13 @@ import android.bluetooth.le.ScanSettings
 import android.content.Context
 import android.util.Log
 import com.konami.ailens.SharedPrefs
-import com.konami.ailens.ble.command.BLECommand
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlin.collections.plus
+import kotlinx.coroutines.launch
 
 
 @SuppressLint("MissingPermission")
@@ -44,36 +46,39 @@ class BLEService private constructor(private val context: Context) {
                 _instance ?: BLEService(context.applicationContext).also { _instance = it }
             }
         }
-
-        fun isInitialized(): Boolean = _instance != null
     }
 
     private val bluetoothAdapter: BluetoothAdapter? by lazy {
         (context.getSystemService(Context.BLUETOOTH_SERVICE) as? BluetoothManager)?.adapter
     }
 
-    private val _devices = MutableStateFlow<List<AiLens>>(emptyList())
-    val devices: StateFlow<List<AiLens>> = _devices.asStateFlow()
+    private val _updateFlow = MutableSharedFlow<Unit>(replay = 0, extraBufferCapacity = 1)
+    val updateFlow = _updateFlow.asSharedFlow()
 
-    private val _lastDevice = MutableStateFlow<AiLens?>(null)
-    val lastDevice: StateFlow<AiLens?> = _lastDevice.asStateFlow()
-
-    private val sessions = mutableMapOf<String, DeviceSession>()
-
-    fun connectedDevices(): List<AiLens> = _devices.value.filter { it.state == AiLens.State.CONNECTED }
-    fun currentConnected(): AiLens? = _devices.value.firstOrNull { it.state == AiLens.State.CONNECTED }
-    fun isConnected(address: String): Boolean = _devices.value.any { it.device.address == address && it.state == AiLens.State.CONNECTED }
+    private val scope = CoroutineScope(Dispatchers.IO)
+    val sessions = mutableMapOf<String, DeviceSession>()
+    private val _connectedSession = MutableStateFlow<DeviceSession?>(null)
+    val connectedSession = _connectedSession.asStateFlow()
 
     private val scanCallback = object : ScanCallback() {
         override fun onScanResult(callbackType: Int, result: ScanResult) {
-            val device = result.device ?: return
-            val address = device.address ?: return
-            if (_devices.value.any { it.device.address == address }) return
-            _devices.value = _devices.value + AiLens(device, AiLens.State.AVAILABLE)
+            val newDevice = result.device ?: return
+            val address = newDevice.address ?: return
+            if (_connectedSession.value?.device?.address == address)
+                return
+
+            if (sessions[address] == null) {
+                val newSession = DeviceSession(context, newDevice, null)
+                sessions[address] = newSession
+                collect(newSession)
+            }
         }
-        override fun onScanFailed(errorCode: Int) { Log.e(TAG, "BLE scan failed: $errorCode") }
+        override fun onScanFailed(errorCode: Int) {
+            Log.e(TAG, "BLE scan failed: $errorCode")
+        }
     }
 
+    //TODO: remove this function
     fun getSession(address: String) : DeviceSession? {
         return sessions[address]
     }
@@ -85,7 +90,6 @@ class BLEService private constructor(private val context: Context) {
             return
         }
         val scanner = adapter.bluetoothLeScanner ?: return
-
         val settings = ScanSettings.Builder()
             .setScanMode(ScanSettings.SCAN_MODE_LOW_LATENCY)
             .build()
@@ -94,39 +98,18 @@ class BLEService private constructor(private val context: Context) {
             val filters = listOf(
                 ScanFilter.Builder()
                     .setManufacturerData(5378, byteArrayOf(0x00, 0x00))
-                    // .setServiceUuid(ParcelUuid.fromString("00010000-0000-1000-8000-00805F9B5A6B"))
                     .build()
             )
             scanner.startScan(filters, settings, scanCallback)
         } else {
             scanner.startScan(null, settings, scanCallback)
         }
-        Log.d(TAG, "startScan(onlyAiLens=$onlyAiLens)")
+        Log.e(TAG, "startScan(onlyAiLens=$onlyAiLens)")
     }
 
     fun stopScan() {
         bluetoothAdapter?.bluetoothLeScanner?.stopScan(scanCallback)
-        Log.d(TAG, "stopScan")
-    }
-
-    fun connect(address: String) {
-        val adapter = bluetoothAdapter ?: return
-        val device = try { adapter.getRemoteDevice(address) } catch (_: IllegalArgumentException) { null } ?: return
-        setDeviceState(address, AiLens.State.CONNECTING)
-        val session = sessions.getOrPut(address) {
-            DeviceSession(context, device) { newState ->
-                setDeviceState(address, newState)
-                if (newState == AiLens.State.CONNECTED) {
-                    _lastDevice.value = _devices.value.firstOrNull { it.device.address == address }
-                }
-            }
-        }
-        session.connect()
-    }
-
-    fun disconnect(address: String) {
-        sessions[address]?.disconnect()
-        setDeviceState(address, AiLens.State.DISCONNECTED)
+        Log.e(TAG, "stopScan")
     }
 
     fun retrieve() {
@@ -135,50 +118,30 @@ class BLEService private constructor(private val context: Context) {
         val device = try { adapter.getRemoteDevice(info.mac) } catch (_: IllegalArgumentException) { null } ?: return
         val isBonded = adapter.bondedDevices?.any { it.address == device.address } == true
 
-        if (_devices.value.none { it.device.address == device.address }) {
-            val targetDevice = AiLens(device, AiLens.State.CONNECTING)
-            _devices.value = listOf(targetDevice) + _devices.value
+        val newSession: DeviceSession
+        if (isBonded) {
+            newSession = DeviceSession(context, device, info.retrieveToken)
+            _connectedSession.value = newSession
+        } else {
+            newSession = DeviceSession(context, device, null)
+            _connectedSession.value = newSession
         }
-        _lastDevice.value = _devices.value.firstOrNull { it.device.address == device.address }
+        collect(newSession)
+        _updateFlow.tryEmit(Unit)
 
-        val session = sessions.getOrPut(device.address) {
-            DeviceSession(context, device, retrieveToken = if (isBonded) info.retrieveToken else null) { newState ->
-                val newDevice = AiLens(device, newState)
-                val temp = _devices.value.toMutableList()
-                temp.removeIf { it.device.address == device.address }
-                _lastDevice.value = newDevice
-                temp.add(newDevice)
-                _devices.value = temp
+        newSession.connect()
+    }
+
+    private fun collect(session: DeviceSession) {
+        scope.launch {
+            session.state.collect {
+                if (it == DeviceSession.State.CONNECTED) {
+                    sessions.remove(session.device.address)
+                    if (_connectedSession.value == null)
+                        _connectedSession.value = session
+                }
+                _updateFlow.tryEmit(Unit)
             }
         }
-        session.connect()
-    }
-
-    fun addCommand(address: String, command: BLECommand) {
-        sessions[address]?.add(command)
-    }
-
-    fun stopCommands(address: String) {
-        sessions[address]?.stopCommands()
-    }
-
-    fun sendRaw(address: String, bytes: ByteArray) {
-        sessions[address]?.sendRaw(bytes)
-    }
-
-    fun setStreamNotifyOn(address: String) {
-        sessions[address]?.setStreamNotifyOn()
-    }
-
-    fun setOnStreamData(address: String, cb: (ByteArray) -> Unit) {
-        sessions[address]?.onStreamData = cb
-    }
-
-    private fun setDeviceState(address: String, newState: AiLens.State) {
-        val updated = _devices.value.map {
-            if (it.device.address == address) it.copy(state = newState) else it
-        }
-        _devices.value = if (updated.any { it.device.address == address }) updated
-        else updated + (bluetoothAdapter?.getRemoteDevice(address)?.let { AiLens(it, newState) } ?: return)
     }
 }

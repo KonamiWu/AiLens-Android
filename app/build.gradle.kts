@@ -1,11 +1,12 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
+    kotlin("plugin.serialization") version "1.9.0"
 }
 
 android {
     namespace = "com.konami.ailens"
-    compileSdk = 35
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "com.konami.ailens"
@@ -26,6 +27,8 @@ android {
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
+
+        isCoreLibraryDesugaringEnabled = true
     }
     kotlinOptions {
         jvmTarget = "11"
@@ -57,4 +60,11 @@ dependencies {
     implementation(libs.onnxruntime.android)
     implementation(libs.opencv)
 
+    implementation(libs.socketio)
+    implementation(libs.okhttp)
+    implementation(libs.kotlinx.serialization.json)
+
+    implementation(libs.maps.navigation)
+
+    coreLibraryDesugaring(libs.desugar.jdk.libs)
 }

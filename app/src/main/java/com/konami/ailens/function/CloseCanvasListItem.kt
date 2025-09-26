@@ -7,6 +7,6 @@ import com.konami.ailens.ble.command.CloseCanvasCommand
 class CloseCanvasListItem(val session: DeviceSession): ListItem {
     override val title: String = "close Canvas"
     override fun execute() {
-        CloseCanvasCommand(session).executeBLE()
+        CloseCanvasCommand().execute(session)
     }
 }

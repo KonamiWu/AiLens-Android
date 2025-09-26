@@ -20,7 +20,7 @@ class FunctionFragment : Fragment() {
         _binding = FragmentFunctionBinding.inflate(inflater, container, false)
         recyclerView = binding.recyclerView
 
-        val aiLens = BLEService.instance.lastDevice.value!!
+        val aiLens = BLEService.instance.connectedSession.value!!
         adapter = FunctionAdapter(aiLens, findNavController())
         recyclerView.adapter = adapter
 
@@ -31,7 +31,7 @@ class FunctionFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
-        val aiLens = BLEService.instance.lastDevice.value ?: return
+        val aiLens = BLEService.instance.connectedSession.value ?: return
         BLEService.instance.getSession(aiLens.device.address)?.stopCommands()
     }
 }

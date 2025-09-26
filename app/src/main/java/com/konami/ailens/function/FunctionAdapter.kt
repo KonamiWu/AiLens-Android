@@ -8,12 +8,12 @@ import android.widget.TextView
 import androidx.navigation.NavController
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
-import com.konami.ailens.ble.AiLens
 import com.konami.ailens.ble.BLEService
 import com.konami.ailens.R
+import com.konami.ailens.ble.DeviceSession
 import com.konami.ailens.function.FunctionAdapter.FunctionViewHolder
 
-class FunctionAdapter(aiLens: AiLens, navController: NavController): RecyclerView.Adapter<FunctionViewHolder>() {
+class FunctionAdapter(session: DeviceSession, navController: NavController): RecyclerView.Adapter<FunctionViewHolder>() {
 
     class FunctionViewHolder(itemView: View): ViewHolder(itemView) {
         val titleTextView: TextView = itemView.findViewById(R.id.titleTextView)
@@ -29,16 +29,11 @@ class FunctionAdapter(aiLens: AiLens, navController: NavController): RecyclerVie
     private val commands = mutableListOf<ListItem>()
 
     init {
-        val session = BLEService.instance.getSession(aiLens.device.address)
-        if (session != null) {
-            commands.add(OpenCanvasListItem(session))
-            commands.add(ClearCanvasListItem(session))
-            commands.add(CloseCanvasListItem(session))
-            commands.add(DrawRectListItem(session, x = 0, y = 0, width = 639, height = 479, lineWidth = 1, fill = false))
-//            commands.add(SubscribeIMUListItem(session))
-//            commands.add(UnSubscribeIMUListItem(session))
-            commands.add(FaceDetectionListItem(navController))
-        }
+        commands.add(OpenCanvasListItem(session))
+        commands.add(ClearCanvasListItem(session))
+        commands.add(CloseCanvasListItem(session))
+        commands.add(DrawRectListItem(session, x = 0, y = 0, width = 639, height = 479, lineWidth = 1, fill = false))
+        commands.add(FaceDetectionListItem(navController))
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FunctionViewHolder {

@@ -1,6 +1,7 @@
 package com.konami.ailens.device
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -20,7 +21,7 @@ class DeviceFragment : Fragment() {
     private var _binding: FragmentDeviceBinding? = null
     private val binding get() = _binding!!
     private lateinit var recyclerView: RecyclerView
-    private val adapter = DeviceAdapter { viewModel.actionItem(it) }
+    private val adapter = DeviceAdapter({ viewModel.onClick(it) }, { viewModel.longPressItem(it) })
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentDeviceBinding.inflate(inflater, container, false)
@@ -29,7 +30,10 @@ class DeviceFragment : Fragment() {
 
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.uiItems.collect { items -> adapter.submitList(items) }
+                viewModel.updateFlow.collect {
+                    adapter.items = viewModel.getItems()
+                    adapter.notifyDataSetChanged()
+                }
             }
         }
 

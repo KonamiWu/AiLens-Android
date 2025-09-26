@@ -6,6 +6,6 @@ import com.konami.ailens.ble.command.ClearCanvasCommand
 class ClearCanvasListItem(val session: DeviceSession): ListItem {
     override val title: String = "clear Canvas"
     override fun execute() {
-        ClearCanvasCommand(session).executeBLE()
+        ClearCanvasCommand().execute(session)
     }
 }

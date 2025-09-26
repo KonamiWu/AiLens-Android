@@ -2,10 +2,8 @@ package com.konami.ailens.facedetection
 
 import android.annotation.SuppressLint
 import android.app.Application
-import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.RectF
-import android.os.SystemClock
 import android.util.Log
 import androidx.camera.core.CameraSelector
 import androidx.camera.core.ExperimentalGetImage
@@ -20,12 +18,10 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
-import org.json.JSONObject
 import org.opencv.core.Core
 import org.opencv.core.CvType
 import org.opencv.core.Mat
 import org.opencv.imgproc.Imgproc
-import java.nio.charset.Charset
 import androidx.core.graphics.createBitmap
 import com.konami.ailens.ble.command.CloseCanvasCommand
 import com.konami.ailens.ble.command.DrawTextCommand
@@ -79,10 +75,10 @@ class FaceDetectionViewModel(application: Application) : AndroidViewModel(applic
     init {
         // Ensure OpenCV is initialized before use (your OpenCVLoader.initLocal() is inside YuNet)
         OpenCVLoader.initLocal()
-        viewModelScope.launch(Dispatchers.IO) {
-            loadEmbeddingsFromAssets(application)
-            _ready.emit(true)
-        }
+//        viewModelScope.launch(Dispatchers.IO) {
+//            loadEmbeddingsFromAssets(application)
+//            _ready.emit(true)
+//        }
 
         viewModelScope.launch(Dispatchers.Default) {
             for (image in frames) {
@@ -231,17 +227,17 @@ class FaceDetectionViewModel(application: Application) : AndroidViewModel(applic
     }
 
     private fun openCanvas() {
-        val aiLens = BLEService.instance.lastDevice.value ?: return
+        val aiLens = BLEService.instance.connectedSession.value ?: return
         val session = BLEService.instance.getSession(aiLens.device.address) ?: return
 
-        session.add(OpenCanvasCommand(session))
+        session.add(OpenCanvasCommand())
     }
 
     private fun sendToGlass(results: List<RecognizedFace>) {
-        val aiLens = BLEService.instance.lastDevice.value ?: return
+        val aiLens = BLEService.instance.connectedSession.value ?: return
         val session = BLEService.instance.getSession(aiLens.device.address) ?: return
 
-        session.add(ClearCanvasCommand(session))
+        session.add(ClearCanvasCommand())
 
         if (results.isEmpty())
             return
@@ -257,42 +253,42 @@ class FaceDetectionViewModel(application: Application) : AndroidViewModel(applic
         if (unknownCount != 0)
             resultString += ("Unknown %d".format(unknownCount))
 //        Log.e("TAG", "resultString = ${resultString}")
-        session.add(DrawTextCommand(session, resultString, 0, 0, 100, 100))
+        session.add(DrawTextCommand(resultString, 0, 0, 100, 100))
     }
 
     private fun closeCanvas() {
-        val aiLens = BLEService.instance.lastDevice.value ?: return
+        val aiLens = BLEService.instance.connectedSession.value ?: return
         val session = BLEService.instance.getSession(aiLens.device.address) ?: return
 
-        session.add(CloseCanvasCommand(session))
+        session.add(CloseCanvasCommand())
     }
 
-    private fun loadEmbeddingsFromAssets(context: Context) {
-        val am = context.assets
-        am.open("embedding/people_avg.json").use { input ->
-            val json = input.readBytes().toString(Charsets.UTF_8)
-            val obj = JSONObject(json)
-            val names = obj.keys()
-            while (names.hasNext()) {
-                val name = names.next()
-                val info = obj.getJSONObject(name)
-                val list = mutableListOf<FloatArray>()
-                if (info.has("embeddings")) {
-                    val arrs = info.getJSONArray("embeddings")
-                    for (i in 0 until arrs.length()) {
-                        val a = arrs.getJSONArray(i)
-                        val emb = FloatArray(a.length()) { j -> a.getDouble(j).toFloat() }
-                        list.add(emb)
-                    }
-                } else {
-                    val a = info.getJSONArray("embedding")
-                    val emb = FloatArray(a.length()) { j -> a.getDouble(j).toFloat() }
-                    list.add(emb)
-                }
-                people.add(Person(name, list))
-            }
-        }
-    }
+//    private fun loadEmbeddingsFromAssets(context: Context) {
+//        val am = context.assets
+//        am.open("embedding/people_avg.json").use { input ->
+//            val json = input.readBytes().toString(Charsets.UTF_8)
+//            val obj = org.json.JSONObject(json)
+//            val names = obj.keys()
+//            while (names.hasNext()) {
+//                val name = names.next()
+//                val info = obj.getJSONObject(name)
+//                val list = mutableListOf<FloatArray>()
+//                if (info.has("embeddings")) {
+//                    val arrs = info.getJSONArray("embeddings")
+//                    for (i in 0 until arrs.length()) {
+//                        val a = arrs.getJSONArray(i)
+//                        val emb = FloatArray(a.length()) { j -> a.getDouble(j).toFloat() }
+//                        list.add(emb)
+//                    }
+//                } else {
+//                    val a = info.getJSONArray("embedding")
+//                    val emb = FloatArray(a.length()) { j -> a.getDouble(j).toFloat() }
+//                    list.add(emb)
+//                }
+//                people.add(Person(name, list))
+//            }
+//        }
+//    }
 
     /** Return best-match name or null if below threshold. */
     private fun findBest(query: FloatArray, minScore: Float): String? {
