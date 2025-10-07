@@ -26,6 +26,8 @@ import com.konami.ailens.orchestrator.Orchestrator
 import com.konami.ailens.orchestrator.role.AgentRole
 import com.konami.ailens.orchestrator.role.BluetoothRole
 import com.konami.ailens.recorder.BluetoothRecorder
+import com.google.android.libraries.navigation.NavigationApi
+import com.google.android.libraries.navigation.Navigator
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.flatMapLatest
@@ -65,6 +67,9 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        // Initialize Navigation SDK and show terms if needed
+        initializeNavigationSDK()
+
         // Check and request permissions at startup
         val hasPermissions = PermissionHelper.checkAndRequestAllPermissions(this, permissionLauncher)
         if (hasPermissions) {
@@ -72,6 +77,42 @@ class MainActivity : AppCompatActivity() {
             startAgentService()
             collectBLE()
         }
+    }
+    
+    private fun initializeNavigationSDK() {
+        Log.d("MainActivity", "Initializing Navigation SDK")
+        
+        // Try to initialize navigator directly
+        // Terms will be shown automatically if needed
+        NavigationApi.getNavigator(
+            this,
+            object : NavigationApi.NavigatorListener {
+                override fun onNavigatorReady(navigator: Navigator) {
+                    Log.d("MainActivity", "Navigator initialized successfully")
+                    // Clean up since we just needed to initialize and accept terms
+                    navigator.cleanup()
+                }
+                
+                override fun onError(errorCode: Int) {
+                    val errorMessage = when (errorCode) {
+                        NavigationApi.ErrorCode.NOT_AUTHORIZED -> "NOT_AUTHORIZED"
+                        NavigationApi.ErrorCode.TERMS_NOT_ACCEPTED -> "TERMS_NOT_ACCEPTED"
+                        NavigationApi.ErrorCode.NETWORK_ERROR -> "NETWORK_ERROR"
+                        NavigationApi.ErrorCode.LOCATION_PERMISSION_MISSING -> "LOCATION_PERMISSION_MISSING"
+                        else -> "Unknown error: $errorCode"
+                    }
+                    Log.e("MainActivity", "Failed to initialize Navigator: $errorMessage")
+                    
+                    if (errorCode == NavigationApi.ErrorCode.TERMS_NOT_ACCEPTED) {
+                        Toast.makeText(
+                            this@MainActivity,
+                            "Please accept terms to use navigation features",
+                            Toast.LENGTH_LONG
+                        ).show()
+                    }
+                }
+            }
+        )
     }
 
     private fun startBleService(withBleAction: Boolean) {

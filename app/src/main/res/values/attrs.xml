@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="CutCornerView">
+        <attr name="cornerCut" format="dimension"/>
+        <attr name="borderColor" format="color"/>
+        <attr name="borderWidth" format="dimension"/>
+        <attr name="fillColor" format="color"/>/>
+        <attr name="cutCorners" format="flags">
+            <flag name="topLeft" value="1" />
+            <flag name="topRight" value="2" />
+            <flag name="bottomRight" value="4" />
+            <flag name="bottomLeft" value="8" />
+        </attr>
+    </declare-styleable>
+
+    <declare-styleable name="DashedLineView">
+        <attr name="lineColor" format="color" />
+        <attr name="lineWidth" format="dimension" />
+        <attr name="dashLength" format="dimension" />
+        <attr name="dashSpacing" format="dimension" />
+        <attr name="orientation" format="enum">
+            <enum name="horizontal" value="0" />
+            <enum name="vertical" value="1" />
+        </attr>
+    </declare-styleable>
+
+    <attr name="appPrimary" format="color" />
+    <attr name="appPrimaryDark" format="color" />
+    <attr name="appBackground" format="color" />
+    <attr name="appSurface1" format="color" />
+    <attr name="appBorderLightGray" format="color" />
+    <attr name="appBorderMediumGray" format="color" />
+    <attr name="appBorderDarkGray" format="color" />
+    <attr name="appTextPrimary" format="color" />
+    <attr name="appTextSecondary" format="color" />
+    <attr name="appTextCaption" format="color" />
+    <attr name="appTextButton" format="color" />
+    <attr name="appTextPlaceholder" format="color" />
+    <attr name="appButtonGrey" format="color" />
+    <attr name="appIconDark" format="color" />
+    <attr name="appWhite" format="color" />
+    <attr name="appRed" format="color" />
+    <attr name="appGrey01" format="color" />
+    <attr name="appGrey02" format="color" />
+</resources>

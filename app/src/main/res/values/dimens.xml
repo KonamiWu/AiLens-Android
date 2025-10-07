@@ -6,9 +6,102 @@
     <dimen name="bluetooth_item_image_size">40dp</dimen>
     <dimen name="bluetooth_item_name_text_size">14sp</dimen>
     <dimen name="bluetooth_item_mac_text_size">10sp</dimen>
-
     <dimen name="command_item_height">60dp</dimen>
     <dimen name="command_item_title_text_size">18sp</dimen>
-
     <dimen name="language_item_section_height">20sp</dimen>
+
+<!--    new-->
+    <dimen name="main_top_section_margin_top">18dp</dimen>
+    <dimen name="main_top_section_padding_horizontal">16dp</dimen>
+    <dimen name="main_top_section_height">250dp</dimen>
+    <dimen name="main_img_glass_margin_top">40dp</dimen>
+    <dimen name="main_img_bottom_left_line_size">42dp</dimen>
+    <dimen name="main_name_text_size">24sp</dimen>
+    <dimen name="main_name_margin_top">14dp</dimen>
+    <dimen name="main_name_margin_left">8dp</dimen>
+    <dimen name="main_battery_size">32dp</dimen>
+    <dimen name="main_battery_margin_end">4dp</dimen>
+    <dimen name="main_battery_text_size">14sp</dimen>
+    <dimen name="main_battery_text_margin_top">14dp</dimen>
+    <dimen name="main_battery_text_margin_right">14dp</dimen>
+    <dimen name="main_setting_margin_start">24dp</dimen>
+    <dimen name="main_setting_margin_bottom">24dp</dimen>
+    <dimen name="main_setting_text_size">16sp</dimen>
+    <dimen name="main_setting_icon_size">24dp</dimen>
+    <dimen name="main_setting_padding_horizontal">20dp</dimen>
+    <dimen name="main_setting_padding_vertical">4dp</dimen>
+    <dimen name="main_setting_spacing">4dp</dimen>
+    <dimen name="main_cut_corner_view_border_width">1dp</dimen>
+    <dimen name="main_cut_corner_view_corner_cut">6dp</dimen>
+
+    <dimen name="main_dash_size">2dp</dimen>
+    <dimen name="main_dash_length">4dp</dimen>
+    <dimen name="main_dash_spacing">4dp</dimen>
+    <dimen name="main_dash_line_width">1dp</dimen>
+    <dimen name="main_left_dash_length">34dp</dimen>
+    <dimen name="main_left_dash_margin_top">70dp</dimen>
+    <dimen name="main_right_dash_length">28dp</dimen>
+    <dimen name="main_right_dash_margin_top">108dp</dimen>
+    <dimen name="main_bottom_dash_length">110dp</dimen>
+
+    <dimen name="main_tab_height">60dp</dimen>
+    <dimen name="main_tab_item_icon_size">24dp</dimen>
+    <dimen name="main_tab_item_text_size">11sp</dimen>
+    <dimen name="main_tab_item_spacing">2dp</dimen>
+
+    <dimen name="main_tab_other_device_size">44dp</dimen>
+    <dimen name="main_tab_other_device_margin_top">70dp</dimen>
+    <dimen name="main_tab_other_device_margin_right">16dp</dimen>
+    <dimen name="main_tab_other_device_icon_size">28dp</dimen>
+
+    <dimen name="main_function_left_margin_top">25dp</dimen>
+    <dimen name="main_function_item_text_size">16sp</dimen>
+    <dimen name="main_function_large_margin_top">27dp</dimen>
+    <dimen name="main_function_small_margin_top">27dp</dimen>
+    <dimen name="main_function_item_margin_horizontal">65dp</dimen>
+
+    <dimen name="address_picker_margin_top">80dp</dimen>
+    <dimen name="address_picker_back_button_size">44dp</dimen>
+    <dimen name="address_picker_back_button_margin_left">16dp</dimen>
+    <dimen name="address_picker_back_button_margin_top">16dp</dimen>
+    <dimen name="address_picker_border_width">2dp</dimen>
+    <dimen name="address_picker_corner_cut">12dp</dimen>
+    <dimen name="address_picker_padding_horizontal">32dp</dimen>
+    <dimen name="address_picker_padding_top">60dp</dimen>
+    <dimen name="address_picker_dot_size">10dp</dimen>
+    <dimen name="address_picker_edit_text_height">40dp</dimen>
+    <dimen name="address_picker_edit_text_spacing">16dp</dimen>
+    <dimen name="address_picker_edit_text_margin_horizontal">12dp</dimen>
+    <dimen name="address_picker_edit_content_margin">-8dp</dimen>
+    <dimen name="address_picker_favorite_height">44dp</dimen>
+    <dimen name="address_picker_favorite_divider_height">30dp</dimen>
+    <dimen name="address_picker_favorite_margin_top">16dp</dimen>
+    <dimen name="address_picker_favorite_margin_bottom">16dp</dimen>
+    <dimen name="address_picker_favorite_item_icon_size">16dp</dimen>
+    <dimen name="address_picker_favorite_item_spacing">4dp</dimen>
+    <dimen name="address_picker_favorite_item_text_size">12sp</dimen>
+    <dimen name="address_picker_favorite_item_padding_horizontal">16dp</dimen>
+    <dimen name="address_picker_grab_width">38dp</dimen>
+    <dimen name="address_picker_grab_height">4dp</dimen>
+    <dimen name="address_picker_grab_corner_radius">2dp</dimen>
+    <dimen name="address_picker_grab_margin_top">12dp</dimen>
+    <dimen name="address_picker_transport_mode_margin_top">20dp</dimen>
+    <dimen name="address_picker_transport_mode_padding_horizontal">16dp</dimen>
+    <dimen name="address_picker_time_margin_top">24dp</dimen>
+    <dimen name="address_picker_time_time_height">30dp</dimen>
+    <dimen name="address_picker_time_start_button_height">52dp</dimen>
+    <dimen name="address_picker_stat_button_corner_cut">6dp</dimen>
+    <dimen name="address_picker_stat_button_margin_top">24dp</dimen>
+    <dimen name="address_picker_stat_button_margin_bottom">16dp</dimen>
+    <dimen name="address_picker_nav_mode_layout_height">32dp</dimen>
+    <dimen name="address_picker_nav_mode_padding_horizontal">12dp</dimen>
+    <dimen name="address_picker_nav_mode_padding_vertical">8dp</dimen>
+    <dimen name="address_picker_nav_mode_icon_size">20dp</dimen>
+    <dimen name="address_picker_nav_mode_text_size">12sp</dimen>
+    <dimen name="address_picker_nav_mode_text_margin_left">6dp</dimen>
+    <dimen name="address_picker_auto_complete_item_height">65dp</dimen>
+    <dimen name="address_picker_auto_complete_item_icon_size">16dp</dimen>
+    <dimen name="address_picker_auto_complete_item_padding_horizontal">16dp</dimen>
+    <dimen name="address_picker_auto_complete_item_primary_text_size">14sp</dimen>
+    <dimen name="address_picker_auto_complete_item_secondary_text_size">12sp</dimen>
 </resources>

@@ -1,0 +1,251 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/main"
+    tools:ignore="ContentDescription"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/container"
+        android:layout_width="match_parent"
+        android:layout_height="335dp"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <com.konami.ailens.main.CutCornerView
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:background="?attr/appBackground"
+            app:cutCorners="topLeft|topRight|bottomLeft|bottomRight"
+            app:cornerCut="@dimen/address_picker_corner_cut"
+            app:borderColor="?appBorderDarkGray"
+            app:borderWidth="@dimen/address_picker_border_width" />
+
+        <ImageView
+            android:layout_width="@dimen/address_picker_grab_width"
+            android:layout_height="@dimen/address_picker_grab_height"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="@dimen/address_picker_grab_margin_top"
+            android:src="@drawable/favorite_grab_drawable" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/topLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingHorizontal="@dimen/address_picker_padding_horizontal"
+            app:layout_constraintTop_toTopOf="parent"
+            android:paddingTop="@dimen/address_picker_padding_horizontal">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/myLocationLayout"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/address_picker_edit_text_height"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" >
+
+                <ImageView
+                    android:id="@+id/dot"
+                    android:layout_width="@dimen/address_picker_dot_size"
+                    android:layout_height="@dimen/address_picker_dot_size"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toStartOf="@id/myLocationTextLayout"
+                    app:layout_constraintTop_toTopOf="@id/myLocationTextLayout"
+                    app:layout_constraintBottom_toBottomOf="@id/myLocationTextLayout"
+                    android:src="@drawable/ic_nav_dot" />
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/myLocationTextLayout"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/address_picker_edit_text_margin_horizontal"
+                    app:layout_constraintStart_toEndOf="@id/dot"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:boxCollapsedPaddingTop="0dp"
+                    app:boxBackgroundMode="filled"
+                    android:background="#00000000"
+                    app:boxStrokeColor="@color/location_picker_edit_text_bg">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/myLocationEditText"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="#00000000"
+                        android:textColor="?attr/appTextPrimary"
+                        android:text="@string/your_location"
+                        android:padding="0dp"
+                        android:layout_marginStart="@dimen/address_picker_edit_content_margin"
+                        style="@style/Medium"
+                        android:textColorHint="?attr/appTextPlaceholder"/>
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/destinationLayout"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/address_picker_edit_text_height"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/myLocationLayout"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginTop="@dimen/address_picker_edit_text_spacing">
+
+                <ImageView
+                    android:id="@+id/destinationIcon"
+                    android:layout_width="@dimen/address_picker_dot_size"
+                    android:layout_height="@dimen/address_picker_dot_size"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toStartOf="@id/destinationTextLayout"
+                    app:layout_constraintTop_toTopOf="@id/destinationTextLayout"
+                    app:layout_constraintBottom_toBottomOf="@id/destinationTextLayout"
+                    android:src="@drawable/ic_map_pin" />
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/destinationTextLayout"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/address_picker_edit_text_margin_horizontal"
+                    app:layout_constraintStart_toEndOf="@id/destinationIcon"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:boxCollapsedPaddingTop="0dp"
+                    app:boxBackgroundMode="filled"
+                    android:background="#00000000"
+                    app:hintEnabled="false"
+                    app:boxStrokeColor="@color/location_picker_edit_text_bg">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/destinationEditText"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="#00000000"
+                        android:textColor="?attr/appTextPrimary"
+                        android:hint="@string/destination"
+                        android:padding="0dp"
+                        android:textCursorDrawable="@null"
+                        android:layout_marginStart="@dimen/address_picker_edit_content_margin"
+                        style="@style/Medium"
+                        android:textColorHint="?attr/appTextPlaceholder"/>
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/transportLayout"
+            android:orientation="horizontal"
+            android:layout_width="0dp"
+            android:layout_height="32dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/topLayout"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:paddingHorizontal="@dimen/address_picker_transport_mode_padding_horizontal">
+
+            <LinearLayout
+                android:id="@+id/walkingLayout"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:orientation="horizontal"
+                android:gravity="center"
+                android:paddingHorizontal="16dp"
+                android:paddingVertical="8dp">
+
+                <ImageView
+                    android:id="@+id/walkingImageView"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:src="@drawable/ic_nav_walking_active" />
+
+                <TextView
+                    android:id="@+id/walkingTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="6dp"
+                    android:text="Walking"
+                    android:textColor="?attr/appPrimary"
+                    android:textSize="14sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/motorcycleLayout"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                app:layout_constraintStart_toEndOf="@id/walkingLayout"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:orientation="horizontal"
+                android:gravity="center"
+                android:paddingHorizontal="16dp"
+                android:paddingVertical="8dp">
+
+                <ImageView
+                    android:id="@+id/motorcycleImageView"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:src="@drawable/ic_nav_walking_active" />
+
+                <TextView
+                    android:id="@+id/motorcycleTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="6dp"
+                    android:text="Walking"
+                    android:textColor="?attr/appPrimary"
+                    android:textSize="14sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/drivingLayout"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                app:layout_constraintStart_toEndOf="@id/motorcycleLayout"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:orientation="horizontal"
+                android:gravity="center"
+                android:paddingHorizontal="16dp"
+                android:paddingVertical="8dp">
+
+                <ImageView
+                    android:id="@+id/drivingImageView"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:src="@drawable/ic_nav_walking_active" />
+
+                <TextView
+                    android:id="@+id/drivingTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="6dp"
+                    android:text="Walking"
+                    android:textColor="?attr/appPrimary"
+                    android:textSize="14sp" />
+            </LinearLayout>
+
+            <View
+                android:id="@+id/indicatorView"
+                android:layout_width="0dp"
+                android:layout_height="2dp"
+                android:background="?attr/appPrimary"
+                app:layout_constraintStart_toStartOf="@id/walkingLayout"
+                app:layout_constraintEnd_toEndOf="@id/walkingLayout"
+                app:layout_constraintBottom_toBottomOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

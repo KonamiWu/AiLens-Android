@@ -5,5 +5,27 @@
         <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
     </style>
 
-    <style name="Theme.AiLens" parent="Base.Theme.AiLens" />
+    <style name="Theme.AiLens" parent="Base.Theme.AiLens">
+        <item name="appPrimary">@color/app_primary</item>
+        <item name="appPrimaryDark">@color/app_primary_dark</item>
+        <item name="appBackground">@color/app_background</item>
+        <item name="appSurface1">@color/app_surface1</item>
+
+        <item name="appBorderLightGray">@color/app_border_light_gray</item>
+        <item name="appBorderMediumGray">@color/app_border_medium_gray</item>
+        <item name="appBorderDarkGray">@color/app_border_dark_gray</item>
+
+        <item name="appTextPrimary">@color/app_text_primary</item>
+        <item name="appTextSecondary">@color/app_text_secondary</item>
+        <item name="appTextButton">@color/app_text_button</item>
+        <item name="appTextCaption">@color/app_text_caption</item>
+        <item name="appTextPlaceholder">@color/app_text_placeholder</item>
+
+        <item name="appButtonGrey">@color/app_button_grey</item>
+        <item name="appIconDark">@color/app_icon_dark</item>
+        <item name="appWhite">@color/app_white</item>
+        <item name="appRed">@color/app_red</item>
+        <item name="appGrey01">@color/app_grey01</item>
+        <item name="appGrey02">@color/app_grey02</item>
+    </style>
 </resources>

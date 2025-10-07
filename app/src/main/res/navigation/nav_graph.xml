@@ -3,7 +3,31 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/DeviceFragment">
+    app:startDestination="@id/MainFragment">
+
+    <fragment
+        android:id="@+id/MainFragment"
+        android:name="com.konami.ailens.main.MainFragment"
+        tools:layout="@layout/fragment_home">
+    </fragment>
+
+    <fragment
+        android:id="@+id/HomeFragment"
+        android:name="com.konami.ailens.main.HomeFragment"
+        tools:layout="@layout/fragment_home">
+    </fragment>
+
+    <fragment
+        android:id="@+id/AddressPickerFragment"
+        android:name="com.konami.ailens.navigation.AddressPickerFragment"
+        tools:layout="@layout/fragment_address_picker">
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigationGuidanceFragment"
+        android:name="com.konami.ailens.navigation.NavigationGuidanceFragment"
+        tools:layout="@layout/fragment_navigation_guidance">
+    </fragment>
 
     <fragment
         android:id="@+id/DeviceFragment"

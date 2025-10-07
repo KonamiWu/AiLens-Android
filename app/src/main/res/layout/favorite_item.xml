@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:ignore="ContentDescription"
+    android:layout_width="wrap_content"
+    android:layout_height="@dimen/address_picker_favorite_height"
+    android:gravity="center"
+    android:paddingHorizontal="@dimen/address_picker_favorite_item_padding_horizontal">
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="@dimen/address_picker_favorite_item_icon_size"
+        android:layout_height="@dimen/address_picker_favorite_item_icon_size"
+        android:src="@drawable/ic_favorite_home" />
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/address_picker_favorite_item_spacing"
+        android:textSize="@dimen/address_picker_favorite_item_text_size"
+        style="@style/Regular"
+        android:textColor="?attr/appPrimaryDark"/>
+
+</LinearLayout>

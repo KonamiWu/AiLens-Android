@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     kotlin("plugin.serialization") version "1.9.0"
+    id("com.google.android.libraries.mapsplatform.secrets-gradle-plugin") version "2.0.1"
 }
 
 android {
@@ -64,7 +65,16 @@ dependencies {
     implementation(libs.okhttp)
     implementation(libs.kotlinx.serialization.json)
 
-    implementation(libs.maps.navigation)
+//    implementation(libs.maps.navigation)
+    implementation(libs.lifecycle.viewmodel.ktx)
+    implementation(libs.lifecycle.runtime.ktx)
 
     coreLibraryDesugaring(libs.desugar.jdk.libs)
+
+    implementation(libs.bundles.google.maps.navigation)
+    implementation(libs.bundles.coroutines)
+
+    configurations.all {
+        exclude(group = "com.google.android.gms", module = "play-services-maps")
+    }
 }

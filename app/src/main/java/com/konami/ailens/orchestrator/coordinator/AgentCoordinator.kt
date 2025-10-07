@@ -33,7 +33,6 @@ class AgentCoordinator(private val agentCapability: AgentCapability,
 
         scope.launch {
             agentCapability.answer.collect { answer ->
-                Log.e("TAG", "answer = ${answer}")
                 agentDisplayCapabilities.forEach { display ->
                     display.displayResultAnswer(answer)
                 }
