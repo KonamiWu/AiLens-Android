@@ -67,4 +67,5 @@ dependencies {
     implementation(libs.maps.navigation)
 
     coreLibraryDesugaring(libs.desugar.jdk.libs)
+
 }
