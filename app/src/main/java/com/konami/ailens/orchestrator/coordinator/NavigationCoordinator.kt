@@ -3,14 +3,15 @@ package com.konami.ailens.orchestrator.coordinator
 import android.util.Log
 import com.konami.ailens.orchestrator.Orchestrator
 import com.konami.ailens.orchestrator.capability.AgentCapability
-import com.konami.ailens.orchestrator.capability.LatLng
 import com.konami.ailens.orchestrator.capability.NavigationCapability
 import com.konami.ailens.orchestrator.capability.NavigationDisplayCapability
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.launch
 
 class NavigationCoordinator(
@@ -34,10 +35,15 @@ class NavigationCoordinator(
             }
 
             jobs += scope.launch {
+                capability.state.remainingSteps.collectLatest { steps ->
+                    navigationDisplays.forEach { it.displayRemainingSteps(steps) }
+                }
+            }
+            jobs += scope.launch {
                 capability.state.currentStep.collectLatest { step ->
                     val time = capability.state.remainingTimeSec.value
                     if (step != null && time != null) {
-                        navigationDisplays.forEach { it.displayNavigation(step, time.toInt()) }
+                        navigationDisplays.forEach { it.displayCurrentStep(step, time.toInt()) }
                     }
                 }
             }
@@ -74,7 +80,8 @@ class NavigationCoordinator(
 
             jobs += scope.launch {
                 capability.state.isFinished.collectLatest { finished ->
-                    if (finished) stop()
+
+                    navigationDisplays.forEach { it.displayEndNavigation() }
                 }
             }
         }
@@ -84,18 +91,17 @@ class NavigationCoordinator(
         navigationCapabilities.forEach { it.start(destination, travelMode) }
     }
 
-    fun start(destination: LatLng, travelMode: Orchestrator.TravelMode) {
-        navigationCapabilities.forEach { it.start(destination, travelMode) }
-    }
-
-    fun add(display: NavigationDisplayCapability) {
-        navigationDisplays.add(display)
+    fun refresh() {
         bind()
     }
 
     fun stop() {
-        navigationDisplays.forEach { it.displayEndNavigation() }
-        navigationCapabilities.forEach { it.stop() }
+        navigationCapabilities.forEach {
+            it.stop()
+        }
+        jobs.forEach { it.cancel() }
+        jobs.clear()
+        scope.cancel()
     }
 }
 

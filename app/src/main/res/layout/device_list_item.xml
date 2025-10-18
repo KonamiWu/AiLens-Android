@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:fitsSystemWindows="true"
+    tools:ignore="ContentDescription">
+
+    <ImageView
+        android:id="@+id/bgImageView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintDimensionRatio="343:100"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:src="@drawable/img_device_list_item_bg" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintStart_toStartOf="@id/bgImageView"
+        app:layout_constraintTop_toTopOf="@id/bgImageView"
+        app:layout_constraintEnd_toEndOf="@id/bgImageView"
+        app:layout_constraintBottom_toBottomOf="@id/bgImageView"
+        android:paddingHorizontal="@dimen/device_list_item_padding_horizontal"
+        android:background="@drawable/device_list_item_background">
+
+        <TextView
+            android:id="@+id/nameTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:textColor="?attr/appTextPrimary"
+            android:text="AiLens 01A2"
+            android:textSize="@dimen/device_list_item_name_text_size"
+            style="@style/SemiBold" />
+        
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/buttonLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent">
+
+            <com.konami.ailens.main.CutCornerView
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:fillColor="?attr/appPrimary"
+                app:cornerCut="@dimen/device_list_item_button_corner_cut" />
+
+            <TextView
+                android:id="@+id/connectButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:paddingHorizontal="@dimen/device_list_item_button_padding_horizontal"
+                android:paddingVertical="@dimen/device_list_item_button_padding_vertical"
+                android:text="@string/connect"
+                android:textSize="@dimen/device_list_item_button_text_size"
+                android:textColor="?attr/appTextButton"
+                android:includeFontPadding="false"
+                style="@style/SemiBold"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/rotateLayout"
+            android:layout_width="@dimen/device_list_item_rotate_layout_size"
+            android:layout_height="@dimen/device_list_item_rotate_layout_size"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:visibility="invisible">
+
+            <com.konami.ailens.main.CutCornerView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:cornerCut="@dimen/device_list_item_rotate_corner_cut"
+                app:fillColor="?attr/appPrimary" />
+
+            <ImageView
+                android:id="@+id/rotateImageView"
+                android:layout_width="@dimen/device_list_item_rotate_image_size"
+                android:layout_height="@dimen/device_list_item_rotate_image_size"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:src="@drawable/ic_device_list_item_rotate" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -8,7 +8,7 @@
     android:paddingHorizontal="@dimen/address_picker_favorite_item_padding_horizontal">
 
     <ImageView
-        android:id="@+id/imageView"
+        android:id="@+id/bgImageView"
         android:layout_width="@dimen/address_picker_favorite_item_icon_size"
         android:layout_height="@dimen/address_picker_favorite_item_icon_size"
         android:src="@drawable/ic_favorite_home" />

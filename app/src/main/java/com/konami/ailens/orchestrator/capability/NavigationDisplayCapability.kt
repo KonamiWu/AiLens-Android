@@ -7,7 +7,8 @@ import java.time.Instant
 interface NavigationDisplayCapability {
     fun displayStartNavigation()
     fun displayEndNavigation()
-    fun displayNavigation(step: NavStep, remainingTimeInSecond: Int)
+    fun displayCurrentStep(step: NavStep, remainingTimeInSecond: Int)
+    fun displayRemainingSteps(steps: List<NavStep>)
     fun displayMap(mapView: View)
     fun displayRemainingDistance(meters: Int)
     fun displayRemainingTime(seconds: Int)

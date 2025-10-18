@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:ignore="ContentDescription"
+    android:fitsSystemWindows="true"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/mainLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <com.konami.ailens.main.CutCornerView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:fillColor="?attr/appSurface1"
+            app:borderColor="?attr/appBorderMediumGray"
+            app:borderWidth="@dimen/nav_top_border_width"
+            app:cornerCut="@dimen/nav_top_cornet_cut"
+            app:cutCorners="topLeft|topRight|bottomRight" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:padding="@dimen/nav_top_padding">
+
+            <ImageView
+                android:id="@+id/currentImageView"
+                android:layout_width="@dimen/nav_top_image_size"
+                android:layout_height="@dimen/nav_top_image_size"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/distanceTextview"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/currentImageView"
+                android:textSize="@dimen/nav_top_distance_text_size"
+                android:textColor="?attr/appTextSecondary"
+                style="@style/Medium"
+                android:text="--" />
+
+            <TextView
+                android:id="@+id/targetTextView"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toEndOf="@id/distanceTextview"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:layout_marginStart="@dimen/nav_top_target_text_margin_start"
+                android:textSize="@dimen/nav_top_target_text_size"
+                android:textColor="?attr/appTextPrimary"
+                style="@style/SemiBold"
+                android:text="--" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/nextStepContainer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/mainLayout"
+        android:layout_marginTop="@dimen/nav_top_next_margin_top">
+
+        <com.konami.ailens.main.CutCornerView
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:fillColor="?attr/appSurface1"
+            app:borderWidth="@dimen/nav_top_border_width"
+            app:borderColor="?attr/appBorderMediumGray"
+            app:cornerCut="@dimen/nav_top_cornet_cut"
+            app:cutCorners="bottomLeft|bottomRight" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:paddingHorizontal="@dimen/nav_top_next_padding_horizontal"
+            android:paddingTop="@dimen/nav_top_next_padding_top"
+            android:paddingBottom="@dimen/nav_top_next_padding_bottom">
+
+            <TextView
+                android:id="@+id/nextTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:textSize="@dimen/nav_top_next_text_size"
+                android:textColor="?attr/appTextSecondary"
+                style="@style/Medium"
+                android:text="@string/then" />
+
+            <ImageView
+                android:id="@+id/nextImageView"
+                android:layout_width="@dimen/nav_top_next_image_size"
+                android:layout_height="@dimen/nav_top_next_image_size"
+                app:layout_constraintStart_toEndOf="@id/nextTextView"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:layout_marginStart="@dimen/nav_top_next_text_margin_left" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+    
+</androidx.constraintlayout.widget.ConstraintLayout>

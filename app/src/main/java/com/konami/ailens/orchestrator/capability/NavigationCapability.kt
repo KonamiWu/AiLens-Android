@@ -12,7 +12,6 @@ interface NavigationCapability {
     val state: NavigationState
     val mapView: View?
 
-    fun start(destination: LatLng, travelMode: com.konami.ailens.orchestrator.Orchestrator.TravelMode)
     fun start(destination: String, travelMode: com.konami.ailens.orchestrator.Orchestrator.TravelMode)
     fun stop()
 }

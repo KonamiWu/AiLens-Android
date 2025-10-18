@@ -23,10 +23,12 @@
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MICROPHONE" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
 
     <application
         android:name=".AiLensApplication"
-        android:allowBackup="true"
+        android:allowBackup="false"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
         android:icon="@mipmap/ic_launcher"
@@ -39,7 +41,7 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyB6p2cXCv73A0IcldS3jHXAHiBc7UFbotQ" />
         <activity
-            android:name=".MainActivity"
+            android:name=".device.AddDeviceActivity"
             android:exported="true"
             android:theme="@style/Theme.AiLens">
             <intent-filter>
@@ -49,20 +51,20 @@
             </intent-filter>
         </activity>
 
-    <service
-        android:name=".ble.BLEForegroundService"
-        android:exported="false"
-        android:foregroundServiceType="connectedDevice|dataSync|location" />
+        <activity
+            android:name=".MainActivity"
+            android:exported="true"
+            android:theme="@style/Theme.AiLens">
+        </activity>
 
         <service
-            android:name=".agent.AgentForegroundService"
+            android:name=".ble.AppForegroundService"
             android:exported="false"
-            android:foregroundServiceType="microphone|mediaPlayback|connectedDevice" />
+            android:foregroundServiceType="connectedDevice|location|microphone|mediaPlayback" />
 
         <service
-            android:name=".navigation.NavigationForegroundService"
-            android:exported="false"
-            android:foregroundServiceType="location" />
+            android:name=".navigation.NavInfoReceivingService"
+            android:exported="false" />
 
     </application>
 </manifest>

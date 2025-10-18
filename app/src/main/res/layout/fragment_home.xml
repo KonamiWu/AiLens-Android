@@ -8,6 +8,11 @@
     android:background="@color/app_background">
 
     <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:src="@drawable/img_background_circuit" />
+
+    <ImageView
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintStart_toStartOf="parent"
@@ -28,6 +33,7 @@
         android:src="@drawable/img_main_bg_bottom" />
 
     <ImageView
+        android:id="@+id/glassesImageView"
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintStart_toStartOf="parent"
@@ -36,7 +42,8 @@
         android:layout_marginTop="@dimen/main_img_glass_margin_top"
         app:layout_constraintDimensionRatio="375:268"
         android:scaleType="fitXY"
-        android:src="@drawable/img_main_glasses" />
+        android:src="@drawable/img_main_glasses"
+        android:alpha="0.5" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:fitsSystemWindows="true"
@@ -105,7 +112,6 @@
                 android:layout_height="@dimen/main_img_bottom_left_line_size"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-
                 android:src="@drawable/img_main_top_right_line" />
 
             <TextView
@@ -145,6 +151,16 @@
                 android:paddingHorizontal="@dimen/main_setting_padding_horizontal"
                 android:paddingVertical="@dimen/main_setting_padding_vertical">
 
+                <Button
+                    android:id="@+id/settingButton"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    android:background="#00000000"/>
+
                 <ImageView
                     android:id="@+id/settingImageView"
                     android:layout_width="@dimen/main_setting_icon_size"
@@ -181,7 +197,8 @@
                 android:textSize="@dimen/main_battery_text_size"
                 android:textColor="?attr/appBorderLightGray"
                 style="@style/Medium"
-                android:text="48%" />
+                android:text="100%"
+                android:visibility="invisible"/>
 
             <ImageView
                 android:id="@+id/batteryImageView"
@@ -191,7 +208,31 @@
                 app:layout_constraintEnd_toStartOf="@id/batteryTextView"
                 app:layout_constraintBottom_toBottomOf="@id/batteryTextView"
                 android:layout_marginEnd="@dimen/main_battery_margin_end"
-                android:src="@drawable/ic_main_battery" />
+                android:visibility="invisible"
+                android:src="@drawable/ic_battery_100" />
+
+            <ImageView
+                android:id="@+id/infoImageView"
+                android:layout_width="@dimen/home_disconnect_info_icon_size"
+                android:layout_height="@dimen/home_disconnect_info_icon_size"
+                android:src="@drawable/ic_info"
+                app:layout_constraintTop_toTopOf="@id/diconnectedTextView"
+                app:layout_constraintEnd_toStartOf="@id/diconnectedTextView"
+                app:layout_constraintBottom_toBottomOf="@id/diconnectedTextView"
+                android:layout_marginEnd="@dimen/home_info_icon_margin_right" />
+
+            <TextView
+                android:id="@+id/diconnectedTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginTop="@dimen/main_battery_text_margin_top"
+                android:layout_marginEnd="@dimen/main_battery_text_margin_right"
+                android:textSize="@dimen/main_battery_text_size"
+                android:textColor="?attr/appTextSecondary"
+                style="@style/SemiBold"
+                android:text="@string/disconnected" />
 
             <FrameLayout
                 android:layout_width="@dimen/main_tab_other_device_size"
@@ -222,12 +263,54 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="0dp"
+            android:id="@+id/disconnectLayout"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layout_constraintTop_toBottomOf="@id/mainTopLayout"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toBottomOf="parent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/home_disconnect_text1_size"
+                    android:text="@string/home_disconnect1"
+                    android:textColor="?attr/appTextPrimary"
+                    android:gravity="center"
+                    style="@style/SemiBold" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/home_disconnect_text2_size"
+                    android:text="@string/home_disconnect2"
+                    android:textColor="?attr/appTextPrimary"
+                    style="@style/Regular" />
+
+            </LinearLayout>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/functionLayout"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/mainTopLayout"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:visibility="invisible">
 
             <View
                 android:id="@+id/divider"

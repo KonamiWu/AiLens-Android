@@ -17,6 +17,7 @@ class NavigationState {
         NO_ROUTE_FOUND("No route found. Please check the start/end locations or travel mode."),
         NETWORK_ERROR("Network connection error. Please check your internet connection."),
         QUOTA_EXCEEDED("Quota exceeded."),
+        PERMISSION_FAILED("Permission failed"),
         UNKNOWN("Navigation failed")
     }
 

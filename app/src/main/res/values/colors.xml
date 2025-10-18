@@ -21,7 +21,7 @@
     <color name="app_button_grey">#434343</color>
     <color name="app_icon_dark">#484A4C</color>
     <color name="app_white">#FFFFFF</color>
-    <color name="app_red">#FFA8A9</color>
+    <color name="app_red">#FF8A9B</color>
     <color name="app_grey01">#989898</color>
     <color name="app_grey02">#7C7C7C</color>
 </resources>

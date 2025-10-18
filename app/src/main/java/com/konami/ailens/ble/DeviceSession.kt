@@ -10,18 +10,24 @@ import android.content.Context
 import android.net.wifi.aware.Characteristics
 import android.os.Build
 import android.util.Log
+import androidx.navigation.fragment.findNavController
+import com.konami.ailens.R
 import com.konami.ailens.SharedPrefs
 import com.konami.ailens.TokenManager
 import com.konami.ailens.ble.command.ActionCommand
 import com.konami.ailens.ble.command.BLECommand
 import com.konami.ailens.ble.command.DisconnectCommand
+import com.konami.ailens.ble.command.LeaveNavigationCommand
+import com.konami.ailens.navigation.NavigationService
 import com.konami.ailens.orchestrator.capability.DeviceEventCapability
 import com.konami.ailens.startsWith
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import java.util.UUID
@@ -62,7 +68,6 @@ class DeviceSession(private val context: Context, val device: BluetoothDevice, p
 
     // External audio/stream consumer
     var onStreamData: ((ByteArray) -> Unit)? = null
-
     // Protocol constants
     private val glassShowLongPressCommand = byteArrayOf(0x45, 0x4D, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00)
     private val connectSucceedResponseCommand = byteArrayOf(0x4F, 0x42, 0x68, 0x00, 0x00, 0x00, 0x00, 0x00)
@@ -76,20 +81,52 @@ class DeviceSession(private val context: Context, val device: BluetoothDevice, p
 
     private val enterAgentCommand = "454dCC000100020001"
     private val leaveAgentCommand = "454DCD000100020001"
+    private val cancelPairCommand1 = "4F420000010002001C"
+    private val cancelPairCommand2 = "4F4200000100020014"
+    private val batteryPrefix= "454D100002000400"
+    private val batteryPrefix2= "4F42100003000600"
+    private val leaveNavigationCommand = "454D8F0012002400"
     var deviceEventHandler: DeviceEventCapability? = null
+
+    private val _batteryFlow = MutableStateFlow<Pair<Int, Boolean>>(Pair(0, false))
+    val batteryFlow = _batteryFlow.asStateFlow()
     var mtu = 23
         private set
     private val _state = MutableStateFlow<State>(State.AVAILABLE)
     val state = _state.asStateFlow()
 
+    // Lock to prevent concurrent writes
+    private val writeLock = Any()
+    private var lastWriteTime = 0L
+    private val minWriteInterval = 50L // ms between writes
+
     fun connect() {
         _state.value = State.CONNECTING
-        gatt = device.connectGatt(context, false, callback, BluetoothDevice.TRANSPORT_LE)
+        gatt = device.connectGatt(context, true, callback, BluetoothDevice.TRANSPORT_LE)
     }
 
-    //TODO: disconnect
     fun disconnect() {
+        gatt?.disconnect()
+    }
 
+    private fun cleanup() {
+        // This should only be called from onConnectionStateChange or connect()
+        gatt?.close()
+        gatt = null
+
+        // Clear pending commands to avoid executing on stale connection
+        commandExecutor.removeAllCommands()
+        commandExecutor.destroy()
+
+
+        // Reset state
+        writeCharacteristic = null
+        txCharacteristic = null
+        handShakingDataCharacteristic = null
+        streamingCharacteristic = null
+        descriptorQueue.clear()
+        handShakingStart = false
+        handshakeRetryCount = 0
     }
 
     /**
@@ -127,8 +164,11 @@ class DeviceSession(private val context: Context, val device: BluetoothDevice, p
                 }
             } else if (newState == BluetoothGatt.STATE_DISCONNECTED) {
                 _state.value = State.DISCONNECTED
+                // Now it's safe to close and cleanup
+                cleanup()
             } else if (status != BluetoothGatt.GATT_SUCCESS) {
                 _state.value = State.DISCONNECTED
+                cleanup()
             }
         }
 
@@ -209,6 +249,7 @@ class DeviceSession(private val context: Context, val device: BluetoothDevice, p
         characteristic.value = token
         characteristic.writeType = BluetoothGattCharacteristic.WRITE_TYPE_NO_RESPONSE
         gatt.writeCharacteristic(characteristic)
+
         scope.launch {
             delay(300)
             gatt.readCharacteristic(handShakingDataCharacteristic)
@@ -221,6 +262,7 @@ class DeviceSession(private val context: Context, val device: BluetoothDevice, p
             txCharacteristicUUID -> handleTxValue(value)
             streamingDataUUID -> { // Strip the 8-byte header if present and forward payload
                 if (value.size > 8) {
+                    Log.e("TAG", "ininininin")
                     onStreamData?.invoke(value.copyOfRange(8, value.size))
                 }
             }
@@ -231,12 +273,9 @@ class DeviceSession(private val context: Context, val device: BluetoothDevice, p
      * Parse SE handshake responses.
      */
     private fun handleHandshakeValue(value: ByteArray) {
-        val write = writeCharacteristic ?: return
         when {
             (value.size == 18 && value[0] == 0x64.toByte()) -> {
                 deviceToken = value.copyOfRange(12, 16)
-
-                // Ensure TX notifications are enabled
                 txCharacteristic?.let { tx ->
                     gatt?.setCharacteristicNotification(tx, true)
                     val descriptor = tx.getDescriptor(descriptorUUID)
@@ -263,24 +302,31 @@ class DeviceSession(private val context: Context, val device: BluetoothDevice, p
      */
     private fun handleTxValue(value: ByteArray) {
         val write = writeCharacteristic ?: return
-        Log.e("TAG", "value = ${value.hexString()}")
+        Log.e("TAG", "value = ${value.hexString()}, $this")
         when { // Device asks to show long-press-to-pair
+            value.startsWith(cancelPairCommand1) || value.startsWith(cancelPairCommand2) -> {
+                _state.value = State.AVAILABLE
+                cleanup()
+            }
             value.size == 1 && value[0] == 0x01.toByte() -> {
                 if (retrieveToken == null) {
                     _state.value = State.PAIRING
-                    add {
+                    scope.launch {
+                        delay(300)
                         sendRaw(glassShowLongPressCommand)
                     }
                 } else {
-                    //retrieve end
-                    if (_state.value == State.CONNECTED)
-                        return
+                    // Retrieve path: already paired device with token
+                    Log.e("TAG", "Retrieve: device already paired")
                     scope.launch {
                         delay(500)
                         add {
                             sendRaw(getPhoneSystemModelCommand)
-                            _state.value = State.CONNECTED
                         }
+                        // Wait for command to complete (CommandExecutor timeout is 300ms)
+                        // Add extra buffer to ensure the command is fully processed
+                        Log.e("TAG", "Setting CONNECTED state after init command completed")
+                        _state.value = State.CONNECTED
                     }
                 }
             }
@@ -292,25 +338,25 @@ class DeviceSession(private val context: Context, val device: BluetoothDevice, p
                 }
             }
 
-            // iOS pairing dialog confirmed/denied
             value.size == 9 && value.startsWith(userPressPairingCheck) -> {
                 val ok = value.lastOrNull()?.toInt() == 0x01
                 if (ok && deviceToken != null) {
                     SharedPrefs.saveDeviceInfo(context, device.address, userId, deviceToken!!)
                 }
 
-                add {
-                    sendRaw(connectSucceedResponseCommand)
-                }
-                scope.launch {
-                    delay(500)
-                    add {
-                        sendRaw(getPhoneSystemModelCommand)
-                    }
-                }
 
-                if (ok)
+                if (ok) {
+                    scope.launch {
+                        delay(300)
+                        add {
+                            sendRaw(getPhoneSystemModelCommand)
+                        }
+                        add {
+                            sendRaw(connectSucceedResponseCommand)
+                        }
+                    }
                     _state.value = State.CONNECTED
+                }
                 else
                     _state.value = State.AVAILABLE
             }
@@ -321,7 +367,24 @@ class DeviceSession(private val context: Context, val device: BluetoothDevice, p
             }
 
             value.startsWith(leaveAgentCommand) -> {
+                Log.e("TAG", "DeviceSession LeaveAgent")
                 deviceEventHandler?.handleDeviceEvent(DeviceEventCapability.DeviceEvent.LeaveAgent)
+            }
+
+            value.startsWith(batteryPrefix) -> {
+                val batteryValue = value[value.size - 2].toInt()
+                val charging = value[value.size - 1].toInt()
+                _batteryFlow.value = Pair(batteryValue, charging == 1)
+            }
+
+            value.startsWith(batteryPrefix2) -> {
+                val batteryValue = value[value.size - 2].toInt()
+                val charging = value[value.size - 1].toInt()
+                _batteryFlow.value = Pair(batteryValue, charging == 1)
+            }
+
+            value.startsWith(leaveNavigationCommand) -> {
+                deviceEventHandler?.handleDeviceEvent(DeviceEventCapability.DeviceEvent.LeaveNavigation)
             }
 
             // TX write ack / generic command completion header "0x4F 0x42"
@@ -361,14 +424,26 @@ class DeviceSession(private val context: Context, val device: BluetoothDevice, p
 
     private fun writeCharacteristic(characteristic: BluetoothGattCharacteristic, value: ByteArray) {
         val gatt = gatt ?: return
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            gatt.writeCharacteristic(characteristic, value, BluetoothGattCharacteristic.WRITE_TYPE_NO_RESPONSE)
-        } else {
-            @Suppress("DEPRECATION")
-            characteristic.value = value
-            characteristic.writeType = BluetoothGattCharacteristic.WRITE_TYPE_NO_RESPONSE
-            @Suppress("DEPRECATION")
-            gatt.writeCharacteristic(characteristic)
+
+        synchronized(writeLock) {
+            // Throttle writes to prevent "prior command is not finished" error
+            val now = System.currentTimeMillis()
+            val elapsed = now - lastWriteTime
+            if (elapsed < minWriteInterval) {
+                Thread.sleep(minWriteInterval - elapsed)
+            }
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                gatt.writeCharacteristic(characteristic, value, BluetoothGattCharacteristic.WRITE_TYPE_NO_RESPONSE)
+            } else {
+                @Suppress("DEPRECATION")
+                characteristic.value = value
+                characteristic.writeType = BluetoothGattCharacteristic.WRITE_TYPE_NO_RESPONSE
+                @Suppress("DEPRECATION")
+                gatt.writeCharacteristic(characteristic)
+            }
+
+            lastWriteTime = System.currentTimeMillis()
         }
     }
 
@@ -386,5 +461,10 @@ class DeviceSession(private val context: Context, val device: BluetoothDevice, p
 
     companion object {
         private const val TAG = "DeviceSession"
+    }
+
+    private fun ByteArray.readUInt16LE(offset: Int): Int {
+        return (this[offset].toInt() and 0xFF) or
+                ((this[offset + 1].toInt() and 0xFF) shl 8)
     }
 }

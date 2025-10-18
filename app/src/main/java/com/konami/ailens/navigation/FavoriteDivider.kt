@@ -23,7 +23,6 @@ class FavoriteDivider(
             val child = parent.getChildAt(i)
             val params = child.layoutParams as RecyclerView.LayoutParams
 
-            // divider 的位置：畫在 item 右邊
             val left = child.right + params.rightMargin
             val right = left + lineWidth
 

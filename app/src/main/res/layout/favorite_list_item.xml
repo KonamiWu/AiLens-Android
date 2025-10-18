@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingHorizontal="@dimen/favorite_list_item_padding_horizontal"
+    android:paddingVertical="@dimen/favorite_list_item_set_padding_vertical"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:ignore="ContentDescription" >
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/centerLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/bgImageView"
+            android:src="@drawable/ic_favorite_home"
+            android:layout_width="@dimen/favorite_list_item_icon_size"
+            android:layout_height="@dimen/favorite_list_item_icon_size"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginEnd="@dimen/favorite_list_item_icon_margin_right"/>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toEndOf="@id/bgImageView"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginStart="@dimen/favorite_list_item_icon_margin_right"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/titleTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="?attr/appTextPrimary"
+                android:textSize="@dimen/favorite_list_item_title_text_size"
+                android:text="Company"/>
+
+            <TextView
+                android:id="@+id/valueTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="?attr/appTextCaption"
+                android:textSize="@dimen/favorite_list_item_value_text_size"
+                android:text="No. 25, Sec. 2, Dunhua South Road"/>
+
+        </LinearLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+<!--    <Button-->
+<!--        android:id="@+id/editButton"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="@dimen/favorite_list_delete_button_size"-->
+<!--        app:layout_constraintTop_toBottomOf="@id/centerLayout"-->
+<!--        app:layout_constraintBottom_toBottomOf="parent"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        android:layout_marginTop="@dimen/favorite_list_delete_button_margin_top"-->
+<!--        android:textSize="@dimen/favorite_list_button_text_size"-->
+<!--        android:backgroundTint="?attr/appPrimary"-->
+<!--        android:textColor="?attr/appTextButton"-->
+<!--        android:text="Edit" />-->
+
+    <ImageButton
+        android:id="@+id/deleteButton"
+        android:layout_width="@dimen/favorite_list_delete_button_size"
+        android:layout_height="@dimen/favorite_list_delete_button_size"
+        android:src="@drawable/ic_favorite_delete"
+        app:layout_constraintEnd_toStartOf="@id/editLayout"
+        app:layout_constraintTop_toTopOf="@id/editLayout"
+        app:layout_constraintBottom_toBottomOf="@id/editLayout"
+        android:layout_marginEnd="@dimen/favorite_list_delete_button_margin_end"
+        android:background="?attr/appPrimary" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/editLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/favorite_list_delete_button_size"
+        app:layout_constraintTop_toBottomOf="@id/centerLayout"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="@dimen/favorite_list_delete_button_margin_top"
+        android:paddingVertical="@dimen/favorite_list_button_padding_vertical"
+        android:paddingHorizontal="@dimen/favorite_list_button_padding_horizontal"
+        android:background="?attr/appPrimary">
+
+        <TextView
+            android:id="@+id/editTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:textSize="@dimen/favorite_list_button_text_size"
+            android:textColor="?attr/appTextButton"
+            android:padding="0dp"
+            style="@style/SemiBold"
+            android:includeFontPadding="false"
+            android:text="Edit" />
+
+        <Button
+            android:id="@+id/editButton"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintStart_toStartOf="@id/editTextView"
+            app:layout_constraintTop_toTopOf="@id/editTextView"
+            app:layout_constraintEnd_toEndOf="@id/editTextView"
+            app:layout_constraintBottom_toBottomOf="@id/editTextView"
+            android:background="#00000000"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

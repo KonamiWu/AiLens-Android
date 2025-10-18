@@ -2,7 +2,6 @@ package com.konami.ailens.main
 
 import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
@@ -17,7 +16,6 @@ import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import com.konami.ailens.R
 import com.konami.ailens.databinding.FragmentMainBinding
-import com.konami.ailens.navigation.AddressPickerFragment
 
 class MainFragment: Fragment() {
     private lateinit var binding: FragmentMainBinding
@@ -45,7 +43,7 @@ class MainFragment: Fragment() {
         TabLayoutMediator(tabLayout, viewPager) { tab, position ->
 
             val view = LayoutInflater.from(context).inflate(R.layout.main_tab_item, null)
-            val imageView = view.findViewById<ImageView>(R.id.imageView)
+            val imageView = view.findViewById<ImageView>(R.id.bgImageView)
             val textView = view.findViewById<TextView>(R.id.textView)
 
             textView.text = when (position) {
@@ -72,7 +70,7 @@ class MainFragment: Fragment() {
             override fun onTabSelected(tab: TabLayout.Tab) {
                 val view = tab.customView ?: return
                 val position = tab.position
-                val imageView = view.findViewById<ImageView>(R.id.imageView)
+                val imageView = view.findViewById<ImageView>(R.id.bgImageView)
                 val textView = view.findViewById<TextView>(R.id.textView)
                 val color = requireContext().themeColor(R.attr.appPrimary)
                 textView.setTextColor(color)
@@ -86,7 +84,7 @@ class MainFragment: Fragment() {
             override fun onTabUnselected(tab: TabLayout.Tab) {
                 val view = tab.customView ?: return
                 val position = tab.position
-                val imageView = view.findViewById<ImageView>(R.id.imageView)
+                val imageView = view.findViewById<ImageView>(R.id.bgImageView)
                 val textView = view.findViewById<TextView>(R.id.textView)
                 val color = requireContext().themeColor(R.attr.appTextPlaceholder)
                 textView.setTextColor(color)
@@ -110,7 +108,7 @@ class MainPagerAdapter(fragment: Fragment) : FragmentStateAdapter(fragment) {
     override fun createFragment(position: Int): Fragment {
         return when (position) {
             0 -> HomeFragment()
-            1 -> HomeFragment()
+            1 -> Fragment()
             else -> Fragment()
         }
     }

@@ -1,5 +1,6 @@
 package com.konami.ailens.ble.command
 
+import android.util.Log
 import com.konami.ailens.ble.DeviceSession
 
 /**

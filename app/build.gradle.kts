@@ -69,6 +69,9 @@ dependencies {
     implementation(libs.lifecycle.viewmodel.ktx)
     implementation(libs.lifecycle.runtime.ktx)
 
+    // WorkManager for background tasks
+    implementation("androidx.work:work-runtime-ktx:2.9.0")
+
     coreLibraryDesugaring(libs.desugar.jdk.libs)
 
     implementation(libs.bundles.google.maps.navigation)

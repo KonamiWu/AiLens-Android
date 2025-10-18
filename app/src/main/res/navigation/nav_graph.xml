@@ -9,24 +9,92 @@
         android:id="@+id/MainFragment"
         android:name="com.konami.ailens.main.MainFragment"
         tools:layout="@layout/fragment_home">
+
+        <action
+            android:id="@+id/action_HomeFragment_to_AddressPickerFragment"
+            app:destination="@id/addressPickerFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"/>
+
+        <action
+            android:id="@+id/action_HomeFragment_to_NavigationFragment"
+            app:destination="@id/navigationGuidanceFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"/>
+
+        <action
+            android:id="@+id/action_HomeFragment_to_SettingFragment"
+            app:destination="@id/settingFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"/>
+
     </fragment>
 
     <fragment
-        android:id="@+id/HomeFragment"
+        android:id="@+id/homeFragment"
         android:name="com.konami.ailens.main.HomeFragment"
         tools:layout="@layout/fragment_home">
+
     </fragment>
 
     <fragment
-        android:id="@+id/AddressPickerFragment"
+        android:id="@+id/addressPickerFragment"
         android:name="com.konami.ailens.navigation.AddressPickerFragment"
         tools:layout="@layout/fragment_address_picker">
+
+        <action
+            android:id="@+id/action_AddressPickerFragment_to_favoriteListFragment"
+            app:destination="@id/favoriteListFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"/>
+
+        <action
+            android:id="@+id/action_AddressPickerFragment_to_GuideFragment"
+            app:destination="@id/navigationGuidanceFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"/>
+
     </fragment>
 
     <fragment
         android:id="@+id/navigationGuidanceFragment"
         android:name="com.konami.ailens.navigation.NavigationGuidanceFragment"
         tools:layout="@layout/fragment_navigation_guidance">
+    </fragment>
+
+    <fragment
+        android:id="@+id/favoriteListFragment"
+        android:name="com.konami.ailens.navigation.FavoriteListFragment"
+        tools:layout="@layout/fragment_favorite_list">
+
+        <action
+            android:id="@+id/action_favoriteListFragment_to_favoriteEditFragment"
+            app:destination="@id/favoriteEditFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/favoriteEditFragment"
+        android:name="com.konami.ailens.navigation.FavoriteEditFragment"
+        tools:layout="@layout/fragment_favorite_edit">
+
+        <argument
+            android:name="favoriteTypeOrdinal"
+            app:argType="integer"
+            android:defaultValue="0"/>
     </fragment>
 
     <fragment
@@ -58,6 +126,11 @@
             app:popExitAnim="@anim/slide_out_right"/>
 
     </fragment>
+
+    <fragment
+        android:id="@+id/settingFragment"
+        android:name="com.konami.ailens.setting.SettingFragment"
+        tools:layout="@layout/fragment_setting"/>
 
     <fragment
         android:id="@+id/FaceDetectionFragment"

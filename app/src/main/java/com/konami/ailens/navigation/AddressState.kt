@@ -5,12 +5,15 @@ import android.content.Context
 import android.content.res.Resources
 import android.transition.AutoTransition
 import android.transition.TransitionManager
+import android.util.Log
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewConfiguration
 import android.view.inputmethod.InputMethodManager
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.ConstraintSet
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import com.konami.ailens.R
 import com.konami.ailens.databinding.FragmentAddressPickerBinding
 import com.konami.ailens.main.CutCornerView
@@ -23,6 +26,7 @@ class AddressState(val fragment: AddressPickerFragment, isReverse: Boolean): Lay
         EXPAND
     }
     private var previousY = 0f
+    private var initialY = 0f
     private var touchActive = false
     private var state = State.EXPAND
     private val context: Context = fragment.requireContext()
@@ -31,9 +35,22 @@ class AddressState(val fragment: AddressPickerFragment, isReverse: Boolean): Lay
     private val resources: Resources = context.resources
     private val binding: FragmentAddressPickerBinding = fragment.binding
     private val topInset: Int = fragment.topInset
-    private val topMargin: Float = fragment.topMargin
+    private val topMargin: Float
+        get() = fragment.topMargin
 
     init {
+
+
+        // Re-enable editing in AddressState
+        binding.destinationEditText.visibility = View.VISIBLE
+        binding.destinationEditText.isFocusable = true
+        binding.destinationEditText.isFocusableInTouchMode = true
+        binding.destinationEditText.isCursorVisible = true
+
+        // Hide marquee TextView overlay
+        binding.destinationMarqueeTextView.visibility = View.GONE
+        binding.destinationMarqueeTextView.isSelected = false
+
         if (isReverse) {
             val animationDuration = 600L
 
@@ -41,7 +58,7 @@ class AddressState(val fragment: AddressPickerFragment, isReverse: Boolean): Lay
             set.clone(binding.main)
             set.setMargin(R.id.container, ConstraintSet.START, 0)
             set.setMargin(R.id.container, ConstraintSet.END, 0)
-            set.setMargin(R.id.container, ConstraintSet.TOP, resources.getDimension(R.dimen.address_picker_margin_top).toInt())
+            set.setMargin(R.id.container, ConstraintSet.TOP, topMargin.toInt())
             set.setMargin(R.id.container, ConstraintSet.BOTTOM, 0)
             set.connect(R.id.container, ConstraintSet.TOP, ConstraintSet.PARENT_ID, ConstraintSet.TOP)
             set.constrainHeight(R.id.container, ConstraintSet.MATCH_CONSTRAINT)
@@ -52,19 +69,12 @@ class AddressState(val fragment: AddressPickerFragment, isReverse: Boolean): Lay
             })
             set.applyTo(binding.main)
 
-            binding.transportLayout.animate().alpha(0f).setDuration(animationDuration).start()
+            binding.transportLayout.animate().alpha(0f).setDuration(animationDuration).withEndAction {
+                binding.transportLayout.visibility = View.GONE
+            }.start()
             binding.favoriteRecyclerView.animate().alpha(1f).setDuration(animationDuration).start()
             binding.cutCornerView.animateRemoveCorners(CutCornerView.CUT_TOP_LEFT or CutCornerView.CUT_TOP_RIGHT, animationDuration)
             binding.grabImageView.animate().alpha(1f).setDuration(animationDuration).start()
-            
-            // Hide the back button when entering AddressState
-            binding.backButton.animate().alpha(0f).setDuration(animationDuration).withEndAction {
-                binding.backButton.visibility = View.GONE
-            }.start()
-        } else {
-            // Also hide back button for non-reverse initialization
-            binding.backButton.visibility = View.GONE
-            binding.backButton.alpha = 0f
         }
     }
 
@@ -75,6 +85,7 @@ class AddressState(val fragment: AddressPickerFragment, isReverse: Boolean): Lay
             MotionEvent.ACTION_DOWN -> {
                 binding.container.animate().cancel()
                 touchActive = false
+                initialY = event.rawY
                 previousY = event.rawY
                 // If touch starts on the container itself, consume to keep receiving moves.
                 // For child views (RecyclerView/EditText), let them handle until drag recognized.
@@ -82,20 +93,28 @@ class AddressState(val fragment: AddressPickerFragment, isReverse: Boolean): Lay
             }
             MotionEvent.ACTION_MOVE -> {
                 val currentY = event.rawY
-                val diff = currentY - previousY
-                if (!touchActive && abs(diff) > touchSlop) {
+
+                // If not yet active, check against initial position (not previous)
+                val diffFromInitial = currentY - initialY
+
+                // Check if we should start dragging
+                if (!touchActive && abs(diffFromInitial) > touchSlop) {
                     val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-                    //close keyboard here
                     imm.hideSoftInputFromWindow(binding.destinationEditText.windowToken, 0)
                     binding.destinationEditText.clearFocus()
                     touchActive = true
+                    // Start fresh from current position to avoid accumulated drift
+                    previousY = currentY
+                    view.parent.requestDisallowInterceptTouchEvent(true)
+                    return true
                 }
+
                 if (!touchActive) {
                     return false
                 }
 
-                // Engage drag on container
-                view.parent.requestDisallowInterceptTouchEvent(true)
+                // Now we're actively dragging, use previousY for smooth tracking
+                val diff = currentY - previousY
                 previousY = currentY
 
                 val params = binding.container.layoutParams as ConstraintLayout.LayoutParams
@@ -109,6 +128,7 @@ class AddressState(val fragment: AddressPickerFragment, isReverse: Boolean): Lay
             MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
                 view.parent.requestDisallowInterceptTouchEvent(false)
 
+                val wasDragging = touchActive
                 if (touchActive) {
                     val velocity = binding.root.velocity
                     if (velocity > velocityThreshold) {
@@ -125,8 +145,9 @@ class AddressState(val fragment: AddressPickerFragment, isReverse: Boolean): Lay
                     }
                     updateLayout()
                 }
+                touchActive = false
                 // Only consume if we were dragging; otherwise allow clicks/edits
-                return touchActive
+                return wasDragging
             }
         }
         return false
@@ -134,7 +155,7 @@ class AddressState(val fragment: AddressPickerFragment, isReverse: Boolean): Lay
 
      fun updateLayout() {
          val slidingDistance = fragment.slidingDistance
-         binding.transportLayout.visibility = View.VISIBLE
+//         binding.transportLayout.visibility = View.VISIBLE
 
         val progress = (binding.container.top - topMargin - topInset) / (slidingDistance - topMargin - topInset)
         val editTextMarginSpacing = context.resources.getDimension(R.dimen.address_picker_edit_text_spacing)

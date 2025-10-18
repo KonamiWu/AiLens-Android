@@ -1,0 +1,69 @@
+<resources>
+    <string name="app_name">AiLens</string>
+    <string name="action_settings">設定</string>
+    <!-- Strings used for fragments for navigation -->
+    <string name="first_fragment_label">第一個片段</string>
+    <string name="second_fragment_label">第二個片段</string>
+    <string name="next">下一步</string>
+    <string name="previous">上一步</string>
+
+    <string name="main_tab_home">首頁</string>
+    <string name="main_tab_me">我</string>
+
+    <string name="home_disconnect1">裝置未連線</string>
+    <string name="home_disconnect2">請開啟眼鏡以連線。</string>
+
+    <string name="your_location">您的位置</string>
+    <string name="destination">目的地</string>
+    <string name="favorite_home">住家</string>
+    <string name="favorite_company">公司</string>
+    <string name="back">返回</string>
+
+    <string name="add_device">新增裝置</string>
+    <string name="add_device_direction_1">請參考以下教學配對眼鏡</string>
+    <string name="add_device_search_text1">正在搜尋裝置...</string>
+    <string name="add_device_search_text2">請將眼鏡靠近手機。</string>
+
+    <string name="device_list_text1">裝置搜尋結果</string>
+    <string name="device_list_text2">未偵測到您要掃描的裝置。您可以嘗試點擊「再試一次」。</string>
+    <string name="connect">連線</string>
+    <string name="try_again">再試一次</string>
+    <string name="connection_failed_text1">裝置連線失敗</string>
+    <string name="connection_failed_text2">請確認您手機的藍牙已開啟。如果藍牙已經開啟，請檢查眼鏡的觸控區域是否有長按。</string>
+    <string name="connection_failed_return">返回</string>
+
+    <string name="connected_successfully_text1">裝置連線成功</string>
+    <string name="connected_successfully_text2_1">3 秒後進入應用程式</string>
+    <string name="connected_successfully_text2_2">2 秒後進入應用程式</string>
+    <string name="connected_successfully_text2_3">1 秒後進入應用程式</string>
+
+    <string name="search_failed_text1">裝置搜尋失敗</string>
+    <string name="search_failed_text2">請參考以上教學解除眼鏡綁定。如果您已確認解除綁定，請點擊再試一次。</string>
+    <string name="unbind_device">解除裝置綁定</string>
+    <string name="exit">退出</string>
+    <string name="then">然後</string>
+    <string name="settings">設定</string>
+    <string name="disconnected">已中斷連線</string>
+
+    <string name="nav_hour">小時</string>
+    <string name="nav_minute">分鐘</string>
+    <!-- Foreground Service Notifications -->
+    <string name="notification_glasses_connected_title">眼鏡已連線</string>
+    <string name="notification_glasses_connected_text">藍牙連線運作中</string>
+    <string name="notification_waiting_connection_title">等待眼鏡連線</string>
+    <string name="notification_waiting_connection_text">正在嘗試連線...</string>
+    <string name="notification_navigation_title">導航運作中</string>
+    <string name="notification_navigation_text">正在導航至目的地</string>
+    <string name="notification_agent_title">AI助理運作中</string>
+    <string name="notification_agent_text">就緒</string>
+    <string name="notification_agent_connecting_title">AI助理</string>
+    <string name="notification_agent_connecting_text">連線中...</string>
+    <string name="notification_ailens_running">AiLens 運作中</string>
+    <string name="notification_glasses_status">眼鏡</string>
+    <string name="notification_waiting_status">等待中</string>
+    <string name="notification_navigation_status">導航</string>
+    <string name="notification_agent_status">AI助理</string>
+    <string name="notification_agent_connecting_status">AI連線中</string>
+    <string name="notification_service_running">服務運作中</string>
+    <string name="notification_separator">、</string>
+</resources>

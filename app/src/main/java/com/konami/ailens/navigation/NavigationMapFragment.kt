@@ -39,6 +39,7 @@ class NavigationMapFragment : Fragment() {
         fun onRouteSummary(durationText: String, distanceText: String)
         fun getContainerHeight(): Int
         fun getNavContainerHeight(): Int
+        fun mapTapped()
     }
 
     private val callbacks: Callbacks by lazy { (parentFragment as Callbacks) }
@@ -80,6 +81,7 @@ class NavigationMapFragment : Fragment() {
 
             googleMap.setOnMapClickListener { tapped ->
                 viewModel.handleMapTap(tapped, callbacks.getSelectedMode())
+                callbacks.mapTapped()
             }
 
             viewLifecycleOwner.lifecycleScope.launch {
@@ -118,7 +120,7 @@ class NavigationMapFragment : Fragment() {
         }
         return root
     }
-    
+
     private fun fitCameraToRoute(googleMap: GoogleMap, routePoints: List<LatLng>) {
         if (routePoints.isEmpty()) return
         

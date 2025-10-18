@@ -21,6 +21,7 @@ class BluetoothRecorder(
     private var isRecording = false
 
     override fun startRecording() {
+        Log.e("TAG", "isRecording = ${isRecording}")
         if (isRecording) return
 
         // reset channel
@@ -31,6 +32,7 @@ class BluetoothRecorder(
         isRecording = true
 
         session.onStreamData = { data ->
+            Log.e("TAG", "onononononon")
             if (isRecording) {
                 channel.trySend(data).isSuccess
             }

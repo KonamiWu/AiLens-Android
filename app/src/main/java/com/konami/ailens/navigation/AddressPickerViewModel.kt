@@ -5,6 +5,8 @@ import android.content.pm.PackageManager
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
+import com.konami.ailens.SharedPrefs
+import com.konami.ailens.AddressHistoryItem
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -17,10 +19,13 @@ import okhttp3.Request
 import org.json.JSONObject
 
 data class AutoCompletePrediction(
-    val placeId: String,
+    val placeId: String?,
+    val lat: Double?,
+    val lng: Double?,
     val description: String,
     val mainText: String,
-    val secondaryText: String
+    val secondaryText: String,
+    val isHistory: Boolean = false
 )
 
 class AddressPickerViewModel(app: Application) : AndroidViewModel(app) {
@@ -35,65 +40,81 @@ class AddressPickerViewModel(app: Application) : AndroidViewModel(app) {
     private var searchJob: Job? = null
     
     fun searchAutoComplete(query: String) {
-        // Cancel previous search
         searchJob?.cancel()
-        
-        if (query.trim().length < 2) {
-            _autoCompletePredictions.value = emptyList()
-            return
-        }
-        
+
         searchJob = viewModelScope.launch(Dispatchers.IO) {
             try {
-                // Add delay to avoid too many requests
-                delay(300)
-                
+
                 withContext(Dispatchers.Main) {
                     _isLoading.value = true
                 }
-                
+
+                // Get filtered history items
+                val historyItems = SharedPrefs.instance.filterAddressHistory(query)
+                val historyPredictions = historyItems.map { historyItem ->
+                    AutoCompletePrediction(
+                        placeId = null,
+                        lat = historyItem.lat,
+                        lng = historyItem.lng,
+                        description = "${historyItem.mainText}, ${historyItem.secondaryText}",
+                        mainText = historyItem.mainText,
+                        secondaryText = historyItem.secondaryText,
+                        isHistory = true
+                    )
+                }
+
                 val context = getApplication<Application>()
                 val key = try {
                     val ai = context.packageManager.getApplicationInfo(context.packageName, PackageManager.GET_META_DATA)
                     ai.metaData.getString("com.google.android.geo.API_KEY")
-                } catch (e: Exception) { 
+                } catch (e: Exception) {
                     Log.e("AddressPickerViewModel", "Failed to get API key", e)
-                    null 
+                    null
                 } ?: return@launch
-                
-                val url = "https://maps.googleapis.com/maps/api/place/autocomplete/json?input=${query.trim()}&key=$key"
+
+                // Get system language
+                val systemLanguage = context.resources.configuration.locales[0].toLanguageTag()
+
+                // Add language parameter to ensure consistent language in results
+                val url = "https://maps.googleapis.com/maps/api/place/autocomplete/json?input=${query.trim()}&language=$systemLanguage&key=$key"
                 val request = Request.Builder().url(url).build()
                 val response = client.newCall(request).execute()
-                val body = response.body?.string() ?: return@launch
-                
+                val body = response.body.string()
+
                 val json = JSONObject(body)
                 val predictions = json.optJSONArray("predictions")
-                val results = mutableListOf<AutoCompletePrediction>()
-                
+                val apiResults = mutableListOf<AutoCompletePrediction>()
+
                 predictions?.let { array ->
                     for (i in 0 until array.length()) {
                         val prediction = array.getJSONObject(i)
                         val placeId = prediction.getString("place_id")
                         val description = prediction.getString("description")
-                        
+
                         val structuredFormatting = prediction.optJSONObject("structured_formatting")
                         val mainText = structuredFormatting?.optString("main_text") ?: description
                         val secondaryText = structuredFormatting?.optString("secondary_text") ?: ""
-                        
-                        results.add(AutoCompletePrediction(
+
+                        apiResults.add(AutoCompletePrediction(
                             placeId = placeId,
+                            lat = null,
+                            lng = null,
                             description = description,
                             mainText = mainText,
-                            secondaryText = secondaryText
+                            secondaryText = secondaryText,
+                            isHistory = false
                         ))
                     }
                 }
-                
+
+                // Combine history and API results (history first)
+                val combinedResults = historyPredictions + apiResults
+
                 withContext(Dispatchers.Main) {
-                    _autoCompletePredictions.value = results
+                    _autoCompletePredictions.value = combinedResults
                     _isLoading.value = false
                 }
-                
+
             } catch (e: Exception) {
                 Log.e("AddressPickerViewModel", "AutoComplete search failed", e)
                 withContext(Dispatchers.Main) {
@@ -111,12 +132,15 @@ class AddressPickerViewModel(app: Application) : AndroidViewModel(app) {
                 val key = try {
                     val ai = context.packageManager.getApplicationInfo(context.packageName, PackageManager.GET_META_DATA)
                     ai.metaData.getString("com.google.android.geo.API_KEY")
-                } catch (e: Exception) { 
+                } catch (e: Exception) {
                     Log.e("AddressPickerViewModel", "Failed to get API key", e)
-                    null 
+                    null
                 } ?: return@launch
-                
-                val url = "https://maps.googleapis.com/maps/api/place/details/json?place_id=$placeId&fields=geometry,formatted_address&key=$key"
+
+                // Get system language
+                val systemLanguage = context.resources.configuration.locales[0].toLanguageTag()
+
+                val url = "https://maps.googleapis.com/maps/api/place/details/json?place_id=$placeId&fields=geometry,formatted_address&language=$systemLanguage&key=$key"
                 val request = Request.Builder().url(url).build()
                 val response = client.newCall(request).execute()
                 val body = response.body?.string() ?: return@launch

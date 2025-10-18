@@ -10,9 +10,60 @@
     <string name="main_tab_home">Home</string>
     <string name="main_tab_me">Me</string>
 
+    <string name="home_disconnect1">Device not connected</string>
+    <string name="home_disconnect2">Please turn on your glasses to connect.</string>
+
     <string name="your_location">Your Location</string>
     <string name="destination">Destination</string>
     <string name="favorite_home">Home</string>
     <string name="favorite_company">Company</string>
+    <string name="back">Back</string>
 
+    <string name="add_device">Add device</string>
+    <string name="add_device_direction_1">Please refer to the following tutorial to pair the glasses</string>
+    <string name="add_device_search_text1">Searching for devices...</string>
+    <string name="add_device_search_text2">Please bring your glasses close to the phone.</string>
+
+    <string name="device_list_text1">Device search results</string>
+    <string name="device_list_text2">The device you want to scan was not detected. You can try clicking \'Try again\'.</string>
+    <string name="connect">Connect</string>
+    <string name="try_again">Try again</string>
+    <string name="connection_failed_text1">Device connection failed</string>
+    <string name="connection_failed_text2">Please make sure your phone\'s Bluetooth is turned on. If Bluetooth is already on, please check if there is a long press area on the glasses\' touch control.</string>
+    <string name="connection_failed_return">Return</string>
+
+    <string name="connected_successfully_text1">Device connected successfully</string>
+    <string name="connected_successfully_text2_1">Directing to the app in 3 seconds</string>
+    <string name="connected_successfully_text2_2">Directing to the app in 2 seconds</string>
+    <string name="connected_successfully_text2_3">Directing to the app in 1 seconds</string>
+
+    <string name="search_failed_text1">Device search failed</string>
+    <string name="search_failed_text2">Please refer to the above tutorial for unbinding the glasses. If you have already confirmed the unbinding, please click to try again.</string>
+    <string name="unbind_device">Unbind Device</string>
+    <string name="exit">Exit</string>
+    <string name="then">Then</string>
+    <string name="settings">Settings</string>
+    <string name="disconnected">Disconnected</string>
+
+    <string name="nav_hour">hr</string>
+    <string name="nav_minute">min</string>
+    <!-- Foreground Service Notifications -->
+    <string name="notification_glasses_connected_title">Glasses Connected</string>
+    <string name="notification_glasses_connected_text">Bluetooth connection active</string>
+    <string name="notification_waiting_connection_title">Waiting for Glasses</string>
+    <string name="notification_waiting_connection_text">Attempting to connect…</string>
+    <string name="notification_navigation_title">Navigation Active</string>
+    <string name="notification_navigation_text">Navigating to destination</string>
+    <string name="notification_agent_title">AI Assistant Active</string>
+    <string name="notification_agent_text">Ready</string>
+    <string name="notification_agent_connecting_title">AI Assistant</string>
+    <string name="notification_agent_connecting_text">Connecting…</string>
+    <string name="notification_ailens_running">AiLens Running</string>
+    <string name="notification_glasses_status">Glasses</string>
+    <string name="notification_waiting_status">Waiting</string>
+    <string name="notification_navigation_status">Navigation</string>
+    <string name="notification_agent_status">AI Assistant</string>
+    <string name="notification_agent_connecting_status">AI Connecting</string>
+    <string name="notification_service_running">Service running</string>
+    <string name="notification_separator">, </string>
 </resources>

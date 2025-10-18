@@ -25,10 +25,29 @@ class NavState(val fragment: AddressPickerFragment): LayoutState {
             animationDuration
         )
 
-        // Show the back button when entering NavState
-        binding.backButton.visibility = View.VISIBLE
-        binding.backButton.alpha = 0f  // Start from invisible
-        binding.backButton.animate().alpha(1f).setDuration(animationDuration).start()
+        // Disable editing in NavState - hide EditText and show marquee TextView
+        binding.destinationEditText.visibility = View.INVISIBLE // Keep space but hide content
+
+        // Show marquee TextView overlay with the same text
+        val destinationText = binding.destinationEditText.text?.toString() ?: ""
+        if (destinationText.isNotEmpty()) {
+            binding.destinationMarqueeTextView.text = destinationText
+            binding.destinationMarqueeTextView.visibility = View.VISIBLE
+
+            // Only enable marquee if text is longer than the view width
+            binding.destinationMarqueeTextView.post {
+                val paint = binding.destinationMarqueeTextView.paint
+                val textWidth = paint.measureText(destinationText)
+                val viewWidth = binding.destinationMarqueeTextView.width
+
+                // Only enable marquee if text overflows
+                if (textWidth > viewWidth) {
+                    binding.destinationMarqueeTextView.isSelected = true
+                } else {
+                    binding.destinationMarqueeTextView.isSelected = false
+                }
+            }
+        }
     }
 
     override fun onTouch(view: View, event: MotionEvent): Boolean {
@@ -59,8 +78,20 @@ class NavState(val fragment: AddressPickerFragment): LayoutState {
 
         set.applyTo(binding.main)
 
-        binding.favoriteRecyclerView.animate().alpha(0f).setDuration(animationDuration).start()
-        binding.transportLayout.animate().alpha(1f).setDuration(animationDuration).start()
+        // Apply separate ConstraintSet for topLayout (destinationLayout is inside topLayout)
+        val editTextMarginSpacing = context.resources.getDimension(R.dimen.address_picker_edit_text_spacing)
+        val set2 = ConstraintSet()
+        set2.clone(binding.topLayout)
+        set2.setMargin(R.id.destinationLayout, ConstraintSet.TOP, editTextMarginSpacing.toInt())
+        set2.applyTo(binding.topLayout)
+
+        binding.transportLayout.visibility = View.VISIBLE
+        binding.favoriteRecyclerView.animate().alpha(0f).setDuration(animationDuration / 2).withEndAction {
+            binding.transportLayout.animate().alpha(1f).setDuration(animationDuration / 2).start()
+            binding.myLocationLayout.animate().alpha(1f).setDuration(animationDuration / 2).start()
+        }.start()
+
         binding.grabImageView.animate().alpha(0f).setDuration(animationDuration).start()
+
     }
 }

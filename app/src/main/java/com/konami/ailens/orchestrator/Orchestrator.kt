@@ -1,7 +1,6 @@
 package com.konami.ailens.orchestrator
 
 import android.util.Log
-import com.konami.ailens.ble.BLEService
 import com.konami.ailens.orchestrator.capability.AgentCapability
 import com.konami.ailens.orchestrator.capability.AgentDisplayCapability
 import com.konami.ailens.orchestrator.capability.CapabilitySink
@@ -12,9 +11,7 @@ import com.konami.ailens.orchestrator.capability.ToolCapability
 import com.konami.ailens.orchestrator.coordinator.AgentCoordinator
 import com.konami.ailens.orchestrator.coordinator.NavigationCoordinator
 import com.konami.ailens.orchestrator.role.Role
-import com.konami.ailens.navigation.NavigationService
-import com.konami.ailens.navigation.NavigationForegroundService
-import com.konami.ailens.AiLensApplication
+import com.konami.ailens.orchestrator.capability.NavigationCapability
 import io.socket.client.Ack
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -49,8 +46,8 @@ class Orchestrator private constructor(): CapabilitySink, DeviceEventCapability,
     private val agentDisplays = mutableListOf<AgentDisplayCapability>()
     private var agentCoordinator: AgentCoordinator? = null
     private var navigationCoordinator: NavigationCoordinator? = null
+    private val navigations = mutableListOf<NavigationCapability>()
     private val navigationDisplays = mutableListOf<NavigationDisplayCapability>()
-    private var lastNavigationDestination: String? = null
 
     private val scope = CoroutineScope(Dispatchers.IO)
 
@@ -68,6 +65,15 @@ class Orchestrator private constructor(): CapabilitySink, DeviceEventCapability,
         agentDisplays.add(role)
     }
 
+    override fun addNavigationDisplay(role: NavigationDisplayCapability) {
+        navigationDisplays.add(role)
+        navigationCoordinator?.refresh()
+    }
+
+    override fun addNavigation(role: NavigationCapability) {
+        navigations.add(role)
+    }
+
     fun register(role: Role) {
         role.registerCapabilities(this)
     }
@@ -79,16 +85,27 @@ class Orchestrator private constructor(): CapabilitySink, DeviceEventCapability,
         agentDisplays.removeAll { it === role }
     }
 
+    fun stopNavigation() {
+        navigationCoordinator?.stop()
+        navigationCoordinator = null
+    }
+
     fun clean() {
-        agent = null
+        agentCoordinator?.stop()
+        agent?.stopAgent()
+
         agentDisplays.clear()
+        navigationDisplays.clear()  // Also clear navigation displays to prevent accumulation
+        navigationCoordinator?.stop()  // Stop navigation coordinator coroutines
+        navigationCoordinator = null
+        agentCoordinator = null
+        agent = null
     }
 
     override fun handleDeviceEvent(event: DeviceEventCapability.DeviceEvent) {
         when (event) {
             DeviceEventCapability.DeviceEvent.EnterAgent -> {
                 val agent = agent ?: return
-
                 agentCoordinator = AgentCoordinator(agent, agentDisplays, this)
                 agentCoordinator?.start()
             }
@@ -112,7 +129,7 @@ class Orchestrator private constructor(): CapabilitySink, DeviceEventCapability,
 
             }
             DeviceEventCapability.DeviceEvent.LeaveNavigation -> {
-
+                stopNavigation()
             }
             DeviceEventCapability.DeviceEvent.LeaveSimultaneousTranslation -> {
 
@@ -157,17 +174,11 @@ class Orchestrator private constructor(): CapabilitySink, DeviceEventCapability,
             else -> TravelMode.DRIVING
         }
 
-        // Ensure foreground service keeps navigation alive and prepare map
-        NavigationForegroundService.start(AiLensApplication.instance)
-        NavigationService.ensureMap(AiLensApplication.instance)
-
-        // Build coordinator on demand using the singleton NavigationService
         navigationCoordinator = NavigationCoordinator(
-            navigationCapabilities = listOf(NavigationService),
+            navigationCapabilities = navigations,
             navigationDisplays = navigationDisplays,
             agentCapability = agent
         )
-        lastNavigationDestination = destination
         navigationCoordinator?.start(destination, travelMode)
     }
 
@@ -230,17 +241,9 @@ class Orchestrator private constructor(): CapabilitySink, DeviceEventCapability,
     override fun replyError(message: String, ack: Ack) {
         TODO("Not yet implemented")
     }
-    // Public helpers to register/unregister navigation displays from UI layers
-    fun addNavigationDisplay(display: NavigationDisplayCapability) {
-        navigationDisplays.add(display)
-    }
 
+    // Public helper to unregister navigation displays from UI layers
     fun removeNavigationDisplay(display: NavigationDisplayCapability) {
         navigationDisplays.remove(display)
-    }
-
-    fun updateNavigationMode(mode: TravelMode) {
-        val dest = lastNavigationDestination ?: return
-        navigationCoordinator?.start(dest, mode)
     }
 }

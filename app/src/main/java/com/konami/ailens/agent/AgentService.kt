@@ -1,12 +1,9 @@
 package com.konami.ailens.agent
 
 
-import android.annotation.SuppressLint
-import android.content.Context
 import android.util.Base64
 import android.util.Log
 import com.konami.ailens.StreamingPCMPlayer
-import com.konami.ailens.orchestrator.Orchestrator
 import com.konami.ailens.orchestrator.capability.AgentToAppTool
 import com.konami.ailens.orchestrator.capability.AppAgentResponder
 import com.konami.ailens.orchestrator.capability.AppToAgentTool
@@ -83,11 +80,28 @@ class AgentService private constructor() {
 
     var toolCapability: ToolCapability? = null
 
+    // Connection parameters for reconnection (internal for WorkManager)
+    internal var lastToken: String? = null
+    internal var lastEnv: EnvironmentConfig? = null
+    internal var lastServiceMode: String? = null
+    internal var lastLanguage: String? = null
+
+    // Heartbeat monitoring
+    private var heartbeatJob: Job? = null
+    private var lastHeartbeatTime: Long = 0
+
     // ======= Public =======
     fun connect(token: String, env: EnvironmentConfig, serviceMode: String, language: String) {
         this.authToken = token
 
+        // Store connection parameters for reconnection
+        lastToken = token
+        lastEnv = env
+        lastServiceMode = serviceMode
+        lastLanguage = language
+
         if (socket != null && socket!!.connected()) {
+            Log.d(TAG, "Socket already connected, skipping")
             return
         }
 
@@ -102,7 +116,9 @@ class AgentService private constructor() {
             forceNew = true
             reconnection = true
             reconnectionAttempts = Int.MAX_VALUE
-            reconnectionDelay = 5000
+            reconnectionDelay = 2000  // Reduced from 5000 to 2000 for faster reconnect
+            reconnectionDelayMax = 10000  // Max delay between attempts
+            timeout = 20000  // Connection timeout
             extraHeaders = mapOf("Authorization" to listOf("Bearer $token"))
             transports = arrayOf(io.socket.engineio.client.transports.WebSocket.NAME)
             query = queryParams
@@ -118,10 +134,16 @@ class AgentService private constructor() {
             on(Socket.EVENT_CONNECT_ERROR, onError)
 
             io().on(Manager.EVENT_RECONNECT_ATTEMPT, Emitter.Listener { args ->
-                Log.e(TAG, "Manager: reconnect attempt ${args.joinToString()}")
+                Log.w(TAG, "Manager: reconnect attempt ${args.joinToString()}")
+                _connectionStatus.value = "Reconnecting..."
             })
             io().on(Manager.EVENT_RECONNECT, Emitter.Listener { args ->
-                Log.e(TAG, "Manager: reconnect succeeded ${args.joinToString()}")
+                Log.d(TAG, "Manager: reconnect succeeded ${args.joinToString()}")
+                _connectionStatus.value = "Reconnected"
+            })
+            io().on(Manager.EVENT_RECONNECT_FAILED, Emitter.Listener { args ->
+                Log.e(TAG, "Manager: reconnect failed ${args.joinToString()}")
+                _connectionStatus.value = "Reconnect Failed"
             })
 
             setupCustomEventHandlers(this)
@@ -129,6 +151,9 @@ class AgentService private constructor() {
 
         _connectionStatus.value = "Connecting..."
         socket?.connect()
+
+        // Start heartbeat monitoring
+        startHeartbeatMonitoring()
     }
 
     fun setRecorder(recorder: Recorder) {
@@ -137,10 +162,14 @@ class AgentService private constructor() {
 
     fun disconnect() {
         stop()
+        stopHeartbeatMonitoring()
         socket?.disconnect()
+        socket?.off()  // Remove all listeners
         socket = null
         _isConnected.value = false
+        _isReady.value = false
         _connectionStatus.value = "Disconnected"
+        Log.d(TAG, "Agent disconnected and cleaned up")
     }
 
     fun start() {
@@ -149,10 +178,8 @@ class AgentService private constructor() {
             return
         }
         val recorder = recorder ?: return
-
         _isRecording.value = true
         recorder.startRecording()
-
         recordingJob = scope.launch {
             recorder.frames.collect { audioData ->
                 sendAudioData(audioData)
@@ -168,15 +195,15 @@ class AgentService private constructor() {
         recordingJob?.cancel()
         recordingJob = null
         _isRecording.value = false
-        emitEvent(SocketEvent.StopTranslation)
+//        emitEvent(SocketEvent.StopTranslation)
     }
 
     // ======= Handlers =======
     private val onConnect = Emitter.Listener {
-        Log.e("AgentService", "Socket connected")
+        Log.d(TAG, "Socket connected")
         _isConnected.value = true
         _connectionStatus.value = "Connected"
-        _isReady.value = true
+        lastHeartbeatTime = System.currentTimeMillis()
     }
 
     private val onDisconnect = Emitter.Listener { args ->
@@ -500,6 +527,65 @@ class AgentService private constructor() {
 
             AgentToAppTool.UNKNOWN -> {
             }
+        }
+    }
+
+    /**
+     * Start heartbeat monitoring to detect connection issues
+     */
+    private fun startHeartbeatMonitoring() {
+        stopHeartbeatMonitoring()
+        heartbeatJob = scope.launch {
+            while (true) {
+                kotlinx.coroutines.delay(30000)  // Check every 30 seconds
+
+                val currentTime = System.currentTimeMillis()
+                val timeSinceLastHeartbeat = currentTime - lastHeartbeatTime
+
+                // If connected but no activity for 2 minutes, check connection
+                if (_isConnected.value && timeSinceLastHeartbeat > 120000) {
+                    Log.w(TAG, "No heartbeat for ${timeSinceLastHeartbeat}ms, checking connection")
+
+                    // Check if socket is actually connected
+                    val socket = socket
+                    if (socket == null || !socket.connected()) {
+                        Log.e(TAG, "Socket disconnected, attempting reconnect")
+                        attemptReconnect()
+                    } else {
+                        // Socket says it's connected, update heartbeat
+                        lastHeartbeatTime = currentTime
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * Stop heartbeat monitoring
+     */
+    private fun stopHeartbeatMonitoring() {
+        heartbeatJob?.cancel()
+        heartbeatJob = null
+    }
+
+    /**
+     * Attempt to reconnect using stored connection parameters
+     */
+    fun attemptReconnect() {
+        val token = lastToken
+        val env = lastEnv
+        val serviceMode = lastServiceMode
+        val language = lastLanguage
+
+        if (token != null && env != null && serviceMode != null && language != null) {
+            Log.d(TAG, "Attempting reconnect with stored parameters")
+            scope.launch {
+                disconnect()
+                kotlinx.coroutines.delay(1000)  // Wait a bit before reconnecting
+                connect(token, env, serviceMode, language)
+            }
+        } else {
+            Log.e(TAG, "Cannot reconnect: missing connection parameters")
         }
     }
 }

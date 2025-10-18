@@ -25,11 +25,8 @@ class AgentRole(override var toolCapability: ToolCapability, recorder: Recorder)
     private val _answer = MutableStateFlow<String>("")
     override val answer = _answer.asStateFlow()
 
-    private val scope = CoroutineScope(Dispatchers.IO)
-
     init {
         service.setRecorder(recorder)
-        bind()
     }
 
     override fun registerCapabilities(sink: CapabilitySink) {
@@ -46,14 +43,6 @@ class AgentRole(override var toolCapability: ToolCapability, recorder: Recorder)
 
     override fun replyNavigationError(message: String) {
         service.replyNavigationError(message)
-    }
-
-    private fun bind() {
-        scope.launch {
-            service.outputTranscript.collect {
-                _answer.value = it
-            }
-        }
     }
 }
 
