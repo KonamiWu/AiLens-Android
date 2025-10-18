@@ -59,8 +59,20 @@ class NavState(val fragment: AddressPickerFragment): LayoutState {
 
         set.applyTo(binding.main)
 
+        // Apply separate ConstraintSet for topLayout (destinationLayout is inside topLayout)
+        val editTextMarginSpacing = context.resources.getDimension(R.dimen.address_picker_edit_text_spacing)
+        val set2 = ConstraintSet()
+        set2.clone(binding.topLayout)
+        set2.setMargin(R.id.destinationLayout, ConstraintSet.TOP, editTextMarginSpacing.toInt())
+        set2.applyTo(binding.topLayout)
+
         binding.favoriteRecyclerView.animate().alpha(0f).setDuration(animationDuration).start()
+        binding.transportLayout.visibility = View.VISIBLE
         binding.transportLayout.animate().alpha(1f).setDuration(animationDuration).start()
         binding.grabImageView.animate().alpha(0f).setDuration(animationDuration).start()
+
+        // Show myLocationLayout (parent of myLocationTextLayout)
+//        binding.myLocationLayout.visibility = View.VISIBLE
+        binding.myLocationLayout.animate().alpha(1f).setDuration(animationDuration).start()
     }
 }

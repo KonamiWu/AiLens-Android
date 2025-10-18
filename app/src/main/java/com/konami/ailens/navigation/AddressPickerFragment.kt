@@ -2,17 +2,14 @@ package com.konami.ailens.navigation
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.content.pm.PackageManager
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.AttributeSet
-import android.util.Log
 import android.view.LayoutInflater
-import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.Interpolator
+import android.view.inputmethod.InputMethodManager
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -24,6 +21,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import androidx.activity.OnBackPressedCallback
 import com.konami.ailens.orchestrator.Orchestrator
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -31,14 +29,7 @@ import com.google.android.gms.maps.model.LatLng
 import com.konami.ailens.R
 import com.konami.ailens.databinding.FragmentAddressPickerBinding
 import com.konami.ailens.resolveAttrColor
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import okhttp3.OkHttpClient
-import okhttp3.Request
-import org.json.JSONObject
 import kotlin.math.pow
 
 class AddressPickerFragment: Fragment(), NavigationMapFragment.Callbacks {
@@ -79,7 +70,7 @@ class AddressPickerFragment: Fragment(), NavigationMapFragment.Callbacks {
 //            )
             
             // Adjust back button top margin to account for status bar
-            val layoutParams = binding.backButton.layoutParams as androidx.constraintlayout.widget.ConstraintLayout.LayoutParams
+            val layoutParams = binding.backButton.layoutParams as ConstraintLayout.LayoutParams
             val baseMargin = resources.getDimension(R.dimen.address_picker_back_button_margin_top).toInt()
             layoutParams.topMargin = baseMargin + topInset
             binding.backButton.layoutParams = layoutParams
@@ -130,7 +121,6 @@ class AddressPickerFragment: Fragment(), NavigationMapFragment.Callbacks {
                 )
             }
         }
-        autoCompleteRecyclerView.layoutManager = LinearLayoutManager(requireContext())
         autoCompleteRecyclerView.adapter = autoCompleteAdapter
         
         // Setup TextWatcher for destinationEditText
@@ -150,10 +140,8 @@ class AddressPickerFragment: Fragment(), NavigationMapFragment.Callbacks {
         // Ensure keyboard shows when EditText gains focus (first tap) and expand AddressState
         binding.destinationEditText.setOnFocusChangeListener { v, hasFocus ->
             if (hasFocus) {
-                v.post {
-                    val imm = v.context.getSystemService(Context.INPUT_METHOD_SERVICE) as android.view.inputmethod.InputMethodManager
-                    imm.showSoftInput(v, android.view.inputmethod.InputMethodManager.SHOW_IMPLICIT)
-                }
+                val imm = v.context.getSystemService(Context.INPUT_METHOD_SERVICE) as android.view.inputmethod.InputMethodManager
+                imm.showSoftInput(v, android.view.inputmethod.InputMethodManager.SHOW_IMPLICIT)
                 (state as? AddressState)?.requestExpand()
             }
         }
@@ -162,7 +150,6 @@ class AddressPickerFragment: Fragment(), NavigationMapFragment.Callbacks {
         lifecycleScope.launch {
             addressPickerViewModel.autoCompletePredictions.collect { predictions ->
                 autoCompleteAdapter.updatePredictions(predictions)
-                autoCompleteRecyclerView.visibility = if (predictions.isEmpty()) View.GONE else View.VISIBLE
             }
         }
         
@@ -171,8 +158,8 @@ class AddressPickerFragment: Fragment(), NavigationMapFragment.Callbacks {
         manager.orientation = LinearLayoutManager.HORIZONTAL
         recyclerView.layoutManager = manager
         recyclerView.adapter = FavoriteAdapter(requireContext()) { value ->
-            if (value == 0)
-                state = NavState(this)
+            state = NavState(this)
+            hideKeyboard()
         }
 
         val density = resources.displayMetrics.density
@@ -230,6 +217,25 @@ class AddressPickerFragment: Fragment(), NavigationMapFragment.Callbacks {
             state.onTouch(view, event)
         }
 
+        // Handle system back button
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                // If in NavState, go back to AddressState
+                if (state is NavState) {
+                    // Clear the route from map
+                    navigationMapViewModel.clearRoute()
+
+                    // Reset to AddressState
+                    state = AddressState(this@AddressPickerFragment, true)
+                    binding.destinationEditText.text?.clear()
+                } else {
+                    // If in AddressState, use default back behavior (exit fragment)
+                    isEnabled = false
+                    requireActivity().onBackPressedDispatcher.onBackPressed()
+                }
+            }
+        })
+
         return binding.root
     }
 
@@ -281,6 +287,32 @@ class AddressPickerFragment: Fragment(), NavigationMapFragment.Callbacks {
         set.connect(R.id.indicatorView, ConstraintSet.BOTTOM, ConstraintSet.PARENT_ID, ConstraintSet.BOTTOM)
         set.applyTo(header)
 
+        when(mode) {
+            Orchestrator.TravelMode.WALKING -> {
+                binding.walkingImageView.setImageResource(R.drawable.ic_nav_walking_active)
+                binding.walkingTextView.setTextColor(requireContext().resolveAttrColor(R.attr.appPrimary))
+                binding.motorcycleImageView.setImageResource(R.drawable.ic_nav_motorcycle_inactive)
+                binding.motorcycleTextView.setTextColor(requireContext().resolveAttrColor(R.attr.appTextPlaceholder))
+                binding.drivingImageView.setImageResource(R.drawable.ic_nav_driving_inactive)
+                binding.drivingTextView.setTextColor(requireContext().resolveAttrColor(R.attr.appTextPlaceholder))
+            }
+            Orchestrator.TravelMode.MOTORCYCLE -> {
+                binding.walkingImageView.setImageResource(R.drawable.ic_nav_walking_inactive)
+                binding.walkingTextView.setTextColor(requireContext().resolveAttrColor(R.attr.appTextPlaceholder))
+                binding.motorcycleImageView.setImageResource(R.drawable.ic_nav_motorcycle_active)
+                binding.motorcycleTextView.setTextColor(requireContext().resolveAttrColor(R.attr.appPrimary))
+                binding.drivingImageView.setImageResource(R.drawable.ic_nav_driving_inactive)
+                binding.drivingTextView.setTextColor(requireContext().resolveAttrColor(R.attr.appTextPlaceholder))
+            }
+            Orchestrator.TravelMode.DRIVING -> {
+                binding.walkingImageView.setImageResource(R.drawable.ic_nav_walking_inactive)
+                binding.walkingTextView.setTextColor(requireContext().resolveAttrColor(R.attr.appTextPlaceholder))
+                binding.motorcycleImageView.setImageResource(R.drawable.ic_nav_motorcycle_inactive)
+                binding.motorcycleTextView.setTextColor(requireContext().resolveAttrColor(R.attr.appTextPlaceholder))
+                binding.drivingImageView.setImageResource(R.drawable.ic_nav_driving_active)
+                binding.drivingTextView.setTextColor(requireContext().resolveAttrColor(R.attr.appPrimary))
+            }
+        }
         // Re-calculate route with new travel mode if destination is already set
         val destination = binding.destinationEditText.text?.toString()?.trim()
         if (!destination.isNullOrEmpty()) {
@@ -336,6 +368,12 @@ class AddressPickerFragment: Fragment(), NavigationMapFragment.Callbacks {
         val result = (navBarInset.toFloat() + topPadding + editTextHeight + transportLayoutTopMargin + transportLayoutHeight + timeMarginTop + timeHeight + startMarginTop + startHeight + startMarginBottom).toInt()
 
         return result
+    }
+
+    private fun hideKeyboard() {
+        val imm = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.hideSoftInputFromWindow(binding.destinationEditText.windowToken, 0)
+        binding.destinationEditText.clearFocus()
     }
 
     class FavoriteAdapter(val context: Context, val onClick: (Int) -> Unit): RecyclerView.Adapter<FavoriteAdapter.ViewHolder>() {

@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.res.Resources
 import android.transition.AutoTransition
 import android.transition.TransitionManager
+import android.util.Log
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewConfiguration
@@ -52,7 +53,9 @@ class AddressState(val fragment: AddressPickerFragment, isReverse: Boolean): Lay
             })
             set.applyTo(binding.main)
 
-            binding.transportLayout.animate().alpha(0f).setDuration(animationDuration).start()
+            binding.transportLayout.animate().alpha(0f).setDuration(animationDuration).withEndAction {
+                binding.transportLayout.visibility = View.GONE
+            }.start()
             binding.favoriteRecyclerView.animate().alpha(1f).setDuration(animationDuration).start()
             binding.cutCornerView.animateRemoveCorners(CutCornerView.CUT_TOP_LEFT or CutCornerView.CUT_TOP_RIGHT, animationDuration)
             binding.grabImageView.animate().alpha(1f).setDuration(animationDuration).start()
@@ -83,13 +86,18 @@ class AddressState(val fragment: AddressPickerFragment, isReverse: Boolean): Lay
             MotionEvent.ACTION_MOVE -> {
                 val currentY = event.rawY
                 val diff = currentY - previousY
+
+                // Check if we should start dragging
                 if (!touchActive && abs(diff) > touchSlop) {
                     val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-                    //close keyboard here
                     imm.hideSoftInputFromWindow(binding.destinationEditText.windowToken, 0)
                     binding.destinationEditText.clearFocus()
                     touchActive = true
+                    // Reset previousY after hiding keyboard to avoid jump
+                    previousY = currentY
+                    return true
                 }
+
                 if (!touchActive) {
                     return false
                 }
@@ -134,7 +142,7 @@ class AddressState(val fragment: AddressPickerFragment, isReverse: Boolean): Lay
 
      fun updateLayout() {
          val slidingDistance = fragment.slidingDistance
-         binding.transportLayout.visibility = View.VISIBLE
+//         binding.transportLayout.visibility = View.VISIBLE
 
         val progress = (binding.container.top - topMargin - topInset) / (slidingDistance - topMargin - topInset)
         val editTextMarginSpacing = context.resources.getDimension(R.dimen.address_picker_edit_text_spacing)

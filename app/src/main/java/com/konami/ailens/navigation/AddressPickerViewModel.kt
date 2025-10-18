@@ -35,18 +35,10 @@ class AddressPickerViewModel(app: Application) : AndroidViewModel(app) {
     private var searchJob: Job? = null
     
     fun searchAutoComplete(query: String) {
-        // Cancel previous search
         searchJob?.cancel()
-        
-        if (query.trim().length < 2) {
-            _autoCompletePredictions.value = emptyList()
-            return
-        }
         
         searchJob = viewModelScope.launch(Dispatchers.IO) {
             try {
-                // Add delay to avoid too many requests
-                delay(300)
                 
                 withContext(Dispatchers.Main) {
                     _isLoading.value = true
@@ -64,8 +56,8 @@ class AddressPickerViewModel(app: Application) : AndroidViewModel(app) {
                 val url = "https://maps.googleapis.com/maps/api/place/autocomplete/json?input=${query.trim()}&key=$key"
                 val request = Request.Builder().url(url).build()
                 val response = client.newCall(request).execute()
-                val body = response.body?.string() ?: return@launch
-                
+                val body = response.body.string()
+
                 val json = JSONObject(body)
                 val predictions = json.optJSONArray("predictions")
                 val results = mutableListOf<AutoCompletePrediction>()
