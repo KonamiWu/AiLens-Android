@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="?attr/appBackground"
+    tools:ignore="ContentDescription"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintDimensionRatio="1500:874"
+        app:layout_constraintTop_toTopOf="parent"
+        android:src="@drawable/img_nav_bg" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fitsSystemWindows="true" >
+
+        <TextView
+            android:id="@+id/text1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginTop="@dimen/device_list_text1_margin_top"
+            android:textSize="@dimen/device_list_text1_size"
+            android:textColor="?attr/appTextPrimary"
+            style="@style/SemiBold"
+            android:text="@string/device_list_text1" />
+
+        <TextView
+            android:id="@+id/text2"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/text1"
+            android:layout_marginTop="@dimen/device_list_text2_margin_top"
+            android:layout_marginHorizontal="@dimen/device_list_text2_margin_horizontal"
+            android:textSize="@dimen/device_list_text2_size"
+            android:textColor="?attr/appTextPrimary"
+            style="@style/Regular"
+            android:lineSpacingMultiplier="1.5"
+            android:text="@string/device_list_text2"
+            android:gravity="center"/>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerView"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/text2"
+            app:layout_constraintBottom_toTopOf="@id/tryAgainLayout"
+            android:layout_marginTop="@dimen/device_list_item_recycler_view_margin_top"
+            android:layout_marginHorizontal="@dimen/device_list_item_recycler_view_margin_horizontal"
+            android:layout_marginBottom="@dimen/device_list_item_recycler_view_margin_bottom"
+            android:orientation="vertical"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
+
+        <FrameLayout
+            android:id="@+id/tryAgainLayout"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/device_list_try_again_button_height"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginHorizontal="@dimen/device_list_try_again_button_margin_horizontal"
+            android:layout_marginBottom="@dimen/device_list_try_again_button_margin_bottom"
+            android:visibility="gone">
+
+            <com.konami.ailens.main.CutCornerView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:cornerCut="@dimen/device_list_try_again_button_corner_cut"
+                app:borderColor="?attr/appPrimary" />
+
+            <Button
+                android:id="@+id/tryAgainButton"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="#00000000"
+                android:textSize="@dimen/device_list_try_again_button_text_size"
+                android:textColor="?attr/appPrimary"
+                style="@style/Bold"
+                android:text="@string/try_again" />
+
+        </FrameLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

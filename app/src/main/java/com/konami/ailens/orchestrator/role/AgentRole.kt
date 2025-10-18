@@ -26,10 +26,17 @@ class AgentRole(override var toolCapability: ToolCapability, recorder: Recorder)
     override val answer = _answer.asStateFlow()
 
     private val scope = CoroutineScope(Dispatchers.IO)
+    private var bindJob: kotlinx.coroutines.Job? = null
 
     init {
         service.setRecorder(recorder)
         bind()
+    }
+
+    fun cleanup() {
+        Log.d("AgentRole", "Cleaning up AgentRole, canceling bind job")
+        bindJob?.cancel()
+        bindJob = null
     }
 
     override fun registerCapabilities(sink: CapabilitySink) {
@@ -49,7 +56,7 @@ class AgentRole(override var toolCapability: ToolCapability, recorder: Recorder)
     }
 
     private fun bind() {
-        scope.launch {
+        bindJob = scope.launch {
             service.outputTranscript.collect {
                 _answer.value = it
             }

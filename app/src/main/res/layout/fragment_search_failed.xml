@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:ignore="ContentDescription"
+    android:background="?attr/appBackground">
+
+    <ImageView
+        android:id="@+id/bgImageView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintDimensionRatio="1500:1524"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="@dimen/search_failed_bg_margin_top"
+        android:src="@drawable/img_search_failed_bg" />
+
+    <ImageView
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintDimensionRatio="996:776"
+        app:layout_constraintWidth_percent="0.7"
+        app:layout_constraintStart_toStartOf="@id/bgImageView"
+        app:layout_constraintTop_toTopOf="@id/bgImageView"
+        app:layout_constraintEnd_toEndOf="@id/bgImageView"
+        app:layout_constraintBottom_toBottomOf="@id/bgImageView"
+        android:layout_marginHorizontal="@dimen/search_failed_img_margin_horizontal"
+        android:src="@drawable/img_search_failed" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toTopOf="@id/text2"
+        android:layout_marginHorizontal="@dimen/search_failed_button_margin_horizontal"
+        android:layout_marginBottom="@dimen/search_failed_text1_margin_bottom"
+        android:text="@string/search_failed_text1"
+        android:textColor="?attr/appTextPrimary"
+        android:textSize="@dimen/search_failed_text2_size"
+        style="@style/SemiBold"
+        android:lineSpacingMultiplier="1.5"
+        android:gravity="center" />
+
+    <TextView
+        android:id="@+id/text2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toTopOf="@id/unbindLayout"
+        android:layout_marginHorizontal="@dimen/search_failed_button_margin_horizontal"
+        android:layout_marginBottom="@dimen/search_failed_text2_margin_bottom"
+        android:text="@string/search_failed_text2"
+        android:textColor="?attr/appTextPrimary"
+        android:textSize="@dimen/search_failed_text2_size"
+        style="@style/Regular"
+        android:lineSpacingMultiplier="1.5"
+        android:gravity="center" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/unbindLayout"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/search_failed_button_height"
+        app:layout_constraintBottom_toTopOf="@id/tryAgainLayout"
+        android:layout_marginHorizontal="@dimen/search_failed_button_margin_horizontal"
+        android:layout_marginBottom="@dimen/search_failed_button_spacing">
+
+        <com.konami.ailens.main.CutCornerView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:fillColor="?attr/appPrimary"
+            app:cornerCut="@dimen/search_failed_button_corner_cut" />
+
+        <Button
+            android:id="@+id/unbindButton"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#00000000"
+            android:textSize="@dimen/search_failed_button_text_size"
+            android:textColor="?attr/appTextButton"
+            style="@style/Bold"
+            android:text="@string/unbind_device" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/tryAgainLayout"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/search_failed_button_height"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginHorizontal="@dimen/search_failed_button_margin_horizontal"
+        android:layout_marginBottom="@dimen/search_failed_button_margin_bottom">
+
+        <com.konami.ailens.main.CutCornerView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:borderColor="?attr/appPrimary"
+            app:cornerCut="@dimen/search_failed_button_corner_cut" />
+
+        <Button
+            android:id="@+id/tryAgainButton"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#00000000"
+            android:textSize="@dimen/search_failed_button_text_size"
+            android:textColor="?attr/appPrimary"
+            style="@style/Bold"
+            android:text="@string/try_again" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -39,10 +39,10 @@ class NavigationMapViewModel(app: Application) : AndroidViewModel(app) {
         _address.value = ""
     }
 
-    fun handleMapTap(dest: LatLng, mode: Orchestrator.TravelMode) {
+    fun handleMapTap(dest: LatLng, mode: Orchestrator.TravelMode, addressOverride: String? = null) {
         val context = getApplication<Application>()
         viewModelScope.launch(Dispatchers.IO) {
-            val addr = try {
+            val addr = addressOverride ?: try {
                 Geocoder(context).getFromLocation(dest.latitude, dest.longitude, 1)?.firstOrNull()?.getAddressLine(0)
             } catch (_: Exception) { null }
             _address.value = addr ?: "${dest.latitude}, ${dest.longitude}"

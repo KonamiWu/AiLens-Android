@@ -1,19 +1,15 @@
 package com.konami.ailens.device
 
 import android.annotation.SuppressLint
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.konami.ailens.R
 import com.konami.ailens.ble.DeviceSession
-import com.konami.ailens.function.FunctionAdapter.FunctionViewHolder
 
 class DeviceAdapter(
     private val onItemClick: (DeviceSession) -> Unit, private val onItemLongClick: (DeviceSession) -> Unit
@@ -62,7 +58,7 @@ class DeviceAdapter(
     @SuppressLint("MissingPermission")
     class BLEViewHolder(v: View, val onItemClick: (DeviceSession) -> Unit, val onItemLongClick: (DeviceSession) -> Unit) : RecyclerView.ViewHolder(v) {
         private val nameTextView: TextView = v.findViewById(R.id.nameTextView)
-        private val imageView: ImageView = v.findViewById(R.id.imageView)
+        private val imageView: ImageView = v.findViewById(R.id.bgImageView)
         private val macTextView: TextView = v.findViewById(R.id.macTextView)
         private val statusTextView: TextView = v.findViewById(R.id.stateTextView)
         private val backgroundView: ConstraintLayout = v.findViewById(R.id.backgroundView)

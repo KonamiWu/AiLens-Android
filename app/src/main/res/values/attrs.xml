@@ -39,7 +39,7 @@
     <attr name="appButtonGrey" format="color" />
     <attr name="appIconDark" format="color" />
     <attr name="appWhite" format="color" />
-    <attr name="appRed" format="color" />
+    <attr name="appRectangle" format="color" />
     <attr name="appGrey01" format="color" />
     <attr name="appGrey02" format="color" />
 </resources>

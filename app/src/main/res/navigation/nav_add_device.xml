@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_add_device"
+    app:startDestination="@id/AddDeviceFragment">
+
+    <fragment
+        android:id="@+id/AddDeviceFragment"
+        android:name="com.konami.ailens.device.AddDeviceFragment"
+        tools:layout="@layout/fragment_add_device">
+
+        <action
+            android:id="@+id/action_AddDeviceFragment_to_AddDeviceSearchFragment"
+            app:destination="@id/addDeviceSearchFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"/>
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/addDeviceSearchFragment"
+        android:name="com.konami.ailens.device.AddDeviceSearchFragment"
+        tools:layout="@layout/fragment_add_device_search">
+
+        <action
+            android:id="@+id/action_AddSearchFragment_to_DeviceListFragment"
+            app:destination="@id/deviceListFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
+
+        <action
+            android:id="@+id/action_AddSearchFragment_to_SearchFailedFragment"
+            app:destination="@id/searchFailedFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/deviceListFragment"
+        android:name="com.konami.ailens.device.DeviceListFragment"
+        tools:layout="@layout/fragment_device_list">
+
+        <action
+            android:id="@+id/action_DeviceListFragment_to_ConnectionFailedFragment"
+            app:destination="@id/connectionFailedFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
+
+        <action
+            android:id="@+id/action_DeviceListFragment_to_ConnectedSuccessfullyFragment"
+            app:destination="@id/connectedSuccessfully"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/connectionFailedFragment"
+        android:name="com.konami.ailens.device.ConnectionFailedFragment"
+        tools:layout="@layout/fragment_connection_failed">
+
+        <action
+            android:id="@+id/action_ConnectionFailedFragment_to_DeviceListFragment"
+            app:destination="@id/deviceListFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/connectedSuccessfully"
+        android:name="com.konami.ailens.device.ConnectedSuccessfullyFragment"
+        tools:layout="@layout/fragment_connected_successfully" />
+
+    <fragment
+        android:id="@+id/searchFailedFragment"
+        android:name="com.konami.ailens.device.SearchFailedFragment"
+        tools:layout="@layout/fragment_search_failed" />
+
+</navigation>

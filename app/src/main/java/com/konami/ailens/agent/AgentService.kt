@@ -1,12 +1,9 @@
 package com.konami.ailens.agent
 
 
-import android.annotation.SuppressLint
-import android.content.Context
 import android.util.Base64
 import android.util.Log
 import com.konami.ailens.StreamingPCMPlayer
-import com.konami.ailens.orchestrator.Orchestrator
 import com.konami.ailens.orchestrator.capability.AgentToAppTool
 import com.konami.ailens.orchestrator.capability.AppAgentResponder
 import com.konami.ailens.orchestrator.capability.AppToAgentTool
@@ -149,7 +146,6 @@ class AgentService private constructor() {
             return
         }
         val recorder = recorder ?: return
-
         _isRecording.value = true
         recorder.startRecording()
 
@@ -176,7 +172,6 @@ class AgentService private constructor() {
         Log.e("AgentService", "Socket connected")
         _isConnected.value = true
         _connectionStatus.value = "Connected"
-        _isReady.value = true
     }
 
     private val onDisconnect = Emitter.Listener { args ->

@@ -12,7 +12,7 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 
 class DeviceViewModel(app: Application) : AndroidViewModel(app) {
-    private val service = BLEService.getOrCreate(app)
+    private val service = BLEService.instance
 
     private val _navigationEvent = Channel<DeviceSession>(capacity = Channel.BUFFERED)
     val navigationEvent = _navigationEvent.receiveAsFlow()

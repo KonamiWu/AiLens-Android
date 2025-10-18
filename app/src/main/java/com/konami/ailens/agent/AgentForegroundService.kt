@@ -19,14 +19,21 @@ class AgentForegroundService: Service() {
     private fun createNotification(): Notification {
         val channelId = "agent_channel"
         val channel = NotificationChannel(
-            channelId, "Agent Service", NotificationManager.IMPORTANCE_LOW
-        )
+            channelId, "AI Agent", NotificationManager.IMPORTANCE_HIGH
+        ).apply {
+            description = "AI assistant service for glasses"
+            setShowBadge(false)
+        }
         val manager = getSystemService(NotificationManager::class.java)
         manager.createNotificationChannel(channel)
 
         return NotificationCompat.Builder(this, channelId)
-            .setContentTitle("Agent Service")
-            .setContentText("Agent Service is running")
+            .setContentTitle("AI Agent Active")
+            .setContentText("Ready to assist")
+            .setSmallIcon(android.R.drawable.ic_dialog_info)
+            .setPriority(NotificationCompat.PRIORITY_LOW)
+            .setOngoing(true)
+            .setGroup("ailens_services")
             .build()
     }
 

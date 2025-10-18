@@ -74,7 +74,7 @@ class NavigationCoordinator(
 
             jobs += scope.launch {
                 capability.state.isFinished.collectLatest { finished ->
-                    if (finished) stop()
+                    navigationDisplays.forEach { it.displayEndNavigation() }
                 }
             }
         }
@@ -91,11 +91,6 @@ class NavigationCoordinator(
     fun add(display: NavigationDisplayCapability) {
         navigationDisplays.add(display)
         bind()
-    }
-
-    fun stop() {
-        navigationDisplays.forEach { it.displayEndNavigation() }
-        navigationCapabilities.forEach { it.stop() }
     }
 }
 

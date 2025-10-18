@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="?attr/appBackground"
+    tools:ignore="ContentDescription"
+    android:fitsSystemWindows="true">
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintDimensionRatio="1500:1870"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="@dimen/add_device_search_bg_margin_top"
+        android:src="@drawable/img_add_device_search_bg" />
+
+    <ImageView
+        android:id="@+id/zoom"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintWidth_percent="0.7"
+        app:layout_constraintDimensionRatio="1:1"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="@dimen/add_device_search_zoom_margin_top"
+        android:src="@drawable/img_add_device_zoom" />
+    
+    <ImageView
+        android:id="@+id/loadingCircleImageView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:src="@drawable/img_add_device_loading_circle"
+        app:layout_constraintStart_toStartOf="@id/zoom"
+        app:layout_constraintTop_toTopOf="@id/zoom"
+        app:layout_constraintEnd_toEndOf="@id/zoom"
+        app:layout_constraintBottom_toBottomOf="@id/zoom" />
+
+    <TextView
+        android:id="@+id/text1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/loadingCircleImageView"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="@dimen/add_device_search_text1_margin_top"
+        android:textSize="@dimen/add_device_search_text1_size"
+        android:textColor="?attr/appTextPrimary"
+        android:text="@string/add_device_search_text1"
+        style="@style/SemiBold" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/text1"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="@dimen/add_device_search_text2_margin_top"
+        android:textSize="@dimen/add_device_search_text2_size"
+        android:textColor="?attr/appTextPrimary"
+        android:text="@string/add_device_search_text2"
+        style="@style/SemiBold" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

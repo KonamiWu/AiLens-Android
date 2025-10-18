@@ -27,13 +27,22 @@ class NavigationForegroundService : Service() {
         val channelId = "navigation_channel"
         val manager = getSystemService(NotificationManager::class.java)
         val channel = NotificationChannel(
-            channelId, "Navigation Service", NotificationManager.IMPORTANCE_LOW
-        )
+            channelId, "Navigation Service", NotificationManager.IMPORTANCE_DEFAULT
+        ).apply {
+            description = "Keeps navigation running in background"
+            setShowBadge(false)
+        }
         manager.createNotificationChannel(channel)
 
         return NotificationCompat.Builder(this, channelId)
-            .setContentTitle("Navigation Service")
-            .setContentText("Navigation is ready")
+            .setContentTitle("Navigation Active")
+            .setContentText("Navigating to destination")
+            .setSmallIcon(android.R.drawable.ic_dialog_map)
+            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+            .setOngoing(true)
+            .setCategory(NotificationCompat.CATEGORY_NAVIGATION)
+            .setGroup("ailens_services")
+            .setForegroundServiceBehavior(NotificationCompat.FOREGROUND_SERVICE_IMMEDIATE)
             .build()
     }
 
@@ -43,6 +52,11 @@ class NavigationForegroundService : Service() {
         fun start(context: Context) {
             val intent = Intent(context, NavigationForegroundService::class.java)
             context.startForegroundService(intent)
+        }
+
+        fun stop(context: Context) {
+            val intent = Intent(context, NavigationForegroundService::class.java)
+            context.stopService(intent)
         }
     }
 }

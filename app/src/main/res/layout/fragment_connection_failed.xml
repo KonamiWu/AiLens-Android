@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:ignore="ContentDescription"
+    android:background="?attr/appBackground"
+    android:fitsSystemWindows="true">
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintDimensionRatio="1500:1524"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="@dimen/connection_failed_img_margin_top"
+        android:src="@drawable/img_connection_failed" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/text2"
+        android:layout_marginHorizontal="@dimen/connection_failed_button_margin_horizontal"
+        android:layout_marginBottom="@dimen/connection_failed_text1_margin_bottom"
+        android:textSize="@dimen/connection_failed_text1_size"
+        android:textColor="?attr/appTextPrimary"
+        android:gravity="center"
+        style="@style/SemiBold"
+        android:text="@string/connection_failed_text1" />
+
+    <TextView
+        android:id="@+id/text2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/buttonLayout"
+        android:layout_marginHorizontal="@dimen/connection_failed_button_margin_horizontal"
+        android:layout_marginBottom="@dimen/connection_failed_text2_margin_bottom"
+        android:textSize="@dimen/connection_failed_text2_size"
+        android:textColor="?attr/appTextPrimary"
+        android:gravity="center"
+        style="@style/Regular"
+        android:lineSpacingMultiplier="1.5"
+        android:text="@string/connection_failed_text2" />
+
+    <FrameLayout
+        android:id="@+id/buttonLayout"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/connection_failed_button_height"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginHorizontal="@dimen/connection_failed_button_margin_horizontal"
+        android:layout_marginBottom="@dimen/connection_failed_button_margin_bottom">
+
+        <com.konami.ailens.main.CutCornerView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:borderColor="?attr/appPrimary"
+            app:cornerCut="@dimen/connection_failed_button_corner_cut" />
+
+        <Button
+            android:id="@+id/returnButton"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#00000000"
+            android:textSize="@dimen/connection_failed_button_text_size"
+            android:text="@string/connection_failed_return"
+            android:textColor="?attr/appPrimary"
+            style="@style/Bold" />
+    </FrameLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

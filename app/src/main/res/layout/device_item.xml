@@ -13,7 +13,7 @@
         android:paddingHorizontal="@dimen/bluetooth_item_horizontalPadding">
 
         <ImageView
-            android:id="@+id/imageView"
+            android:id="@+id/bgImageView"
             android:layout_width="@dimen/bluetooth_item_image_size"
             android:layout_height="@dimen/bluetooth_item_image_size"
             app:layout_constraintLeft_toLeftOf="parent"
@@ -34,7 +34,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/bluetooth_item_horizontalPadding"
-            app:layout_constraintLeft_toRightOf="@id/imageView"
+            app:layout_constraintLeft_toRightOf="@id/bgImageView"
             app:layout_constraintBottom_toTopOf="@id/centerView"/>
 
         <TextView
@@ -44,7 +44,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/bluetooth_item_horizontalPadding"
-            app:layout_constraintLeft_toRightOf="@id/imageView"
+            app:layout_constraintLeft_toRightOf="@id/bgImageView"
             app:layout_constraintTop_toBottomOf="@id/centerView"/>
 
         <TextView
