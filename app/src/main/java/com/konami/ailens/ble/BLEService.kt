@@ -169,7 +169,9 @@ class BLEService private constructor(private val context: Context) {
         }
         val info = SharedPrefs.getDeviceInfo(context) ?: return
         val device = try { adapter.getRemoteDevice(info.mac) } catch (_: IllegalArgumentException) { null } ?: return
+        Log.e(TAG, "retrieve() creating new DeviceSession for device=${device.address}")
         val newSession = DeviceSession(context, device, info.retrieveToken)
+        Log.e(TAG, "retrieve() created newSession=$newSession, setting as connectedSession")
         _connectedSession.value = newSession
         collect(newSession)
         _updateFlow.tryEmit(Unit)

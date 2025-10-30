@@ -19,6 +19,7 @@ import io.socket.emitter.Emitter
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -35,7 +36,7 @@ class AgentService private constructor() {
         val instance: AgentService by lazy { AgentService() }
     }
 
-    private val scope: CoroutineScope = CoroutineScope(Dispatchers.IO)
+    private val scope: CoroutineScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
 
     private val _isConnected = MutableStateFlow(false)
     val isConnected: StateFlow<Boolean> = _isConnected
@@ -89,6 +90,7 @@ class AgentService private constructor() {
     // Heartbeat monitoring
     private var heartbeatJob: Job? = null
     private var lastHeartbeatTime: Long = 0
+    private var lastPingTime: Long = 0
 
     // ======= Public =======
     fun connect(token: String, env: EnvironmentConfig, serviceMode: String, language: String) {
@@ -133,12 +135,23 @@ class AgentService private constructor() {
             on(Socket.EVENT_DISCONNECT, onDisconnect)
             on(Socket.EVENT_CONNECT_ERROR, onError)
 
+            // Monitor ping/pong using string literals (Engine.IO events)
+            on("ping", Emitter.Listener {
+                lastPingTime = System.currentTimeMillis()
+                Log.e(TAG, "Socket PING sent")
+            })
+            on("pong", Emitter.Listener { args ->
+                val latency = args.firstOrNull() as? Long ?: 0
+                lastHeartbeatTime = System.currentTimeMillis()
+                Log.e(TAG, "Socket PONG received, latency: ${latency}ms")
+            })
+
             io().on(Manager.EVENT_RECONNECT_ATTEMPT, Emitter.Listener { args ->
-                Log.w(TAG, "Manager: reconnect attempt ${args.joinToString()}")
+                Log.e(TAG, "Manager: reconnect attempt ${args.joinToString()}")
                 _connectionStatus.value = "Reconnecting..."
             })
             io().on(Manager.EVENT_RECONNECT, Emitter.Listener { args ->
-                Log.d(TAG, "Manager: reconnect succeeded ${args.joinToString()}")
+                Log.e(TAG, "Manager: reconnect succeeded ${args.joinToString()}")
                 _connectionStatus.value = "Reconnected"
             })
             io().on(Manager.EVENT_RECONNECT_FAILED, Emitter.Listener { args ->
@@ -195,15 +208,16 @@ class AgentService private constructor() {
         recordingJob?.cancel()
         recordingJob = null
         _isRecording.value = false
-//        emitEvent(SocketEvent.StopTranslation)
     }
 
     // ======= Handlers =======
     private val onConnect = Emitter.Listener {
-        Log.d(TAG, "Socket connected")
+        Log.e(TAG, "Socket connected")
         _isConnected.value = true
         _connectionStatus.value = "Connected"
-        lastHeartbeatTime = System.currentTimeMillis()
+        val currentTime = System.currentTimeMillis()
+        lastHeartbeatTime = currentTime
+        lastPingTime = currentTime
     }
 
     private val onDisconnect = Emitter.Listener { args ->
@@ -223,27 +237,33 @@ class AgentService private constructor() {
     }
 
     private fun setupCustomEventHandlers(s: Socket) {
-        s.on(SocketEvent.Message.value) { /* no-op */ }
+        s.on(SocketEvent.Message.value) {
+            lastHeartbeatTime = System.currentTimeMillis()
+        }
 
         s.on(SocketEvent.GeminiResponse.value) { args ->
+            lastHeartbeatTime = System.currentTimeMillis()
             val obj = args.firstOrNull() as? JSONObject
             val text = obj?.optString("text") ?: return@on
 //            _outputTranscript.value = text
         }
 
         s.on(SocketEvent.GeminiAudio.value) { args ->
+            lastHeartbeatTime = System.currentTimeMillis()
             val base64 = args.firstOrNull() as? String ?: return@on
             val raw = Base64.decode(base64, Base64.DEFAULT)
             player.write(raw)
         }
 
         s.on(SocketEvent.GeminiInputTranscript.value) { args ->
+            lastHeartbeatTime = System.currentTimeMillis()
             val obj = args.firstOrNull() as? JSONObject ?: return@on
             val text = obj.optString("text")
             _inputTranscript.value = text
         }
 
         s.on(SocketEvent.GeminiOutputTranscript.value) { args ->
+            lastHeartbeatTime = System.currentTimeMillis()
             val obj = args.firstOrNull() as? JSONObject ?: return@on
             val text = obj.optString("text")
 
@@ -251,6 +271,7 @@ class AgentService private constructor() {
         }
 
         s.on(SocketEvent.GeminiTurnComplete.value) {
+            lastHeartbeatTime = System.currentTimeMillis()
             Log.e("TAG", "tempResult = ${tempResult}")
             _outputTranscript.value = tempResult
             tempResult = ""
@@ -258,6 +279,7 @@ class AgentService private constructor() {
         }
 
         s.on(SocketEvent.DeviceToolCall.value) { args ->
+            lastHeartbeatTime = System.currentTimeMillis()
             Log.e("AgentService", "deviceToolCall = ${args.joinToString()}")
             val obj = args.getOrNull(0) as? JSONObject ?: return@on
             val ack = args.getOrNull(1) as? Ack ?: return@on
@@ -265,14 +287,17 @@ class AgentService private constructor() {
         }
 
         s.on(SocketEvent.TranslationConnected.value) {
+            lastHeartbeatTime = System.currentTimeMillis()
             Log.e("AgentService", "translation_connected")
         }
 
         s.on(SocketEvent.TranslationStarted.value) {
+            lastHeartbeatTime = System.currentTimeMillis()
             Log.e("AgentService", "translation_started")
         }
 
         s.on(SocketEvent.GeminiSessionOpen.value) {
+            lastHeartbeatTime = System.currentTimeMillis()
             Log.e("AgentService", "gemini_session_opened")
             _isReady.value = true
         }
@@ -532,6 +557,7 @@ class AgentService private constructor() {
 
     /**
      * Start heartbeat monitoring to detect connection issues
+     * This actively checks for both ping/pong activity and socket state
      */
     private fun startHeartbeatMonitoring() {
         stopHeartbeatMonitoring()
@@ -541,10 +567,11 @@ class AgentService private constructor() {
 
                 val currentTime = System.currentTimeMillis()
                 val timeSinceLastHeartbeat = currentTime - lastHeartbeatTime
+                val timeSinceLastPing = currentTime - lastPingTime
 
-                // If connected but no activity for 2 minutes, check connection
-                if (_isConnected.value && timeSinceLastHeartbeat > 120000) {
-                    Log.w(TAG, "No heartbeat for ${timeSinceLastHeartbeat}ms, checking connection")
+                // If connected but no activity for 90 seconds, check connection
+                if (_isConnected.value && timeSinceLastHeartbeat > 90000) {
+                    Log.e(TAG, "No heartbeat for ${timeSinceLastHeartbeat}ms, checking connection")
 
                     // Check if socket is actually connected
                     val socket = socket
@@ -552,8 +579,15 @@ class AgentService private constructor() {
                         Log.e(TAG, "Socket disconnected, attempting reconnect")
                         attemptReconnect()
                     } else {
-                        // Socket says it's connected, update heartbeat
-                        lastHeartbeatTime = currentTime
+                        // Socket says it's connected, but no pong received
+                        // This indicates a "fake connection" - network is frozen (Doze mode)
+                        Log.e(TAG, "Socket connected but no activity detected (fake connection)")
+                        Log.e(TAG, "Time since last ping: ${timeSinceLastPing}ms")
+                        Log.e(TAG, "Time since last pong: ${timeSinceLastHeartbeat}ms")
+
+                        // Force reconnect to restore real connection
+                        Log.e(TAG, "Forcing reconnect to restore connection")
+                        attemptReconnect()
                     }
                 }
             }

@@ -101,6 +101,7 @@ class DeviceSession(private val context: Context, val device: BluetoothDevice, p
     private val minWriteInterval = 50L // ms between writes
 
     fun connect() {
+        Log.e(TAG, "connect() called, session=$this, device=${device.address}")
         _state.value = State.CONNECTING
         gatt = device.connectGatt(context, true, callback, BluetoothDevice.TRANSPORT_LE)
     }
@@ -110,6 +111,7 @@ class DeviceSession(private val context: Context, val device: BluetoothDevice, p
     }
 
     private fun cleanup() {
+        Log.e(TAG, "cleanup() called, session=$this")
         // This should only be called from onConnectionStateChange or connect()
         gatt?.close()
         gatt = null
@@ -153,6 +155,7 @@ class DeviceSession(private val context: Context, val device: BluetoothDevice, p
 
     private val callback = object : BluetoothGattCallback() {
         override fun onConnectionStateChange(gatt: BluetoothGatt?, status: Int, newState: Int) {
+            Log.e(TAG, "onConnectionStateChange: status=$status, newState=$newState, session=$this@DeviceSession")
             if (status == BluetoothGatt.GATT_SUCCESS && newState == BluetoothGatt.STATE_CONNECTED) {
                 if (retrieveToken == null) {
                     _state.value = State.CONNECTING
@@ -177,35 +180,61 @@ class DeviceSession(private val context: Context, val device: BluetoothDevice, p
                 _state.value = State.DISCONNECTED
                 return
             }
+            Log.e(TAG, "onServicesDiscovered: session=$this")
+            var foundHandshaking = false
+
             gatt.services?.forEach { service ->
                 service.characteristics.forEach { characteristic ->
                     when (characteristic.uuid) {
                         writeCharacteristicUUID -> writeCharacteristic = characteristic
                         txCharacteristicUUID -> txCharacteristic = characteristic
-                        handShakingDataUUID -> handShakingDataCharacteristic = characteristic
-                        streamingDataUUID -> streamingCharacteristic = characteristic
+                        handShakingDataUUID -> {
+                            handShakingDataCharacteristic = characteristic
+                            foundHandshaking = true
+                            Log.e(TAG, "Found handShakingDataCharacteristic")
+                        }
+                        streamingDataUUID -> {
+                            streamingCharacteristic = characteristic
+                            Log.e(TAG, "Found streamingCharacteristic, properties=${characteristic.properties}")
+                        }
                     }
                     if ((characteristic.properties and BluetoothGattCharacteristic.PROPERTY_NOTIFY) != 0) {
-                        gatt.setCharacteristicNotification(characteristic, true)
+                        val notifyEnabled = gatt.setCharacteristicNotification(characteristic, true)
+                        Log.e(TAG, "setCharacteristicNotification for ${characteristic.uuid}: $notifyEnabled")
                         characteristic.getDescriptor(descriptorUUID)?.let { descriptor ->
                             descriptor.value = BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE
                             descriptorQueue.add(descriptor)
-                        }
+                            Log.e(TAG, "Added descriptor to queue for ${characteristic.uuid}")
+                        } ?: Log.e(TAG, "No descriptor found for ${characteristic.uuid}")
                     }
                 }
             }
+            Log.e(TAG, "Total descriptors in queue: ${descriptorQueue.size}")
+
+            // iOS-style: start handshaking immediately when found, like iOS does
+            if (foundHandshaking && !handShakingStart) {
+                Log.e(TAG, "Starting handshaking immediately (iOS-style)")
+                startHandshaking()
+            }
+
+            // Still write descriptors in parallel
             writeNextDescriptor()
         }
 
         override fun onDescriptorWrite(gatt: BluetoothGatt, descriptor: BluetoothGattDescriptor, status: Int) {
-            writeNextDescriptor()
-            if (!handShakingStart && descriptorQueue.isEmpty()) {
-                startHandshaking()
+            Log.e(TAG, "onDescriptorWrite: characteristic=${descriptor.characteristic.uuid}, status=$status, remaining=${descriptorQueue.size}")
+
+            // Just continue writing the next descriptor
+            // Handshaking is already started in onServicesDiscovered (iOS-style)
+            if (descriptorQueue.isNotEmpty()) {
+                writeNextDescriptor()
+            } else {
+                Log.e(TAG, "All descriptors written")
             }
         }
 
         override fun onCharacteristicChanged(gatt: BluetoothGatt, characteristic: BluetoothGattCharacteristic, value: ByteArray) {
-//            Log.e("TAG", "value = ${value.hexString()}")
+//            Log.e(TAG, "onCharacteristicChanged: uuid=${characteristic.uuid}, size=${value.size}, session=$this")
             handleCharacteristicValue(characteristic.uuid, value)
         }
 
@@ -262,7 +291,6 @@ class DeviceSession(private val context: Context, val device: BluetoothDevice, p
             txCharacteristicUUID -> handleTxValue(value)
             streamingDataUUID -> { // Strip the 8-byte header if present and forward payload
                 if (value.size > 8) {
-                    Log.e("TAG", "ininininin")
                     onStreamData?.invoke(value.copyOfRange(8, value.size))
                 }
             }
@@ -323,6 +351,10 @@ class DeviceSession(private val context: Context, val device: BluetoothDevice, p
                         add {
                             sendRaw(getPhoneSystemModelCommand)
                         }
+                        delay(500)
+                        add {
+                            sendRaw(getPhoneSystemModelCommand)
+                        }
                         // Wait for command to complete (CommandExecutor timeout is 300ms)
                         // Add extra buffer to ensure the command is fully processed
                         Log.e("TAG", "Setting CONNECTED state after init command completed")
@@ -349,11 +381,12 @@ class DeviceSession(private val context: Context, val device: BluetoothDevice, p
                     scope.launch {
                         delay(300)
                         add {
-                            sendRaw(getPhoneSystemModelCommand)
-                        }
-                        add {
                             sendRaw(connectSucceedResponseCommand)
                         }
+                        add {
+                            sendRaw(getPhoneSystemModelCommand)
+                        }
+
                     }
                     _state.value = State.CONNECTED
                 }

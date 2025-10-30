@@ -354,8 +354,15 @@ class AppForegroundService : Service() {
     private fun scheduleConnectionCheck() {
         try {
             val workRequest = PeriodicWorkRequestBuilder<AgentConnectionWorker>(
-                15, java.util.concurrent.TimeUnit.MINUTES  // Check every 15 minutes
-            ).build()
+                15, java.util.concurrent.TimeUnit.MINUTES  // Check every 15 minutes (minimum allowed)
+            )
+                .setConstraints(
+                    androidx.work.Constraints.Builder()
+                        .setRequiresDeviceIdle(false)  // Allow running even in Doze mode
+                        .setRequiresBatteryNotLow(false)  // Allow running even when battery is low
+                        .build()
+                )
+                .build()
 
             WorkManager.getInstance(applicationContext)
                 .enqueueUniquePeriodicWork(
@@ -364,7 +371,7 @@ class AppForegroundService : Service() {
                     workRequest
                 )
 
-            Log.d("AppForegroundService", "WorkManager connection check scheduled")
+            Log.e("AppForegroundService", "WorkManager connection check scheduled")
         } catch (e: Exception) {
             Log.e("AppForegroundService", "Failed to schedule WorkManager: ${e.message}")
         }

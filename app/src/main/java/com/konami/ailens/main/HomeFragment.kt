@@ -21,6 +21,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import androidx.core.view.isInvisible
 import androidx.core.view.isVisible
+import com.konami.ailens.ble.command.ToggleMicCommand
 import com.konami.ailens.resolveAttrColor
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flatMapLatest
@@ -42,6 +43,14 @@ class HomeFragment: Fragment() {
         binding.settingButton.setOnClickListener {
             findNavController().navigate(R.id.action_HomeFragment_to_SettingFragment)
         }
+
+         binding.teleprompterButton.setOnClickListener {
+                 BLEService.instance.connectedSession.value?.add(ToggleMicCommand(true))
+             }
+
+         binding.translationButton.setOnClickListener {
+                 BLEService.instance.connectedSession.value?.add(ToggleMicCommand(false))
+             }
 
         // Monitor connectedSession state changes
         viewLifecycleOwner.lifecycleScope.launch {

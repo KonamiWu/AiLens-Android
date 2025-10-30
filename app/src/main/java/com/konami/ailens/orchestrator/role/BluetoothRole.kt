@@ -42,7 +42,6 @@ class BluetoothRole(private val session: DeviceSession, private val deviceEventH
     }
 
     override fun displayStopAgent() {
-        Log.e("TAG", "displayStopAgent displayStopAgent displayStopAgent")
         val command = ToggleAgentCommand(false)
         session.add(command)
     }

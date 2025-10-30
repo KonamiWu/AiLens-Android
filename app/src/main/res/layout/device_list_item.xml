@@ -75,7 +75,7 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/rotateLayout"
+            android:id="@+id/loadingLayout"
             android:layout_width="@dimen/device_list_item_rotate_layout_size"
             android:layout_height="@dimen/device_list_item_rotate_layout_size"
             app:layout_constraintTop_toTopOf="parent"
@@ -90,7 +90,7 @@
                 app:fillColor="?attr/appPrimary" />
 
             <ImageView
-                android:id="@+id/rotateImageView"
+                android:id="@+id/loadingImageView"
                 android:layout_width="@dimen/device_list_item_rotate_image_size"
                 android:layout_height="@dimen/device_list_item_rotate_image_size"
                 app:layout_constraintStart_toStartOf="parent"

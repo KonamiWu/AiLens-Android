@@ -12,6 +12,7 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.konami.ailens.SharedPrefs
 import com.konami.ailens.ble.BLEService
+import com.konami.ailens.ble.command.UnbindCommand
 import com.konami.ailens.databinding.FragmentSettingBinding
 import com.konami.ailens.device.AddDeviceActivity
 
@@ -49,13 +50,12 @@ class SettingFragment: Fragment() {
 
     private fun removeBond(device: BluetoothDevice) {
         try {
-            val method = device.javaClass.getMethod("removeBond")
-            val result = method.invoke(device) as? Boolean
-            if (result == true) {
-                Log.d("SettingFragment", "Successfully removed bond for device: ${device.name}")
-            } else {
-                Log.e("SettingFragment", "Failed to remove bond for device: ${device.name}")
+            val command = UnbindCommand()
+            command.completion = {
+                val method = device.javaClass.getMethod("removeBond")
+                val result = method.invoke(device)
             }
+
         } catch (e: Exception) {
             Log.e("SettingFragment", "Error removing bond: ${e.message}", e)
         }

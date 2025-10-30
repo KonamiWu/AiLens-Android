@@ -30,25 +30,25 @@ class AgentConnectionWorker(
                 agentService.lastEnv != null &&
                 !agentService.isConnected.value) {
 
-                Log.w(TAG, "Agent disconnected, attempting reconnect")
+                Log.e(TAG, "Agent disconnected, attempting reconnect")
                 agentService.attemptReconnect()
 
                 Result.success()
             } else if (agentService.isConnected.value && !agentService.isReady.value) {
                 // Connected but not ready - might be stuck
-                Log.w(TAG, "Agent connected but not ready, checking...")
+                Log.e(TAG, "Agent connected but not ready, checking...")
 
                 // Wait a bit and check again
                 kotlinx.coroutines.delay(5000)
 
                 if (agentService.isConnected.value && !agentService.isReady.value) {
-                    Log.w(TAG, "Agent still not ready, reconnecting")
+                    Log.e(TAG, "Agent still not ready, reconnecting")
                     agentService.attemptReconnect()
                 }
 
                 Result.success()
             } else {
-                Log.d(TAG, "Agent connection healthy")
+                Log.e(TAG, "Agent connection healthy")
                 Result.success()
             }
         } catch (e: Exception) {

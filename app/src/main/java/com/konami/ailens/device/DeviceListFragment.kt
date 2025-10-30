@@ -13,7 +13,6 @@ import android.view.ViewGroup
 import android.view.animation.LinearInterpolator
 import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
@@ -27,8 +26,6 @@ import com.konami.ailens.ble.BLEService
 import com.konami.ailens.ble.DeviceSession
 import com.konami.ailens.databinding.FragmentDeviceListBinding
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
 
@@ -43,6 +40,7 @@ class DeviceListFragment: Fragment() {
             removeBond(deviceSession)
         }
         viewModel.connect(deviceSession)
+
         refresh()
     }
 
@@ -64,6 +62,7 @@ class DeviceListFragment: Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         adapter.updateItems(viewModel.getItems())
         adapter.notifyDataSetChanged()
 
@@ -207,8 +206,8 @@ class DeviceListFragment: Fragment() {
         class ViewHolder(view: View): RecyclerView.ViewHolder(view) {
             val nameTextView: TextView = view.findViewById(R.id.nameTextView)
             val connectLayout: View = view.findViewById(R.id.buttonLayout)
-            val rotateLayout: View = view.findViewById(R.id.rotateLayout)
-            val rotateImageView: ImageView = view.findViewById(R.id.rotateImageView)
+            val rotateLayout: View = view.findViewById(R.id.loadingLayout)
+            val rotateImageView: ImageView = view.findViewById(R.id.loadingImageView)
             var rotateAnim: ObjectAnimator? = null
         }
     }

@@ -2,6 +2,8 @@ package com.konami.ailens.recorder
 
 import android.util.Log
 import com.konami.ailens.ble.DeviceSession
+import com.konami.ailens.ble.command.ToggleAgentCommand
+import com.konami.ailens.ble.command.ToggleAgentMicCommand
 import com.konami.ailens.ble.command.ToggleMicCommand
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -15,13 +17,16 @@ class BluetoothRecorder(
     private val session: DeviceSession
 ) : Recorder {
 
+    init {
+        Log.e("BluetoothRecorder", "BluetoothRecorder created with session=$session")
+    }
+
     private val channel = Channel<ByteArray>(capacity = Channel.UNLIMITED)
     override val frames: Flow<ByteArray> = channel.receiveAsFlow()
 
     private var isRecording = false
 
     override fun startRecording() {
-        Log.e("TAG", "isRecording = ${isRecording}")
         if (isRecording) return
 
         // reset channel
@@ -32,14 +37,13 @@ class BluetoothRecorder(
         isRecording = true
 
         session.onStreamData = { data ->
-            Log.e("TAG", "onononononon")
             if (isRecording) {
                 channel.trySend(data).isSuccess
             }
         }
         CoroutineScope(Dispatchers.IO).launch {
             delay(300)
-            session.add(ToggleMicCommand(true))
+            session.add(ToggleAgentMicCommand(true))
         }
     }
 
@@ -48,7 +52,7 @@ class BluetoothRecorder(
         isRecording = false
 
         // 發送關閉麥克風的 BLE 指令
-        session.add(ToggleMicCommand(false))
+        session.add(ToggleAgentMicCommand(false))
 
         // 停止接收
         session.onStreamData = null
