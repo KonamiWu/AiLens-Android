@@ -6,6 +6,8 @@ import android.media.session.MediaSession
 import android.util.Base64
 import com.google.gson.Gson
 import androidx.core.content.edit
+import com.google.gson.reflect.TypeToken
+import com.konami.ailens.orchestrator.Orchestrator
 
 data class DeviceInfo(
     val mac: String,
@@ -33,6 +35,11 @@ object SharedPrefs {
     private const val KEY_HOME_FAVORITE = "homeFavorite"
     private const val KEY_COMPANY_FAVORITE = "companyFavorite"
     private const val KEY_ADDRESS_HISTORY = "addressHistory"
+    private const val KEY_INTERPRETATION_SOURCE_LANGUAGE = "interpretationSource"
+    private const val KEY_INTERPRETATION_TARGET_LANGUAGE = "interpretationTarget"
+    private const val KEY_TWO_WAY_SOURCE_LANGUAGE = "twoWaySource"
+    private const val KEY_TWO_WAY_TARGET_LANGUAGE = "twoWayTarget"
+    private const val KEY_TWO_WAY_BILINGUAL = "bilingual"
     private const val MAX_HISTORY_SIZE = 5
     private val tokenManager = TokenManager()
     private lateinit var prefs: SharedPreferences
@@ -59,11 +66,21 @@ object SharedPrefs {
         }
         set(value) {
             if (value == null) {
-                prefs.edit().remove(KEY_HOME_FAVORITE).apply()
+                prefs.edit { remove(KEY_HOME_FAVORITE) }
             } else {
                 val gson = Gson()
                 val jsonStr = gson.toJson(value)
-                prefs.edit().putString(KEY_HOME_FAVORITE, jsonStr).apply()
+                prefs.edit { putString(KEY_HOME_FAVORITE, jsonStr) }
+            }
+        }
+
+    var bilingual: Boolean
+        get() {
+            return prefs.getBoolean(KEY_TWO_WAY_BILINGUAL, false)
+        }
+        set(value) {
+            prefs.edit {
+                putBoolean(KEY_TWO_WAY_BILINGUAL, value)
             }
         }
 
@@ -92,7 +109,7 @@ object SharedPrefs {
         val gson = Gson()
         val jsonStr = prefs.getString(KEY_ADDRESS_HISTORY, null) ?: return emptyList()
         return try {
-            val type = object : com.google.gson.reflect.TypeToken<List<AddressHistoryItem>>() {}.type
+            val type = object : TypeToken<List<AddressHistoryItem>>() {}.type
             gson.fromJson(jsonStr, type) ?: emptyList()
         } catch (e: Exception) {
             emptyList()
@@ -114,7 +131,7 @@ object SharedPrefs {
         // Save to SharedPreferences
         val gson = Gson()
         val jsonStr = gson.toJson(updatedHistory)
-        prefs.edit().putString(KEY_ADDRESS_HISTORY, jsonStr).apply()
+        prefs.edit { putString(KEY_ADDRESS_HISTORY, jsonStr) }
     }
 
     fun filterAddressHistory(query: String): List<AddressHistoryItem> {
@@ -136,7 +153,29 @@ object SharedPrefs {
             "retrieveToken" to Base64.encodeToString(tokenManager.getRetrieveToken(mac, userId, deviceToken), Base64.NO_WRAP)
         )
         val jsonStr = gson.toJson(jsonMap)
-        prefs.edit().putString(KEY_DEVICE_INFO, jsonStr).apply()
+        prefs.edit { putString(KEY_DEVICE_INFO, jsonStr) }
+    }
+
+    fun getInterpretationSourceLanguage(context: Context):  Orchestrator.Language {
+        val prefs = getPrefs(context)
+        val code = prefs.getString(
+            KEY_INTERPRETATION_SOURCE_LANGUAGE,
+            Orchestrator.Language.interpretationSourceDefault.code
+        )
+
+        return Orchestrator.Language.fromCode(code ?: "")
+            ?: Orchestrator.Language.interpretationSourceDefault
+    }
+
+    fun getInterpretationTargetLanguage(context: Context):  Orchestrator.Language {
+        val prefs = getPrefs(context)
+        val code = prefs.getString(
+            KEY_INTERPRETATION_TARGET_LANGUAGE,
+            Orchestrator.Language.interpretationTargetDefault.code
+        )
+
+        return Orchestrator.Language.fromCode(code ?: "")
+            ?: Orchestrator.Language.interpretationTargetDefault
     }
 
     fun getDeviceInfo(context: Context): DeviceInfo? {

@@ -3,6 +3,7 @@ package com.konami.ailens.recorder
 import android.util.Log
 import com.konami.ailens.ble.Glasses
 import com.konami.ailens.ble.command.ToggleAgentMicCommand
+import com.konami.ailens.ble.command.ToggleMicCommand
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
@@ -12,7 +13,7 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 
 class BluetoothRecorder(
-    private val session: Glasses
+    private val session: Glasses, private val isAgent: Boolean
 ) : Recorder {
 
     init {
@@ -29,7 +30,7 @@ class BluetoothRecorder(
 
         // reset channel
         if (!channel.isEmpty) {
-            channel.tryReceive().getOrNull() // 清掉殘留
+            channel.tryReceive().getOrNull()
         }
 
         isRecording = true
@@ -41,7 +42,10 @@ class BluetoothRecorder(
         }
         CoroutineScope(Dispatchers.IO).launch {
             delay(300)
-            session.add(ToggleAgentMicCommand(true))
+            if (isAgent)
+                session.add(ToggleAgentMicCommand(true))
+            else
+                session.add(ToggleMicCommand(true))
         }
     }
 
@@ -49,15 +53,18 @@ class BluetoothRecorder(
         if (!isRecording) return
         isRecording = false
 
-        // 發送關閉麥克風的 BLE 指令
-        session.add(ToggleAgentMicCommand(false))
-
-        // 停止接收
+        if (isAgent)
+            session.add(ToggleAgentMicCommand(false))
+        else
+            session.add(ToggleMicCommand(false))
         session.onStreamData = null
     }
 
     override fun close() {
-        if (isRecording) stopRecording()
+        if (isRecording) {
+            stopRecording()
+        }
+
         channel.close()
     }
 }

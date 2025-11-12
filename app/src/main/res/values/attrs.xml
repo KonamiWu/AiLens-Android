@@ -24,6 +24,13 @@
         </attr>
     </declare-styleable>
 
+    <declare-styleable name="WaveView">
+        <attr name="dotSize" format="dimension" />
+        <attr name="dotSpacing" format="dimension" />
+        <attr name="dotColor" format="color" />
+        <attr name="waveBackgroundColor" format="color" />
+    </declare-styleable>
+
     <attr name="appPrimary" format="color" />
     <attr name="appPrimaryDark" format="color" />
     <attr name="appBackground" format="color" />

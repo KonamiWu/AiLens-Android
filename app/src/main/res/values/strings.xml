@@ -66,4 +66,27 @@
     <string name="notification_agent_connecting_status">AI Connecting</string>
     <string name="notification_service_running">Service running</string>
     <string name="notification_separator">, </string>
+
+<!--    language selection-->
+    <string name="japanes">日文</string>
+    <string name="enblish">English</string>
+    <string name="chinese">中文</string>
+    <string name="espanol">Español</string>
+    <string name="francais">français </string>
+
+<!--    smart translation-->
+    <string name="smart_translation">Smart Translation</string>
+    <string name="interpretation">Interpretation</string>
+    <string name="two_way_translation">Two-way Translation</string>
+    <string name="smart_translation_info_1">Translate recognized speech to the selected language on glasses and App</string>
+    <string name="smart_translation_info_2">Translate conversations between two people using the glasses and App</string>
+
+<!--    Interpretation-->
+    <string name="bilingual_display">Bilingual Display</string>
+    <string name="bilingual_info">Show original and translation on glasses and app.</string>
+    <string name="interpretation_info">After completing the language setup, start the interpretation feature from your glasses to begin.</string>
+    <string name="interpretation_main_info">After completing the language setup, start the interpretation feature from your glasses to begin.</string>
+
+<!--    dialog translation-->
+    <string name="start">Start</string>
 </resources>

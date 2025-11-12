@@ -68,6 +68,7 @@ dependencies {
 //    implementation(libs.maps.navigation)
     implementation(libs.lifecycle.viewmodel.ktx)
     implementation(libs.lifecycle.runtime.ktx)
+    implementation(libs.azure.speech.sdk)
 
     // WorkManager for background tasks
     implementation("androidx.work:work-runtime-ktx:2.9.0")

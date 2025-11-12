@@ -2,6 +2,7 @@ package com.konami.ailens.main
 
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
@@ -11,11 +12,17 @@ import android.widget.TextView
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.fragment.findNavController
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import com.konami.ailens.R
 import com.konami.ailens.databinding.FragmentMainBinding
+import com.konami.ailens.orchestrator.Orchestrator
+import kotlinx.coroutines.launch
 
 class MainFragment: Fragment() {
     private lateinit var binding: FragmentMainBinding

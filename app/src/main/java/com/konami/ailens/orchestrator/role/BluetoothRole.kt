@@ -7,19 +7,23 @@ import android.graphics.drawable.Drawable
 import android.util.Log
 import android.view.View
 import com.konami.ailens.ble.Glasses
+import com.konami.ailens.ble.command.LeaveInterpretationCommand
 import com.konami.ailens.ble.command.LeaveNavigationCommand
 import com.konami.ailens.ble.command.SendNavigationInfoCommand
 import com.konami.ailens.ble.command.StartNavigationCommand
 import com.konami.ailens.ble.command.TextToAgentCommand
+import com.konami.ailens.ble.command.TextToSimultaneousTranslationCommand
 import com.konami.ailens.ble.command.ToggleAgentCommand
 import com.konami.ailens.navigation.NavStep
+import com.konami.ailens.orchestrator.Orchestrator
 import com.konami.ailens.orchestrator.capability.AgentDisplayCapability
 import com.konami.ailens.orchestrator.capability.CapabilitySink
 import com.konami.ailens.orchestrator.capability.DeviceEventCapability
+import com.konami.ailens.orchestrator.capability.InterpretationDisplayCapability
 import com.konami.ailens.orchestrator.capability.NavigationDisplayCapability
 import java.time.Instant
 
-class BluetoothRole(private val session: Glasses, private val deviceEventHandler: DeviceEventCapability): Role, AgentDisplayCapability, NavigationDisplayCapability {
+class BluetoothRole(private val session: Glasses, private val deviceEventHandler: DeviceEventCapability): Role, AgentDisplayCapability, NavigationDisplayCapability, InterpretationDisplayCapability {
     private var sessionId: UByte = 1u
 
     init {
@@ -28,6 +32,7 @@ class BluetoothRole(private val session: Glasses, private val deviceEventHandler
     override fun registerCapabilities(sink: CapabilitySink) {
         sink.addAgentDisplay(this)
         sink.addNavigationDisplay(this)
+        sink.addInterpretationDisplay(this)
     }
 
     override fun displayResultAnswer(result: String) {
@@ -43,6 +48,34 @@ class BluetoothRole(private val session: Glasses, private val deviceEventHandler
 
     override fun displayStopAgent() {
         val command = ToggleAgentCommand(false)
+        session.add(command)
+    }
+
+    override fun displayPartial(transcription: String, translation: String) {
+        if (Orchestrator.instance.bilingual) {
+            val command = TextToSimultaneousTranslationCommand(sessionId, transcription, translation)
+            session.add(command)
+        } else {
+            val command = TextToSimultaneousTranslationCommand(sessionId, null, translation)
+            session.add(command)
+        }
+    }
+
+    override fun displayResult(transcription: String, translation: String) {
+        if (Orchestrator.instance.bilingual) {
+            val command = TextToSimultaneousTranslationCommand(sessionId++, transcription, translation)
+            session.add(command)
+        } else {
+            val command = TextToSimultaneousTranslationCommand(sessionId++, null, translation)
+            session.add(command)
+        }
+    }
+
+    override fun displayStart() {
+    }
+
+    override fun displayStop() {
+        val command = LeaveInterpretationCommand()
         session.add(command)
     }
 
