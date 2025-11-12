@@ -17,7 +17,6 @@ import android.util.Log
 import androidx.annotation.RequiresPermission
 import androidx.core.app.NotificationCompat
 import androidx.core.app.ServiceCompat
-import androidx.lifecycle.lifecycleScope
 import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
@@ -175,7 +174,7 @@ class AppForegroundService : Service() {
                 }
                 .collect { state ->
                     when (state) {
-                        DeviceSession.State.CONNECTED -> {
+                        Glasses.State.CONNECTED -> {
                             val session = service.connectedSession.value ?: return@collect
                             isBluetoothConnected = true
                             updateNotificationForCurrentState()
@@ -197,7 +196,7 @@ class AppForegroundService : Service() {
                             orchestrator.register(navigationRole)
                         }
 
-                        DeviceSession.State.DISCONNECTED -> {
+                        Glasses.State.DISCONNECTED -> {
                             isBluetoothConnected = false
                             updateNotificationForCurrentState()
                             orchestrator.clean()
@@ -333,7 +332,7 @@ class AppForegroundService : Service() {
     private fun reconnectAgent() {
         try {
             val session = bleService.connectedSession.value
-            if (session != null && session.state.value == DeviceSession.State.CONNECTED) {
+            if (session != null && session.state.value == Glasses.State.CONNECTED) {
                 Log.d("AppForegroundService", "Reconnecting agent after doze mode")
                 AgentService.instance.connect(
                     getString(R.string.token),

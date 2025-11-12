@@ -6,7 +6,7 @@ import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
 import android.util.Log
 import android.view.View
-import com.konami.ailens.ble.DeviceSession
+import com.konami.ailens.ble.Glasses
 import com.konami.ailens.ble.command.LeaveNavigationCommand
 import com.konami.ailens.ble.command.SendNavigationInfoCommand
 import com.konami.ailens.ble.command.StartNavigationCommand
@@ -19,7 +19,7 @@ import com.konami.ailens.orchestrator.capability.DeviceEventCapability
 import com.konami.ailens.orchestrator.capability.NavigationDisplayCapability
 import java.time.Instant
 
-class BluetoothRole(private val session: DeviceSession, private val deviceEventHandler: DeviceEventCapability): Role, AgentDisplayCapability, NavigationDisplayCapability {
+class BluetoothRole(private val session: Glasses, private val deviceEventHandler: DeviceEventCapability): Role, AgentDisplayCapability, NavigationDisplayCapability {
     private var sessionId: UByte = 1u
 
     init {

@@ -1,7 +1,7 @@
 package com.konami.ailens.ble.command
 
 import android.graphics.Bitmap
-import com.konami.ailens.ble.DeviceSession
+import com.konami.ailens.ble.Glasses
 import com.konami.ailens.ble.ImageUtils
 import com.konami.ailens.ble.RLC
 import com.konami.ailens.ble.TLV
@@ -43,7 +43,7 @@ class SendNavigationInfoCommand(
         private const val TLV_ICON: UByte = 0x15u
     }
 
-    override fun execute(session: DeviceSession) {
+    override fun execute(session: Glasses) {
 //        android.util.Log.e("SendNavInfo", "=== SendNavigationInfoCommand execute ===")
 //        android.util.Log.e("SendNavInfo", "guideInfo: $guideInfo")
 //        android.util.Log.e("SendNavInfo", "timeRemaining: $timeRemaining")

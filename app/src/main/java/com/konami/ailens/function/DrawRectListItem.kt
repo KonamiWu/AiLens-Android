@@ -1,9 +1,9 @@
 package com.konami.ailens.function
 
-import com.konami.ailens.ble.DeviceSession
+import com.konami.ailens.ble.Glasses
 import com.konami.ailens.ble.command.DrawRectCommand
 
-class DrawRectListItem(private val session: DeviceSession,
+class DrawRectListItem(private val session: Glasses,
                        private val x: Int,
                        private val y: Int,
                        private val width: Int,

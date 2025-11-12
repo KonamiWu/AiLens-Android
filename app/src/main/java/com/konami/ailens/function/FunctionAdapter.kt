@@ -1,6 +1,5 @@
 package com.konami.ailens.function
 
-import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -8,12 +7,11 @@ import android.widget.TextView
 import androidx.navigation.NavController
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
-import com.konami.ailens.ble.BLEService
 import com.konami.ailens.R
-import com.konami.ailens.ble.DeviceSession
+import com.konami.ailens.ble.Glasses
 import com.konami.ailens.function.FunctionAdapter.FunctionViewHolder
 
-class FunctionAdapter(session: DeviceSession, navController: NavController): RecyclerView.Adapter<FunctionViewHolder>() {
+class FunctionAdapter(session: Glasses, navController: NavController): RecyclerView.Adapter<FunctionViewHolder>() {
 
     class FunctionViewHolder(itemView: View): ViewHolder(itemView) {
         val titleTextView: TextView = itemView.findViewById(R.id.titleTextView)

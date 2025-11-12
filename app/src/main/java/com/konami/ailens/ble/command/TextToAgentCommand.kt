@@ -1,10 +1,6 @@
 package com.konami.ailens.ble.command
 
-import android.bluetooth.BluetoothGattCharacteristic
-import com.konami.ailens.ble.DeviceSession
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
+import com.konami.ailens.ble.Glasses
 
 // MARK: - V1 meta_cmd framer (8B header)
 object ChatGPTV1Framer {
@@ -60,7 +56,7 @@ class TextToAgentCommand(
     private val text: String
 ) : VoidCommand() {
 
-    override fun execute(session: DeviceSession) {
+    override fun execute(session: Glasses) {
         val mtu = session.mtu
 
         val frames = ChatGPTV1Framer.buildFrames(

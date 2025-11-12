@@ -1,14 +1,13 @@
 package com.konami.ailens.ble.command
 
-import android.util.Log
-import com.konami.ailens.ble.DeviceSession
+import com.konami.ailens.ble.Glasses
 
 /**
  * Command to open the microphone on glasses.
  */
 class ToggleMicCommand(private val isOn: Boolean) : VoidCommand() {
 
-    override fun execute(session: DeviceSession) {
+    override fun execute(session: Glasses) {
         // Send raw command bytes to device
         val value = byteArrayOf(
             0x45, 0x4D,

@@ -2,7 +2,6 @@ package com.konami.ailens.main
 
 import android.annotation.SuppressLint
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,11 +12,9 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import com.konami.ailens.R
 import com.konami.ailens.ble.BLEService
-import com.konami.ailens.ble.DeviceSession
-import com.konami.ailens.ble.command.ReadBatteryCommand
+import com.konami.ailens.ble.Glasses
 import com.konami.ailens.databinding.FragmentHomeBinding
 import com.konami.ailens.navigation.NavigationService
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import androidx.core.view.isInvisible
 import androidx.core.view.isVisible
@@ -69,7 +66,7 @@ class HomeFragment: Fragment() {
                         } else {
                             binding.nameTextView.text = session.device.name
                             when (state) {
-                                DeviceSession.State.CONNECTED -> setViewStateConnected()
+                                Glasses.State.CONNECTED -> setViewStateConnected()
                                 else -> setViewStateDisconnected()
                             }
                         }

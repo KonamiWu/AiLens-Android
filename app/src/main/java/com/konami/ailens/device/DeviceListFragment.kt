@@ -23,7 +23,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.konami.ailens.R
 import com.konami.ailens.SharedPrefs
 import com.konami.ailens.ble.BLEService
-import com.konami.ailens.ble.DeviceSession
+import com.konami.ailens.ble.Glasses
 import com.konami.ailens.databinding.FragmentDeviceListBinding
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -34,7 +34,7 @@ class DeviceListFragment: Fragment() {
     private lateinit var binding: FragmentDeviceListBinding
     private val viewModel: DeviceListViewModel by viewModels()
     private val adapter = DeviceListAdapter { deviceSession ->
-        if (deviceSession.state.value != DeviceSession.State.AVAILABLE)
+        if (deviceSession.state.value != Glasses.State.AVAILABLE)
             return@DeviceListAdapter
         if (deviceSession.device.bondState == BluetoothDevice.BOND_BONDED) {
             removeBond(deviceSession)
@@ -106,7 +106,7 @@ class DeviceListFragment: Fragment() {
     /**
      * Remove bond (unpair) a Bluetooth device
      */
-    private fun removeBond(deviceSession: DeviceSession) {
+    private fun removeBond(deviceSession: Glasses) {
         val device = deviceSession.device
         val deviceName = device.name ?: device.address
 
@@ -158,8 +158,8 @@ class DeviceListFragment: Fragment() {
         }
     }
 
-    class DeviceListAdapter(val onclick: (DeviceSession) -> Unit): RecyclerView.Adapter<DeviceListAdapter.ViewHolder>() {
-        private var items = listOf<DeviceSession>()
+    class DeviceListAdapter(val onclick: (Glasses) -> Unit): RecyclerView.Adapter<DeviceListAdapter.ViewHolder>() {
+        private var items = listOf<Glasses>()
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
             val view = LayoutInflater.from(parent.context).inflate(R.layout.device_list_item, parent, false)
@@ -175,7 +175,7 @@ class DeviceListFragment: Fragment() {
             }
 
             when (session.state.value) {
-                DeviceSession.State.CONNECTING, DeviceSession.State.PAIRING -> {
+                Glasses.State.CONNECTING, Glasses.State.PAIRING -> {
                     holder.rotateLayout.visibility = View.VISIBLE
                     holder.connectLayout.visibility = View.GONE
                     if (holder.rotateAnim?.isRunning != true) {
@@ -199,7 +199,7 @@ class DeviceListFragment: Fragment() {
             return items.size
         }
 
-        fun updateItems(items: List<DeviceSession>) {
+        fun updateItems(items: List<Glasses>) {
             this.items = items
         }
 

@@ -60,9 +60,9 @@ class BLEService private constructor(private val context: Context) {
     val updateFlow = _updateFlow.asSharedFlow()
 
     private val scope = CoroutineScope(Dispatchers.IO)
-    val sessions = mutableMapOf<String, DeviceSession>()
+    val sessions = mutableMapOf<String, Glasses>()
     private val sessionJobs = mutableMapOf<String, kotlinx.coroutines.Job>()
-    private val _connectedSession = MutableStateFlow<DeviceSession?>(null)
+    private val _connectedSession = MutableStateFlow<Glasses?>(null)
     val connectedSession = _connectedSession.asStateFlow()
 
     private var reconnectJob: kotlinx.coroutines.Job? = null  // Track reconnect job
@@ -75,7 +75,7 @@ class BLEService private constructor(private val context: Context) {
                 return
             if (sessions[address] == null) {
                 Log.e("TAG", "newDevice.name = ${newDevice.name}")
-                val newSession = DeviceSession(context, newDevice, null)
+                val newSession = Ailens(context, newDevice, null)
                 sessions[address] = newSession
                 collect(newSession)
                 _updateFlow.tryEmit(Unit)
@@ -86,7 +86,7 @@ class BLEService private constructor(private val context: Context) {
         }
     }
 
-    fun getSession(address: String) : DeviceSession? {
+    fun getSession(address: String) : Glasses? {
         return sessions[address]
     }
 
@@ -170,7 +170,7 @@ class BLEService private constructor(private val context: Context) {
         val info = SharedPrefs.getDeviceInfo(context) ?: return
         val device = try { adapter.getRemoteDevice(info.mac) } catch (_: IllegalArgumentException) { null } ?: return
         Log.e(TAG, "retrieve() creating new DeviceSession for device=${device.address}")
-        val newSession = DeviceSession(context, device, info.retrieveToken)
+        val newSession = Ailens(context, device, info.retrieveToken)
         Log.e(TAG, "retrieve() created newSession=$newSession, setting as connectedSession")
         _connectedSession.value = newSession
         collect(newSession)
@@ -193,7 +193,7 @@ class BLEService private constructor(private val context: Context) {
         sessionJobs.clear()
     }
 
-    private fun collect(session: DeviceSession) {
+    private fun collect(session: Glasses) {
         val address = session.device.address
 
         // Cancel previous job for this address if exists
@@ -202,13 +202,13 @@ class BLEService private constructor(private val context: Context) {
         // Start new monitoring job
         val job = scope.launch {
             session.state.collect {
-                if (it == DeviceSession.State.CONNECTED) {
+                if (it == Glasses.State.CONNECTED) {
                     sessions.remove(address)
                     // Update connectedSession to this newly connected session
                     _connectedSession.value = session
                     _updateFlow.tryEmit(Unit)
                     Log.d(TAG, "Device connected: $address")
-                } else if (it == DeviceSession.State.DISCONNECTED) {
+                } else if (it == Glasses.State.DISCONNECTED) {
                     Log.e(TAG, "Device disconnected: $address, scheduling reconnect...")
                     // Cancel this job first to avoid conflict
                     sessionJobs.remove(address)?.cancel()

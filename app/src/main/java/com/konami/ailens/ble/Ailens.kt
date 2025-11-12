@@ -7,42 +7,55 @@ import android.bluetooth.BluetoothGattCallback
 import android.bluetooth.BluetoothGattCharacteristic
 import android.bluetooth.BluetoothGattDescriptor
 import android.content.Context
-import android.net.wifi.aware.Characteristics
 import android.os.Build
 import android.util.Log
-import androidx.navigation.fragment.findNavController
-import com.konami.ailens.R
 import com.konami.ailens.SharedPrefs
 import com.konami.ailens.TokenManager
 import com.konami.ailens.ble.command.ActionCommand
 import com.konami.ailens.ble.command.BLECommand
-import com.konami.ailens.ble.command.DisconnectCommand
-import com.konami.ailens.ble.command.LeaveNavigationCommand
-import com.konami.ailens.navigation.NavigationService
 import com.konami.ailens.orchestrator.capability.DeviceEventCapability
 import com.konami.ailens.startsWith
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import java.util.UUID
+import com.konami.ailens.ble.Glasses.State
 
 @SuppressLint("MissingPermission")
-class DeviceSession(private val context: Context, val device: BluetoothDevice, private val retrieveToken: ByteArray? = null) {
-    sealed class State(val description: String) {
-        object AVAILABLE : State("Available")
-        object CONNECTING : State("Connecting")
-        object CONNECTED : State("Connected")
-        object PAIRING : State("Pairing")
-        object DISCONNECTED : State("Disconnected")
+class Ailens(private val context: Context, override var device: BluetoothDevice, private val retrieveToken: ByteArray? = null): Glasses {
+
+
+
+    override var onStreamData: ((ByteArray) -> Unit)? = null
+    override var deviceEventHandler: DeviceEventCapability? = null
+    private val _batteryFlow = MutableStateFlow<Pair<Int, Boolean>>(Pair(0, false))
+    override val batteryFlow = _batteryFlow.asStateFlow()
+    private val _state = MutableStateFlow<State>(State.AVAILABLE)
+    override val state = _state.asStateFlow()
+
+    override fun connect() {
+        Log.e(TAG, "connect() called, session=$this, device=${device.address}")
+        _state.value = State.CONNECTING
+        gatt = device.connectGatt(context, true, callback, BluetoothDevice.TRANSPORT_LE)
     }
 
-    private var gatt: BluetoothGatt? = null
+    override fun disconnect() {
+        gatt?.disconnect()
+    }
+
+    override fun add(command: BLECommand<*>) {
+        commandExecutor.add(command)
+    }
+
+    override fun add(action: () -> Unit) {
+        val command = ActionCommand(action)
+        add(command)
+    }
+
     private val scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
 
     // === UUIDs ===
@@ -67,7 +80,7 @@ class DeviceSession(private val context: Context, val device: BluetoothDevice, p
     private val commandExecutor = CommandExecutor(this)
 
     // External audio/stream consumer
-    var onStreamData: ((ByteArray) -> Unit)? = null
+
     // Protocol constants
     private val glassShowLongPressCommand = byteArrayOf(0x45, 0x4D, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00)
     private val connectSucceedResponseCommand = byteArrayOf(0x4F, 0x42, 0x68, 0x00, 0x00, 0x00, 0x00, 0x00)
@@ -86,29 +99,21 @@ class DeviceSession(private val context: Context, val device: BluetoothDevice, p
     private val batteryPrefix= "454D100002000400"
     private val batteryPrefix2= "4F42100003000600"
     private val leaveNavigationCommand = "454D8F0012002400"
-    var deviceEventHandler: DeviceEventCapability? = null
 
-    private val _batteryFlow = MutableStateFlow<Pair<Int, Boolean>>(Pair(0, false))
-    val batteryFlow = _batteryFlow.asStateFlow()
-    var mtu = 23
+
+
+
+
+    override var mtu = 23
         private set
-    private val _state = MutableStateFlow<State>(State.AVAILABLE)
-    val state = _state.asStateFlow()
+
 
     // Lock to prevent concurrent writes
     private val writeLock = Any()
     private var lastWriteTime = 0L
     private val minWriteInterval = 50L // ms between writes
 
-    fun connect() {
-        Log.e(TAG, "connect() called, session=$this, device=${device.address}")
-        _state.value = State.CONNECTING
-        gatt = device.connectGatt(context, true, callback, BluetoothDevice.TRANSPORT_LE)
-    }
-
-    fun disconnect() {
-        gatt?.disconnect()
-    }
+    private var gatt: BluetoothGatt? = null
 
     private fun cleanup() {
         Log.e(TAG, "cleanup() called, session=$this")
@@ -134,21 +139,10 @@ class DeviceSession(private val context: Context, val device: BluetoothDevice, p
     /**
      * Queue a BLE command (matches Swift: commandExecuter.add(command:))
      */
-    fun add(command: BLECommand<*>) {
-        commandExecutor.add(command)
-    }
-
-    fun add(action: () -> Unit) {
-        val command = ActionCommand(action)
-        add(command)
-    }
-
-    fun stopCommands() {
-        commandExecutor.removeAllCommands()
-    }
 
 
-    fun sendRaw(bytes: ByteArray) {
+
+    override fun sendRaw(bytes: ByteArray) {
         val characteristic = writeCharacteristic ?: return
         writeCharacteristic(characteristic, bytes)
     }
@@ -254,7 +248,7 @@ class DeviceSession(private val context: Context, val device: BluetoothDevice, p
         }
 
         override fun onMtuChanged(gatt: BluetoothGatt?, mtu: Int, status: Int) {
-            this@DeviceSession.mtu = mtu
+            this@Ailens.mtu = mtu
         }
     }
 
@@ -267,7 +261,7 @@ class DeviceSession(private val context: Context, val device: BluetoothDevice, p
      * Start initial SE handshaking sequence.
      */
     private fun startHandshaking() {
-        val gatt = this@DeviceSession.gatt ?: return
+        val gatt = this@Ailens.gatt ?: return
         val characteristic = handShakingDataCharacteristic ?: run {
             _state.value = State.DISCONNECTED
             return

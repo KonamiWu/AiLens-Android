@@ -1,10 +1,8 @@
 package com.konami.ailens.recorder
 
 import android.util.Log
-import com.konami.ailens.ble.DeviceSession
-import com.konami.ailens.ble.command.ToggleAgentCommand
+import com.konami.ailens.ble.Glasses
 import com.konami.ailens.ble.command.ToggleAgentMicCommand
-import com.konami.ailens.ble.command.ToggleMicCommand
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
@@ -14,7 +12,7 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 
 class BluetoothRecorder(
-    private val session: DeviceSession
+    private val session: Glasses
 ) : Recorder {
 
     init {

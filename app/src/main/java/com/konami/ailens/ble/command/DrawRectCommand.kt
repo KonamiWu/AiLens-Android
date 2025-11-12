@@ -1,7 +1,7 @@
 package com.konami.ailens.ble.command
 
 import com.konami.ailens.ble.CRC32
-import com.konami.ailens.ble.DeviceSession
+import com.konami.ailens.ble.Glasses
 
 class DrawRectCommand(
     private val x: Int,
@@ -88,7 +88,7 @@ class DrawRectCommand(
         ((value ushr 24) and 0xFF).toByte()
     )
 
-    override fun execute(session: DeviceSession) {
+    override fun execute(session: Glasses) {
         session.sendRaw(getData())
     }
 }

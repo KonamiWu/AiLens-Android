@@ -9,15 +9,15 @@ import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
 import com.konami.ailens.R
-import com.konami.ailens.ble.DeviceSession
+import com.konami.ailens.ble.Glasses
 
 class DeviceAdapter(
-    private val onItemClick: (DeviceSession) -> Unit, private val onItemLongClick: (DeviceSession) -> Unit
+    private val onItemClick: (Glasses) -> Unit, private val onItemLongClick: (Glasses) -> Unit
 ) :  RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     sealed class BLEListItem {
         data class Header(val title: String) : BLEListItem()
-        data class Device(val glasses: DeviceSession) : BLEListItem()
+        data class Device(val glasses: Glasses) : BLEListItem()
     }
 
     companion object {
@@ -56,14 +56,14 @@ class DeviceAdapter(
     }
 
     @SuppressLint("MissingPermission")
-    class BLEViewHolder(v: View, val onItemClick: (DeviceSession) -> Unit, val onItemLongClick: (DeviceSession) -> Unit) : RecyclerView.ViewHolder(v) {
+    class BLEViewHolder(v: View, val onItemClick: (Glasses) -> Unit, val onItemLongClick: (Glasses) -> Unit) : RecyclerView.ViewHolder(v) {
         private val nameTextView: TextView = v.findViewById(R.id.nameTextView)
         private val imageView: ImageView = v.findViewById(R.id.bgImageView)
         private val macTextView: TextView = v.findViewById(R.id.macTextView)
         private val statusTextView: TextView = v.findViewById(R.id.stateTextView)
         private val backgroundView: ConstraintLayout = v.findViewById(R.id.backgroundView)
 
-        fun bind(glasses: DeviceSession, isLast: Boolean) {
+        fun bind(glasses: Glasses, isLast: Boolean) {
             nameTextView.text = glasses.device.name
             macTextView.text = glasses.device.address
 

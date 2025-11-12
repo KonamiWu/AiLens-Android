@@ -4,11 +4,10 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.konami.ailens.ble.BLEService
-import com.konami.ailens.ble.DeviceSession
+import com.konami.ailens.ble.Glasses
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
 class DeviceListViewModel: ViewModel() {
@@ -39,17 +38,17 @@ class DeviceListViewModel: ViewModel() {
         BLEService.instance.stopScan()
     }
 
-    fun getItems(): List<DeviceSession> {
+    fun getItems(): List<Glasses> {
         return BLEService.instance.sessions.values.toList()
     }
 
-    fun connect(deviceSession: DeviceSession) {
+    fun connect(deviceSession: Glasses) {
         job?.cancel()
         job = viewModelScope.launch {
             deviceSession.state.collect {
-                if (it == DeviceSession.State.CONNECTED)
+                if (it == Glasses.State.CONNECTED)
                     _deviceConnectStateFlow.emit(true)
-                else if(it == DeviceSession.State.DISCONNECTED) {
+                else if(it == Glasses.State.DISCONNECTED) {
                     _deviceConnectStateFlow.emit(false)
                 }
             }

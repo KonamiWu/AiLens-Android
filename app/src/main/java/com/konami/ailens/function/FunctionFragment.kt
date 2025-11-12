@@ -32,6 +32,6 @@ class FunctionFragment : Fragment() {
         super.onDestroyView()
         _binding = null
         val aiLens = BLEService.instance.connectedSession.value ?: return
-        BLEService.instance.getSession(aiLens.device.address)?.stopCommands()
+//        BLEService.instance.getSession(aiLens.device.address)?.stopCommands()
     }
 }

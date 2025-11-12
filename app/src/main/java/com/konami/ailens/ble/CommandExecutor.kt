@@ -8,7 +8,7 @@ import kotlin.concurrent.withLock
  * CommandExecutor ensures BLECommands are executed sequentially,
  * with a timeout mechanism and proper completion handling.
  */
-class CommandExecutor(private val session: DeviceSession) {
+class CommandExecutor(private val session: Glasses) {
     private val commands = mutableListOf<BLECommand<*>>()
     private var pendingCommand: BLECommand<*>? = null
 

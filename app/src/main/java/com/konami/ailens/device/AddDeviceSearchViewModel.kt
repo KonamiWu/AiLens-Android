@@ -3,7 +3,7 @@ package com.konami.ailens.device
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.konami.ailens.ble.BLEService
-import com.konami.ailens.ble.DeviceSession
+import com.konami.ailens.ble.Glasses
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
@@ -32,7 +32,7 @@ class AddDeviceSearchViewModel: ViewModel() {
         BLEService.instance.stopScan()
     }
 
-    fun getItems(): List<DeviceSession> {
+    fun getItems(): List<Glasses> {
         return BLEService.instance.sessions.values.toList()
     }
 }

@@ -1,6 +1,6 @@
 package com.konami.ailens.ble.command
 
-import com.konami.ailens.ble.DeviceSession
+import com.konami.ailens.ble.Glasses
 /**
  * Base class for all BLE commands
  */
@@ -10,7 +10,7 @@ abstract class BLECommand<T> {
     /**
      * Execute this command on given DeviceSession
      */
-    abstract fun execute(session: DeviceSession)
+    abstract fun execute(session: Glasses)
 
     /**
      * Parse response data into Result<T>
@@ -34,7 +34,7 @@ abstract class VoidCommand : BLECommand<Unit>() {
 }
 
 class ActionCommand(private val action: () -> Unit): VoidCommand() {
-    override fun execute(session: DeviceSession) {
+    override fun execute(session: Glasses) {
         action.invoke()
     }
 }

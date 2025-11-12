@@ -1,7 +1,7 @@
 package com.konami.ailens.ble.command
 
 import com.konami.ailens.ble.CRC32
-import com.konami.ailens.ble.DeviceSession
+import com.konami.ailens.ble.Glasses
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
 
@@ -87,7 +87,7 @@ class DrawTextCommand(
         return bb.array().toList()
     }
 
-    override fun execute(session: DeviceSession) {
+    override fun execute(session: Glasses) {
         session.sendRaw(getData())
     }
 }
