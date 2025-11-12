@@ -259,4 +259,30 @@
     <dimen name="big_bottom_button_margin_horizontal">32dp</dimen>
     <dimen name="big_bottom_button_margin_bottom">24dp</dimen>
     <dimen name="big_bottom_button_cut_corner">4dp</dimen>
+
+
+    <dimen name="smart_translation_padding_horizontal">16dp</dimen>
+    <dimen name="smart_translation_title_text_size">17sp</dimen>
+    <dimen name="smart_translation_nav_back_icon_size">24dp</dimen>
+    <dimen name="smart_translation_margin_top">40dp</dimen>
+    <dimen name="smart_translation_text_padding_horizontal">70dp</dimen>
+    <dimen name="smart_translation_title_info_space">12dp</dimen>
+    <dimen name="smart_translation_interpretation_title_text_size">16sp</dimen>
+    <dimen name="smart_translation_interpretation_info_text_size">12sp</dimen>
+
+    <dimen name="interpretation_main_top_view_margin_top">16dp</dimen>
+    <dimen name="interpretation_main_top_view_margin_horizontal">16dp</dimen>
+    <dimen name="interpretation_main_top_view_padding_horizontal">16dp</dimen>
+    <dimen name="interpretation_main_top_view_corner_cut">6dp</dimen>
+    <dimen name="interpretation_main_exchange_button_size">32dp</dimen>
+    <dimen name="interpretation_main_language_text_size">16sp</dimen>
+    <dimen name="interpretation_main_language_drop_down_icon_size">16dp</dimen>
+    <dimen name="interpretation_main_language_drop_down_icon_margin_left">2dp</dimen>
+    <dimen name="interpretation_main_bilingual_text_size">12sp</dimen>
+    <dimen name="interpretation_main_bilingual_info_text_size">11sp</dimen>
+    <dimen name="interpretation_main_bilingual_info_margin_top">4dp</dimen>
+
+    <dimen name="interpretation_main_bilingual_switch_thumb_size">20dp</dimen>
+    <dimen name="interpretation_main_bilingual_switch_thumb_stroke_width">8dp</dimen>
+    <dimen name="interpretation_main_bilingual_switch_track_corner">10dp</dimen> <!-- half of thumb size-->
 </resources>

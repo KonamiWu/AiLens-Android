@@ -27,7 +27,7 @@ playServicesMaps = "19.2.0"
 mapsCompose = "6.12.1"
 navigationSdk = "7.1.0"
 placesApi = "5.0.0"
-
+speechsdk = "1.46.0"
 # Coroutines - 這個是你缺少的！
 coroutines = "1.10.2"
 
@@ -74,10 +74,11 @@ google-navigation-sdk = { group = "com.google.android.libraries.navigation", nam
 # Google Places API
 google-places = { group = "com.google.android.libraries.places", name = "places", version.ref = "placesApi" }
 
-# Coroutines - 這三個是你缺少的！
 kotlinx-coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "coroutines" }
 kotlinx-coroutines-android = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-android", version.ref = "coroutines" }
 kotlinx-coroutines-play-services = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-play-services", version.ref = "coroutines" }
+
+azure-speech-sdk = { group = "com.microsoft.cognitiveservices.speech", name = "client-sdk", version.ref = "speechsdk" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

@@ -29,7 +29,7 @@ class BluetoothRecorder(
 
         // reset channel
         if (!channel.isEmpty) {
-            channel.tryReceive().getOrNull() // 清掉殘留
+            channel.tryReceive().getOrNull()
         }
 
         isRecording = true

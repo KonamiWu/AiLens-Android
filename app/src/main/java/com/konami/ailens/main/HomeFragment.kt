@@ -42,37 +42,36 @@ class HomeFragment: Fragment() {
         }
 
          binding.teleprompterButton.setOnClickListener {
-                 BLEService.instance.connectedSession.value?.add(ToggleMicCommand(true))
-             }
+         }
 
          binding.translationButton.setOnClickListener {
-                 BLEService.instance.connectedSession.value?.add(ToggleMicCommand(false))
-             }
+             findNavController().navigate(R.id.action_HomeFragment_to_SmartTranslationFragment)
+         }
 
         // Monitor connectedSession state changes
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                BLEService.instance.connectedSession
-                    .flatMapLatest { session ->
-                        if (session == null) {
-                            flowOf(null to null)  // (session, state)
-                        } else {
-                            session.state.map { state -> session to state }
-                        }
-                    }
-                    .collect { (session, state) ->
-                        if (session == null) {
-                            setViewStateDisconnected()
-                        } else {
-                            binding.nameTextView.text = session.device.name
-                            when (state) {
-                                Glasses.State.CONNECTED -> setViewStateConnected()
-                                else -> setViewStateDisconnected()
-                            }
-                        }
-                    }
-            }
-        }
+//        viewLifecycleOwner.lifecycleScope.launch {
+//            viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
+//                BLEService.instance.connectedSession
+//                    .flatMapLatest { session ->
+//                        if (session == null) {
+//                            flowOf(null to null)  // (session, state)
+//                        } else {
+//                            session.state.map { state -> session to state }
+//                        }
+//                    }
+//                    .collect { (session, state) ->
+//                        if (session == null) {
+//                            setViewStateDisconnected()
+//                        } else {
+//                            binding.nameTextView.text = session.device.name
+//                            when (state) {
+//                                Glasses.State.CONNECTED -> setViewStateConnected()
+//                                else -> setViewStateDisconnected()
+//                            }
+//                        }
+//                    }
+//            }
+//        }
 
         // Monitor battery level separately
         viewLifecycleOwner.lifecycleScope.launch {
@@ -98,6 +97,7 @@ class HomeFragment: Fragment() {
             }
         }
 
+        setViewStateConnected()
         return binding.root
     }
 

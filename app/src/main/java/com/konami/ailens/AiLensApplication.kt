@@ -6,6 +6,7 @@ import com.google.android.libraries.navigation.NavigationApi
 import com.google.android.libraries.navigation.Navigator
 import com.konami.ailens.ble.BLEService
 import com.konami.ailens.navigation.NavigationService
+import com.konami.ailens.orchestrator.Orchestrator
 
 class AiLensApplication : Application() {
     companion object {
@@ -16,6 +17,7 @@ class AiLensApplication : Application() {
     override fun onCreate() {
         super.onCreate()
         instance = this
+        Orchestrator.init(this)
         SharedPrefs.init(this)
         BLEService.init(this)
         NavigationService.init(this)

@@ -1,10 +1,15 @@
 package com.konami.ailens.orchestrator
 
+import android.annotation.SuppressLint
+import android.content.Context
 import android.util.Log
+import com.konami.ailens.SharedPrefs
+import com.konami.ailens.ble.BLEService
 import com.konami.ailens.orchestrator.capability.AgentCapability
 import com.konami.ailens.orchestrator.capability.AgentDisplayCapability
 import com.konami.ailens.orchestrator.capability.CapabilitySink
 import com.konami.ailens.orchestrator.capability.DeviceEventCapability
+import com.konami.ailens.orchestrator.capability.InterpretationCapability
 import com.konami.ailens.orchestrator.capability.Operation
 import com.konami.ailens.orchestrator.capability.NavigationDisplayCapability
 import com.konami.ailens.orchestrator.capability.ToolCapability
@@ -12,20 +17,22 @@ import com.konami.ailens.orchestrator.coordinator.AgentCoordinator
 import com.konami.ailens.orchestrator.coordinator.NavigationCoordinator
 import com.konami.ailens.orchestrator.role.Role
 import com.konami.ailens.orchestrator.capability.NavigationCapability
+import com.konami.ailens.orchestrator.coordinator.InterpretationCoordinator
 import io.socket.client.Ack
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class Orchestrator private constructor(): CapabilitySink, DeviceEventCapability, ToolCapability {
+class Orchestrator private constructor(private val context: Context): CapabilitySink, DeviceEventCapability, ToolCapability {
     enum class Language(val code: String, val title: String) {
         ENGLISH("en-US", "English"),
         ESPANOL("es-ES", "Español"),
         FRANCAIS("fr-FR", "Français"),
         CHINESE("zh-TW", "中文"),
         JAPANESE("ja-JP", "日本語");
-
         companion object {
+            val interpretationSourceDefault: Language = CHINESE
+            val interpretationTargetDefault: Language = ENGLISH
             fun fromCode(code: String): Language? {
                 return entries.find { it.code == code }
             }
@@ -39,22 +46,41 @@ class Orchestrator private constructor(): CapabilitySink, DeviceEventCapability,
     }
 
     companion object {
-        val instance: Orchestrator by lazy { Orchestrator() }
+        private const val TAG = "Orchestrator"
+        @SuppressLint("StaticFieldLeak")
+        @Volatile private var _instance: Orchestrator? = null
+        val instance: Orchestrator
+            get() = _instance ?: throw IllegalStateException("Call Orchestrator.init(context) first")
+
+        fun init(context: Context) {
+            if (_instance == null) {
+                synchronized(this) {
+                    if (_instance == null) {
+                        _instance = Orchestrator(context.applicationContext)
+                        Log.d(TAG, "Orchestrator initialized")
+                    }
+                }
+            }
+        }
     }
+
 
     private var agent: AgentCapability? = null
     private val agentDisplays = mutableListOf<AgentDisplayCapability>()
     private var agentCoordinator: AgentCoordinator? = null
     private var navigationCoordinator: NavigationCoordinator? = null
+    private var interpretationCoordinator: InterpretationCoordinator? = null
     private val navigations = mutableListOf<NavigationCapability>()
     private val navigationDisplays = mutableListOf<NavigationDisplayCapability>()
+    private val interpretations = mutableListOf<InterpretationCapability>()
 
-    private val scope = CoroutineScope(Dispatchers.IO)
+    var interpretationSourceLanguage: Orchestrator.Language = SharedPrefs.getInterpretationSourceLanguage(context)
+        private set
+    var interpretationTargetLanguage: Orchestrator.Language = SharedPrefs.getInterpretationTargetLanguage(context)
+        private set
 
     init {
-        scope.launch {
 
-        }
     }
 
     override fun setAgent(role: AgentCapability) {
@@ -74,6 +100,9 @@ class Orchestrator private constructor(): CapabilitySink, DeviceEventCapability,
         navigations.add(role)
     }
 
+    override fun addInterpretation(role: InterpretationCapability) {
+        interpretations.add(role)
+    }
     fun register(role: Role) {
         role.registerCapabilities(this)
     }
@@ -95,19 +124,37 @@ class Orchestrator private constructor(): CapabilitySink, DeviceEventCapability,
         agent?.stopAgent()
 
         agentDisplays.clear()
-        navigationDisplays.clear()  // Also clear navigation displays to prevent accumulation
-        navigationCoordinator?.stop()  // Stop navigation coordinator coroutines
+        navigationDisplays.clear()
+        interpretations.clear()
+        navigationCoordinator?.stop()
         navigationCoordinator = null
         agentCoordinator = null
         agent = null
     }
 
+    fun startAgent() {
+        val agent = agent ?: return
+        agentCoordinator = AgentCoordinator(agent, agentDisplays, this)
+        agentCoordinator?.start()
+    }
+
+    fun stopAgent() {
+        agentCoordinator?.stop()
+        agentCoordinator = null
+    }
+
+    fun startInterpretation() {
+
+    }
+
+    fun stopInterpretation() {
+
+    }
+
     override fun handleDeviceEvent(event: DeviceEventCapability.DeviceEvent) {
         when (event) {
             DeviceEventCapability.DeviceEvent.EnterAgent -> {
-                val agent = agent ?: return
-                agentCoordinator = AgentCoordinator(agent, agentDisplays, this)
-                agentCoordinator?.start()
+                startAgent()
             }
             DeviceEventCapability.DeviceEvent.EnterDialogueTranslation -> {
 
@@ -119,11 +166,10 @@ class Orchestrator private constructor(): CapabilitySink, DeviceEventCapability,
 
             }
             DeviceEventCapability.DeviceEvent.EnterSimultaneousTranslation -> {
-
+                startInterpretation()
             }
             DeviceEventCapability.DeviceEvent.LeaveAgent -> {
-                agentCoordinator?.stop()
-                agentCoordinator = null
+                stopAgent()
             }
             DeviceEventCapability.DeviceEvent.LeaveDialogueTranslation -> {
 
@@ -132,7 +178,7 @@ class Orchestrator private constructor(): CapabilitySink, DeviceEventCapability,
                 stopNavigation()
             }
             DeviceEventCapability.DeviceEvent.LeaveSimultaneousTranslation -> {
-
+                stopInterpretation()
             }
             is DeviceEventCapability.DeviceEvent.SetDialogueLanguages -> {
 

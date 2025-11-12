@@ -5,4 +5,6 @@ interface CapabilitySink {
     fun addAgentDisplay(role: AgentDisplayCapability)
     fun addNavigationDisplay(role: NavigationDisplayCapability)
     fun addNavigation(role: NavigationCapability)
+
+    fun addInterpretation(role: InterpretationCapability)
 }
