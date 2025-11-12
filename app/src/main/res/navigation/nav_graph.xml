@@ -5,6 +5,22 @@
     android:id="@+id/nav_graph"
     app:startDestination="@id/MainFragment">
 
+    <action
+        android:id="@+id/action_global_to_InterpretationFragment"
+        app:destination="@id/InterpretationFragment"
+        app:enterAnim="@anim/slide_in_right"
+        app:exitAnim="@anim/slide_out_left"
+        app:popEnterAnim="@anim/slide_in_left"
+        app:popExitAnim="@anim/slide_out_right" />
+
+    <action
+        android:id="@+id/action_global_to_DialogTranslationFragment"
+        app:destination="@id/DialogTranslationFragment"
+        app:enterAnim="@anim/slide_in_right"
+        app:exitAnim="@anim/slide_out_left"
+        app:popEnterAnim="@anim/slide_in_left"
+        app:popExitAnim="@anim/slide_out_right" />
+
     <fragment
         android:id="@+id/MainFragment"
         android:name="com.konami.ailens.main.MainFragment"
@@ -33,6 +49,14 @@
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
             app:popExitAnim="@anim/slide_out_right"/>
+
+        <action
+            android:id="@+id/action_HomeFragment_to_SmartTranslationFragment"
+            app:destination="@id/smartTranslationFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
 
     </fragment>
 
@@ -137,4 +161,46 @@
         android:name="com.konami.ailens.facedetection.FaceDetectionFragment"
         tools:layout="@layout/fragment_face_detection"/>
 
+    <fragment
+        android:id="@+id/smartTranslationFragment"
+        android:name="com.konami.ailens.translation.SmartTranslationFragment"
+        tools:layout="@layout/fragment_smart_translation">
+
+        <action
+            android:id="@+id/action_SmartTranslationFragment_to_InterpretationMainFragment"
+            app:destination="@id/InterpretationMainFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"/>
+
+        <action
+            android:id="@+id/action_SmartTranslationFragment_to_DialogTranslationSettingFragment"
+            app:destination="@id/DialogTranslationSettingFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"/>
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/InterpretationMainFragment"
+        android:name="com.konami.ailens.translation.interpretation.InterpretationMainFragment"
+        tools:layout="@layout/fragment_interpretation_main" />
+
+    <fragment
+        android:id="@+id/InterpretationFragment"
+        android:name="com.konami.ailens.translation.interpretation.InterpretationFragment"
+        tools:layout="@layout/fragment_interpretation" />
+
+    <fragment
+        android:id="@+id/DialogTranslationSettingFragment"
+        android:name="com.konami.ailens.translation.dialog.DialogTranslationSettingFragment"
+        tools:layout="@layout/fragment_dialog_translation_setting" />
+
+    <fragment
+        android:id="@+id/DialogTranslationFragment"
+        android:name="com.konami.ailens.translation.dialog.DialogTranslationFragment"
+        tools:layout="@layout/fragment_dialog_translation" />
 </navigation>

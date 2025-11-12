@@ -4,22 +4,32 @@ import android.animation.ValueAnimator
 import android.content.Context
 import android.graphics.*
 import android.util.AttributeSet
-import android.view.View
 import android.view.animation.DecelerateInterpolator
+import android.widget.FrameLayout
 import com.konami.ailens.R
 
 class CutCornerView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
-) : View(context, attrs, defStyleAttr) {
+) : FrameLayout(context, attrs, defStyleAttr) {
 
     var cornerCut = 12f
     var borderColor: Int = Color.WHITE
     var borderWidth: Float = 2f
     var fillColor: Int = Color.TRANSPARENT
+    var fillColorAlpha: Float = 1f
+        set(value) {
+            field = value.coerceIn(0f, 1f)
+            invalidate()
+        }
     var cutCorners: Int =
         CUT_TOP_LEFT or CUT_TOP_RIGHT or CUT_BOTTOM_RIGHT or CUT_BOTTOM_LEFT
+    var backgroundImage: Bitmap? = null
+        set(value) {
+            field = value
+            invalidate()
+        }
 
     private var cornerProgress = floatArrayOf(0f, 0f, 0f, 0f)
 
@@ -31,14 +41,18 @@ class CutCornerView @JvmOverloads constructor(
         strokeCap = Paint.Cap.BUTT
         strokeJoin = Paint.Join.MITER
     }
+    private val bitmapPaint = Paint(Paint.ANTI_ALIAS_FLAG)
 
     init {
+        setWillNotDraw(false)
+
         context.theme.obtainStyledAttributes(attrs, R.styleable.CutCornerView, 0, 0).apply {
             try {
                 cornerCut = getDimension(R.styleable.CutCornerView_cornerCut, cornerCut)
                 borderWidth = getDimension(R.styleable.CutCornerView_borderWidth, borderWidth)
                 borderColor = getColor(R.styleable.CutCornerView_borderColor, borderColor)
                 fillColor = getColor(R.styleable.CutCornerView_fillColor, fillColor)
+                fillColorAlpha = getFloat(R.styleable.CutCornerView_fillColorAlpha, fillColorAlpha)
                 cutCorners = getInt(
                     R.styleable.CutCornerView_cutCorners,
                     CUT_TOP_LEFT or CUT_TOP_RIGHT or CUT_BOTTOM_RIGHT or CUT_BOTTOM_LEFT
@@ -53,9 +67,7 @@ class CutCornerView @JvmOverloads constructor(
         }
     }
 
-    override fun onDraw(canvas: Canvas) {
-        super.onDraw(canvas)
-
+    private fun updatePaths() {
         val w = width.toFloat()
         val h = height.toFloat()
         val inset = borderWidth / 2f
@@ -76,9 +88,6 @@ class CutCornerView @JvmOverloads constructor(
         shapePath.lineTo(0f, if (cTL > 0) cTL else 0f)
         shapePath.close()
 
-        fillPaint.color = fillColor
-        canvas.drawPath(shapePath, fillPaint)
-
         borderPath.reset()
         borderPath.moveTo(if (cTL > 0) cTL + inset else inset, inset)
         borderPath.lineTo(if (cTR > 0) w - cTR - inset else w - inset, inset)
@@ -89,10 +98,45 @@ class CutCornerView @JvmOverloads constructor(
         if (cBL > 0) borderPath.lineTo(inset, h - cBL - inset)
         borderPath.lineTo(inset, if (cTL > 0) cTL + inset else inset)
         borderPath.close()
+    }
+
+    override fun onDraw(canvas: Canvas) {
+        super.onDraw(canvas)
+
+        val w = width.toFloat()
+        val h = height.toFloat()
+
+        updatePaths()
+
+        val saveCount = canvas.save()
+        canvas.clipPath(shapePath)
+
+        backgroundImage?.let { bitmap ->
+            val srcRect = RectF(0f, 0f, bitmap.width.toFloat(), bitmap.height.toFloat())
+            val dstRect = RectF(0f, 0f, w, h)
+            canvas.drawBitmap(bitmap, null, dstRect, bitmapPaint)
+        }
+
+        val colorAlpha = Color.alpha(fillColor) / 255f
+        val combinedAlpha = colorAlpha * fillColorAlpha
+        fillPaint.color = fillColor
+        fillPaint.alpha = (combinedAlpha * 255).toInt()
+        canvas.drawPath(shapePath, fillPaint)
+
+        canvas.restoreToCount(saveCount)
 
         borderPaint.color = borderColor
         borderPaint.strokeWidth = borderWidth
         canvas.drawPath(borderPath, borderPaint)
+    }
+
+    override fun dispatchDraw(canvas: Canvas) {
+        updatePaths()
+
+        val saveCount = canvas.save()
+        canvas.clipPath(shapePath)
+        super.dispatchDraw(canvas)
+        canvas.restoreToCount(saveCount)
     }
 
     fun animateAddCorners(targetFlags: Int, duration: Long = 800L) {

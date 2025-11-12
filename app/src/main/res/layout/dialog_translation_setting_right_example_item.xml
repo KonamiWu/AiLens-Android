@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:ignore="ContentDescription">
+
+    <com.konami.ailens.main.CutCornerView
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintStart_toStartOf="@id/container"
+        app:layout_constraintTop_toTopOf="@id/container"
+        app:layout_constraintEnd_toEndOf="@id/container"
+        app:layout_constraintBottom_toBottomOf="@id/container"
+        app:cutCorners="topLeft|topRight|bottomLeft"
+        app:cornerCut="@dimen/dialog_translation_item_corner_cut"
+        app:borderColor="#00000000"
+        app:fillColor="?attr/appSurface1"
+        app:fillColorAlpha="0.5"/>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/container"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:paddingHorizontal="@dimen/dialog_translation_setting_example_item_padding_horizontal"
+        android:paddingVertical="@dimen/dialog_translation_setting_example_item_padding_vertical">
+
+        <FrameLayout
+            android:id="@+id/iconContainer"
+            android:layout_width="@dimen/dialog_translation_setting_item_icon_container_width"
+            android:layout_height="@dimen/dialog_translation_setting_item_icon_container_height"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:background="@drawable/dialog_translation_setting_icon_bg">
+
+            <ImageView
+                android:layout_width="@dimen/dialog_translation_setting_item_icon_size"
+                android:layout_height="@dimen/dialog_translation_setting_item_icon_size"
+                android:src="@drawable/ic_translation_setting_phone"
+                android:layout_gravity="center" />
+
+        </FrameLayout>
+
+        <TextView
+            android:id="@+id/languageTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="@id/iconContainer"
+            app:layout_constraintBottom_toBottomOf="@id/iconContainer"
+            app:layout_constraintStart_toEndOf="@id/iconContainer"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginStart="@dimen/dialog_translation_setting_item_language_margin_start"
+            android:textSize="@dimen/dialog_translation_setting_example_item_text_size"
+            android:textColor="?attr/appTextPrimary"
+            android:text="English"
+            style="@style/Medium" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

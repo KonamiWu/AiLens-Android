@@ -36,6 +36,7 @@
     <dimen name="main_setting_margin_bottom">24dp</dimen>
     <dimen name="main_setting_text_size">16sp</dimen>
     <dimen name="main_setting_icon_size">24dp</dimen>
+    <dimen name="main_setting_icon_corner">12dp</dimen>
     <dimen name="main_setting_padding_horizontal">20dp</dimen>
     <dimen name="main_setting_padding_vertical">4dp</dimen>
     <dimen name="main_setting_spacing">4dp</dimen>
@@ -258,5 +259,95 @@
     <dimen name="big_bottom_button_text_size">16sp</dimen>
     <dimen name="big_bottom_button_margin_horizontal">32dp</dimen>
     <dimen name="big_bottom_button_margin_bottom">24dp</dimen>
-    <dimen name="big_bottom_button_cut_corner">4dp</dimen>
+    <dimen name="big_bottom_button_cut_corner">5dp</dimen>
+
+
+    <dimen name="smart_translation_padding_horizontal">16dp</dimen>
+    <dimen name="smart_translation_title_text_size">17sp</dimen>
+    <dimen name="smart_translation_nav_back_icon_size">24dp</dimen>
+    <dimen name="smart_translation_margin_top">40dp</dimen>
+    <dimen name="smart_translation_text_padding_horizontal">70dp</dimen>
+    <dimen name="smart_translation_title_info_space">12dp</dimen>
+    <dimen name="smart_translation_interpretation_title_text_size">16sp</dimen>
+    <dimen name="smart_translation_interpretation_info_text_size">12sp</dimen>
+
+    <dimen name="interpretation_main_top_view_margin_top">16dp</dimen>
+    <dimen name="interpretation_main_top_view_margin_horizontal">16dp</dimen>
+    <dimen name="interpretation_main_top_view_padding_horizontal">16dp</dimen>
+    <dimen name="interpretation_main_top_view_corner_cut">6dp</dimen>
+    <dimen name="interpretation_main_exchange_button_size">32dp</dimen>
+    <dimen name="interpretation_main_language_text_size">16sp</dimen>
+    <dimen name="interpretation_main_language_drop_down_icon_size">16dp</dimen>
+    <dimen name="interpretation_main_language_drop_down_icon_margin_left">2dp</dimen>
+    <dimen name="interpretation_main_bilingual_text_size">12sp</dimen>
+    <dimen name="interpretation_main_bilingual_info_text_size">11sp</dimen>
+    <dimen name="interpretation_main_bilingual_info_margin_top">4dp</dimen>
+
+    <dimen name="interpretation_main_bilingual_switch_thumb_size">20dp</dimen>
+    <dimen name="interpretation_main_bilingual_switch_thumb_stroke_width">8dp</dimen>
+    <dimen name="interpretation_main_bilingual_switch_track_corner">10dp</dimen>
+    <dimen name="interpretation_main_info_margin_horizontal">60dp</dimen>
+    <dimen name="interpretation_main_info_text_size">14sp</dimen>
+
+    <dimen name="interpretation_language_title_size">17sp</dimen>
+    <dimen name="interpretation_language_arrow_size">24dp</dimen>
+    <dimen name="interpretation_language_text_size">14sp</dimen>
+    <dimen name="interpretation_language_text_spacing">24dp</dimen>
+    <dimen name="interpretation_language_text_margin_top">12dp</dimen>
+    <dimen name="interpretation_language_done_size">24dp</dimen>
+    <dimen name="interpretation_recycler_view_margin_top">24dp</dimen>
+    <dimen name="interpretation_recycler_view_margin_bottom">24dp</dimen>
+    <dimen name="interpretation_item_text_size">14sp</dimen>
+    <dimen name="interpretation_item_padding_horizontal">24dp</dimen>
+    <dimen name="interpretation_item_text_spacing">4dp</dimen>
+    <dimen name="interpretation_item_spacing">24dp</dimen>
+    <dimen name="interpretation_wave_size">48dp</dimen>
+    <dimen name="interpretation_wave_dot_spacing">3dp</dimen>
+    <dimen name="interpretation_wave_dot_margin_bottom">28dp</dimen>
+
+    <dimen name="language_selection_top_margin_top">16dp</dimen>
+    <dimen name="language_selection_corner_cut">8dp</dimen>
+    <dimen name="language_selection_top_height">32dp</dimen>
+    <dimen name="language_selection_grab_width">38dp</dimen>
+    <dimen name="language_selection_grab_height">4dp</dimen>
+    <dimen name="language_selection_grab_corner_radius">2dp</dimen>
+    <dimen name="language_selection_item_text_size">14sp</dimen>
+    <dimen name="language_selection_item_height">53dp</dimen>
+    <dimen name="language_selection_item_check_size">16dp</dimen>
+    <dimen name="language_selection_item_title_margin_start">12dp</dimen>
+    <dimen name="language_selection_item_padding_horizontal">16dp</dimen>
+
+    <dimen name="dialog_translation_setting_recycler_view_margin_top">40dp</dimen>
+    <dimen name="dialog_translation_setting_recycler_view_margin_horizontal">12dp</dimen>
+    <dimen name="dialog_translation_setting_item_margin_horizontal">65dp</dimen>
+    <dimen name="dialog_translation_setting_item_padding_horizontal">12dp</dimen>
+    <dimen name="dialog_translation_setting_item_padding_vertical">16dp</dimen>
+    <dimen name="dialog_translation_setting_item_icon_size">16dp</dimen>
+    <dimen name="dialog_translation_setting_item_icon_container_width">32dp</dimen>
+    <dimen name="dialog_translation_setting_item_icon_container_height">24dp</dimen>
+    <dimen name="dialog_translation_setting_item_language_text_size">16sp</dimen>
+    <dimen name="dialog_translation_setting_item_title_margin_top">0dp</dimen>
+    <dimen name="dialog_translation_setting_item_title_text_size">16sp</dimen>
+    <dimen name="dialog_translation_setting_item_language_margin_start">4dp</dimen>
+    <dimen name="dialog_translation_setting_item_info_text_size">14sp</dimen>
+    <dimen name="dialog_translation_setting_item_info_margin_top">6dp</dimen>
+    <dimen name="dialog_translation_setting_item_down_arrow_size">16dp</dimen>
+    <dimen name="dialog_translation_setting_item_right_arrow_size">24dp</dimen>
+    <dimen name="dialog_translation_setting_item_right_arrow_margin_left">4dp</dimen>
+    <dimen name="dialog_translation_setting_item_vertical_space">24dp</dimen>
+    <dimen name="dialog_translation_setting_example_item_padding_horizontal">20dp</dimen>
+    <dimen name="dialog_translation_setting_example_item_padding_vertical">16dp</dimen>
+    <dimen name="dialog_translation_setting_example_item_text_size">14sp</dimen>
+
+    <dimen name="dialog_translation_item_spacing">16dp</dimen>
+    <dimen name="dialog_translation_action_icon_size">24dp</dimen>
+    <dimen name="dialog_translation_wave_dot_spacing">1.5dp</dimen>
+    <dimen name="dialog_translation_wave_dot_size">2.25dp</dimen>
+    <dimen name="dialog_translation_button_text_size">16sp</dimen>
+    <dimen name="dialog_translation_button_text_margin_left">4dp</dimen>
+    <dimen name="dialog_translation_item_corner_cut">6dp</dimen>
+    <dimen name="dialog_translation_content_margin_top">16dp</dimen>
+    <dimen name="dialog_translation_content_margin_horizontal">32dp</dimen>
+    <dimen name="dialog_translation_content_margin_bottom">24dp</dimen>
+
 </resources>

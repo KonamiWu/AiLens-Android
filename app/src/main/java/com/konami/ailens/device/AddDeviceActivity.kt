@@ -49,7 +49,7 @@ class AddDeviceActivity : AppCompatActivity() {
             startAppForegroundService()
         }
         // Check if device is already paired
-        val deviceInfo = SharedPrefs.getDeviceInfo(this)
+        val deviceInfo = SharedPrefs.getDeviceInfo()
         if (deviceInfo != null) {
             val intent = Intent(this, MainActivity::class.java)
             intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK

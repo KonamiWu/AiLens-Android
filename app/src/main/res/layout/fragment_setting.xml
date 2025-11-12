@@ -57,26 +57,26 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <com.konami.ailens.main.CutCornerView
-            android:id="@+id/cutCornerView"
-            android:layout_width="match_parent"
+        <FrameLayout
+            android:id="@+id/buttonLayout"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
-            android:text="@string/settings"
-            style="@style/BigPrimaryButton"/>
+            style="@style/BigPrimaryButtonLayout">
 
-        <Button
-            android:id="@+id/unbindButton"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            app:layout_constraintStart_toStartOf="@id/cutCornerView"
-            app:layout_constraintTop_toTopOf="@id/cutCornerView"
-            app:layout_constraintEnd_toEndOf="@id/cutCornerView"
-            app:layout_constraintBottom_toBottomOf="@id/cutCornerView"
-            android:background="#00000000"
-            style="@style/Bold"
-            android:text="@string/unbind_device"
-            android:textColor="@color/app_text_button"
-            android:textSize="@dimen/big_bottom_button_text_size" />
+            <com.konami.ailens.main.CutCornerView
+                android:id="@+id/cutCornerView"
+                style="@style/BigPrimaryButtonCutCorner"/>
+
+            <Button
+                android:id="@+id/unbindButton"
+                android:background="#00000000"
+                style="@style/BigPrimaryButtonText"
+                android:text="@string/unbind_device"
+                android:textColor="@color/app_text_button"
+                android:textSize="@dimen/big_bottom_button_text_size" />
+
+        </FrameLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

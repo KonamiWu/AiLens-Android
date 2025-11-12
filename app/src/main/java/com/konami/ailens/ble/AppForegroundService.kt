@@ -29,8 +29,11 @@ import com.konami.ailens.navigation.NavigationService
 import com.konami.ailens.orchestrator.Orchestrator
 import com.konami.ailens.orchestrator.role.AgentRole
 import com.konami.ailens.orchestrator.role.BluetoothRole
+import com.konami.ailens.orchestrator.role.DialogTranslationRole
+import com.konami.ailens.orchestrator.role.InterpretationRole
 import com.konami.ailens.orchestrator.role.NavigationRole
 import com.konami.ailens.recorder.BluetoothRecorder
+import com.konami.ailens.recorder.PhoneRecorder
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -189,11 +192,15 @@ class AppForegroundService : Service() {
                                 "en"
                             )
                             val bluetoothRole = BluetoothRole(session, orchestrator)
-                            val agentRole = AgentRole(orchestrator, BluetoothRecorder(session))
+                            val agentRole = AgentRole(orchestrator, BluetoothRecorder(session, true))
                             val navigationRole = NavigationRole()
+                            val interpretationRole = InterpretationRole(applicationContext, BluetoothRecorder(session, false))
+                            val dialogRole = DialogTranslationRole(applicationContext, BluetoothRecorder(session, false), PhoneRecorder())
                             orchestrator.register(bluetoothRole)
                             orchestrator.register(agentRole)
                             orchestrator.register(navigationRole)
+                            orchestrator.register(interpretationRole)
+                            orchestrator.register(dialogRole)
                         }
 
                         Glasses.State.DISCONNECTED -> {

@@ -1,0 +1,261 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:ignore="ContentDescription"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintDimensionRatio="1500:874"
+        app:layout_constraintTop_toTopOf="parent"
+        android:src="@drawable/img_nav_bg" />
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fitsSystemWindows="true"
+        tools:layout_editor_absoluteX="0dp"
+        tools:layout_editor_absoluteY="0dp">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/navLayout"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/nav_bar_height"
+            android:paddingHorizontal="@dimen/smart_translation_padding_horizontal"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <FrameLayout
+                android:layout_width="@dimen/nav_back_button_size"
+                android:layout_height="@dimen/nav_back_button_size"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <Button
+                    android:id="@+id/backButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="#00000000" />
+
+                <ImageView
+                    android:layout_width="@dimen/smart_translation_nav_back_icon_size"
+                    android:layout_height="@dimen/smart_translation_nav_back_icon_size"
+                    android:layout_gravity="center"
+                    android:src="@drawable/ic_nav_back" />
+
+            </FrameLayout>
+
+            <TextView
+                android:id="@+id/titleTextView"
+                style="@style/SemiBold"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/interpretation"
+                android:textColor="?attr/appTextPrimary"
+                android:textSize="@dimen/smart_translation_title_text_size"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/topLayout"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginHorizontal="@dimen/interpretation_main_top_view_margin_horizontal"
+            android:layout_marginTop="@dimen/interpretation_main_top_view_margin_top"
+            app:layout_constraintDimensionRatio="343:117"
+            app:layout_constraintTop_toBottomOf="@id/navLayout">
+
+            <com.konami.ailens.main.CutCornerView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:alpha="0.5"
+                app:borderColor="?attr/appBorderMediumGray"
+                app:borderWidth="2dp"
+                app:fillColor="?attr/appSurface1"
+                app:cornerCut="@dimen/interpretation_main_top_view_corner_cut"/>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:paddingHorizontal="@dimen/interpretation_main_top_view_padding_horizontal">
+
+                <View
+                    android:id="@+id/separator"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="?attr/appBorderDarkGray"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    app:layout_constraintBottom_toTopOf="@id/separator"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <ImageView
+                        android:id="@+id/exchangeImageView"
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:src="@drawable/ic_interpretation_exchange"
+                        app:layout_constraintBottom_toBottomOf="@id/exchangeButton"
+                        app:layout_constraintEnd_toEndOf="@id/exchangeButton"
+                        app:layout_constraintStart_toStartOf="@id/exchangeButton"
+                        app:layout_constraintTop_toTopOf="@id/exchangeButton" />
+
+                    <Button
+                        android:id="@+id/exchangeButton"
+                        android:layout_width="@dimen/interpretation_main_exchange_button_size"
+                        android:layout_height="@dimen/interpretation_main_exchange_button_size"
+                        android:background="#00000000"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:id="@+id/sourceTextView"
+                        style="@style/SemiBold"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:drawablePadding="@dimen/interpretation_main_language_drop_down_icon_margin_left"
+                        android:text="English"
+                        android:textColor="?attr/appTextPrimary"
+                        android:textSize="@dimen/interpretation_main_language_text_size"
+                        app:drawableEndCompat="@drawable/ic_interpretation_drop_down"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toStartOf="@id/exchangeButton"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <Button
+                        android:id="@+id/sourceButton"
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        app:layout_constraintStart_toStartOf="@id/sourceTextView"
+                        app:layout_constraintTop_toTopOf="@id/sourceTextView"
+                        app:layout_constraintEnd_toEndOf="@id/sourceTextView"
+                        app:layout_constraintBottom_toBottomOf="@id/sourceTextView"
+                        android:background="#00000000"/>
+
+                    <TextView
+                        android:id="@+id/targetTextView"
+                        style="@style/SemiBold"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:drawablePadding="@dimen/interpretation_main_language_drop_down_icon_margin_left"
+                        android:text="中文"
+                        android:textColor="?attr/appTextPrimary"
+                        android:textSize="@dimen/interpretation_main_language_text_size"
+                        app:drawableEndCompat="@drawable/ic_interpretation_drop_down"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toEndOf="@id/exchangeButton"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <Button
+                        android:id="@+id/targetButton"
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        app:layout_constraintStart_toStartOf="@id/targetTextView"
+                        app:layout_constraintTop_toTopOf="@id/targetTextView"
+                        app:layout_constraintEnd_toEndOf="@id/targetTextView"
+                        app:layout_constraintBottom_toBottomOf="@id/targetTextView"
+                        android:background="#00000000"/>
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/separator">
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent">
+
+                        <TextView
+                            android:id="@+id/bilingualTextView"
+                            style="@style/Medium"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:includeFontPadding="false"
+                            android:text="@string/bilingual_display"
+                            android:textColor="?attr/appTextPrimary"
+                            android:textSize="@dimen/interpretation_main_bilingual_text_size" />
+
+                        <TextView
+                            android:id="@+id/bilingualInfoTextView"
+                            style="@style/Regular"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/interpretation_main_bilingual_info_margin_top"
+                            android:includeFontPadding="false"
+                            android:text="@string/bilingual_info"
+                            android:textColor="?attr/appTextSecondary"
+                            android:textSize="@dimen/interpretation_main_bilingual_info_text_size" />
+
+                    </LinearLayout>
+
+                    <androidx.appcompat.widget.SwitchCompat
+                        android:id="@+id/bilingualSwitch"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        android:checked="false"
+                        android:thumb="@drawable/switch_thumb"
+                        app:track="@drawable/switch_track"
+                        app:thumbTint="@color/switch_thumb_tint"
+                        app:trackTint="@color/switch_track_tint"/>
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintDimensionRatio="375:494"
+            app:layout_constraintTop_toBottomOf="@id/topLayout"
+            android:src="@drawable/img_interpretation_main_bg" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/topLayout"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginHorizontal="@dimen/interpretation_main_info_margin_horizontal"
+            android:gravity="center"
+            android:textColor="?attr/appTextPrimary"
+            style="@style/Medium"
+            android:textSize="@dimen/interpretation_main_info_text_size"
+            android:text="@string/interpretation_main_info"
+            android:lineSpacingMultiplier="1.5" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

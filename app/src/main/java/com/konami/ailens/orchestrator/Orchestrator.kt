@@ -1,10 +1,18 @@
 package com.konami.ailens.orchestrator
 
+import android.annotation.SuppressLint
+import android.content.Context
 import android.util.Log
+import com.konami.ailens.SharedPrefs
 import com.konami.ailens.orchestrator.capability.AgentCapability
 import com.konami.ailens.orchestrator.capability.AgentDisplayCapability
 import com.konami.ailens.orchestrator.capability.CapabilitySink
 import com.konami.ailens.orchestrator.capability.DeviceEventCapability
+import com.konami.ailens.orchestrator.capability.DialogDisplayCapability
+import com.konami.ailens.orchestrator.capability.DialogTranslationCapability
+import com.konami.ailens.orchestrator.capability.DialogTranslationCapability.*
+import com.konami.ailens.orchestrator.capability.InterpretationCapability
+import com.konami.ailens.orchestrator.capability.InterpretationDisplayCapability
 import com.konami.ailens.orchestrator.capability.Operation
 import com.konami.ailens.orchestrator.capability.NavigationDisplayCapability
 import com.konami.ailens.orchestrator.capability.ToolCapability
@@ -12,20 +20,29 @@ import com.konami.ailens.orchestrator.coordinator.AgentCoordinator
 import com.konami.ailens.orchestrator.coordinator.NavigationCoordinator
 import com.konami.ailens.orchestrator.role.Role
 import com.konami.ailens.orchestrator.capability.NavigationCapability
+import com.konami.ailens.orchestrator.coordinator.DialogTranslationCoordinator
+import com.konami.ailens.orchestrator.coordinator.InterpretationCoordinator
 import io.socket.client.Ack
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.asSharedFlow
 
-class Orchestrator private constructor(): CapabilitySink, DeviceEventCapability, ToolCapability {
+class Orchestrator private constructor(private val context: Context): CapabilitySink, DeviceEventCapability, ToolCapability {
+    sealed class UINavigationEvent {
+        data object Interpretation : UINavigationEvent()
+        data class DialogTranslation(val startSide: MicSide) : UINavigationEvent()
+        data object NavigateToNavigation : UINavigationEvent()
+        data object NavigateToAgent : UINavigationEvent()
+    }
+
     enum class Language(val code: String, val title: String) {
         ENGLISH("en-US", "English"),
         ESPANOL("es-ES", "Español"),
         FRANCAIS("fr-FR", "Français"),
         CHINESE("zh-TW", "中文"),
         JAPANESE("ja-JP", "日本語");
-
         companion object {
+            val interpretationSourceDefault: Language = CHINESE
+            val interpretationTargetDefault: Language = ENGLISH
             fun fromCode(code: String): Language? {
                 return entries.find { it.code == code }
             }
@@ -39,23 +56,51 @@ class Orchestrator private constructor(): CapabilitySink, DeviceEventCapability,
     }
 
     companion object {
-        val instance: Orchestrator by lazy { Orchestrator() }
+        private const val TAG = "Orchestrator"
+        @SuppressLint("StaticFieldLeak")
+        @Volatile private var _instance: Orchestrator? = null
+        val instance: Orchestrator
+            get() = _instance ?: throw IllegalStateException("Call Orchestrator.init(context) first")
+
+        fun init(context: Context) {
+            if (_instance == null) {
+                synchronized(this) {
+                    if (_instance == null) {
+                        _instance = Orchestrator(context.applicationContext)
+                        Log.d(TAG, "Orchestrator initialized")
+                    }
+                }
+            }
+        }
     }
 
+    private val _uiNavigationEvent = MutableSharedFlow<UINavigationEvent>(extraBufferCapacity = 1)
+    val uiNavigationEvent = _uiNavigationEvent.asSharedFlow()
     private var agent: AgentCapability? = null
     private val agentDisplays = mutableListOf<AgentDisplayCapability>()
     private var agentCoordinator: AgentCoordinator? = null
     private var navigationCoordinator: NavigationCoordinator? = null
+    private var interpretationCoordinator: InterpretationCoordinator? = null
+    private var dialogTranslationCoordinator: DialogTranslationCoordinator? = null
     private val navigations = mutableListOf<NavigationCapability>()
     private val navigationDisplays = mutableListOf<NavigationDisplayCapability>()
+    private var interpretation: InterpretationCapability? = null
+    private val interpretationDisplays = mutableListOf<InterpretationDisplayCapability>()
+    private var dialogTranslation: DialogTranslationCapability? = null
+    private val dialogDisplays = mutableListOf<DialogDisplayCapability>()
+    private var dialogStartSide: MicSide? = MicSide.SOURCE
 
-    private val scope = CoroutineScope(Dispatchers.IO)
+    var interpretationSourceLanguage: Language = SharedPrefs.interpretationSourceLanguage
+    var interpretationTargetLanguage: Language = SharedPrefs.interpretationTargetLanguage
 
-    init {
-        scope.launch {
+    var dialogSourceLanguage: Language = SharedPrefs.dialogSourceLanguage
+    var dialogTargetLanguage: Language = SharedPrefs.dialogTargetLanguage
 
+    var bilingual = SharedPrefs.bilingual
+        set(value) {
+            SharedPrefs.bilingual = value
+            field = value
         }
-    }
 
     override fun setAgent(role: AgentCapability) {
         agent = role
@@ -74,15 +119,31 @@ class Orchestrator private constructor(): CapabilitySink, DeviceEventCapability,
         navigations.add(role)
     }
 
+    override fun setInterpretation(role: InterpretationCapability) {
+        interpretation = role
+    }
+
+    override fun addInterpretationDisplay(role: InterpretationDisplayCapability) {
+        interpretationDisplays.add(role)
+    }
+
+    override fun setDialogTranslation(role: DialogTranslationCapability) {
+        dialogTranslation = role
+    }
+
+    override fun addDialogDisplay(role: DialogDisplayCapability) {
+        dialogDisplays.add(role)
+//        dialogTranslationCoordinator?.updateDisplay(role)
+    }
+
     fun register(role: Role) {
         role.registerCapabilities(this)
     }
 
     fun unregister(role: Role) {
-        if (role === agent) {
-            agent = null
-        }
         agentDisplays.removeAll { it === role }
+        interpretationDisplays.removeAll { it === role }
+        dialogDisplays.removeAll { it === role }
     }
 
     fun stopNavigation() {
@@ -95,22 +156,74 @@ class Orchestrator private constructor(): CapabilitySink, DeviceEventCapability,
         agent?.stopAgent()
 
         agentDisplays.clear()
-        navigationDisplays.clear()  // Also clear navigation displays to prevent accumulation
-        navigationCoordinator?.stop()  // Stop navigation coordinator coroutines
+        navigationDisplays.clear()
+        interpretationDisplays.clear()
+        dialogDisplays.clear()
+        interpretation?.stop()
+        interpretation = null
+        dialogTranslationCoordinator?.stop()
+        dialogTranslationCoordinator = null
+        dialogTranslation?.stop()
+        dialogTranslation = null
+        navigationCoordinator?.stop()
         navigationCoordinator = null
         agentCoordinator = null
         agent = null
     }
 
+    fun startAgent() {
+        val agent = agent ?: return
+        agentCoordinator = AgentCoordinator(agent, agentDisplays, this)
+        agentCoordinator?.start()
+    }
+
+    fun stopAgent() {
+        agentCoordinator?.stop()
+        agentCoordinator = null
+    }
+
+    fun startInterpretation() {
+        interpretation?.let {
+            _uiNavigationEvent.tryEmit(UINavigationEvent.Interpretation)
+            interpretationCoordinator = InterpretationCoordinator(it, interpretationDisplays)
+            interpretationCoordinator?.start()
+        }
+    }
+
+    fun stopInterpretation() {
+        interpretationCoordinator?.stop()
+        interpretationCoordinator = null
+    }
+
+    fun startDialogTranslation(side: MicSide) {
+        dialogStartSide = side
+        dialogTranslation?.let {
+            _uiNavigationEvent.tryEmit(UINavigationEvent.DialogTranslation(side))
+            dialogTranslationCoordinator = DialogTranslationCoordinator(it, dialogDisplays)
+            dialogTranslationCoordinator?.start(side)
+        }
+    }
+
+    fun switchToRecorder(side: MicSide) {
+        dialogTranslationCoordinator?.switchRecorder(side)
+    }
+
+    fun stopDialogRecording(side: MicSide) {
+        dialogTranslationCoordinator?.stopRecording(side)
+    }
+
+    fun stopDialogTranslation() {
+        dialogTranslationCoordinator?.stop()
+        dialogTranslationCoordinator = null
+    }
+
     override fun handleDeviceEvent(event: DeviceEventCapability.DeviceEvent) {
         when (event) {
             DeviceEventCapability.DeviceEvent.EnterAgent -> {
-                val agent = agent ?: return
-                agentCoordinator = AgentCoordinator(agent, agentDisplays, this)
-                agentCoordinator?.start()
+                startAgent()
             }
             DeviceEventCapability.DeviceEvent.EnterDialogueTranslation -> {
-
+                startDialogTranslation(MicSide.SOURCE)
             }
             is DeviceEventCapability.DeviceEvent.EnterNavigation -> {
 
@@ -119,26 +232,34 @@ class Orchestrator private constructor(): CapabilitySink, DeviceEventCapability,
 
             }
             DeviceEventCapability.DeviceEvent.EnterSimultaneousTranslation -> {
-
+                startInterpretation()
             }
             DeviceEventCapability.DeviceEvent.LeaveAgent -> {
-                agentCoordinator?.stop()
-                agentCoordinator = null
+                stopAgent()
             }
             DeviceEventCapability.DeviceEvent.LeaveDialogueTranslation -> {
-
+                stopDialogTranslation()
             }
             DeviceEventCapability.DeviceEvent.LeaveNavigation -> {
                 stopNavigation()
             }
             DeviceEventCapability.DeviceEvent.LeaveSimultaneousTranslation -> {
-
+                stopInterpretation()
             }
             is DeviceEventCapability.DeviceEvent.SetDialogueLanguages -> {
 
             }
             is DeviceEventCapability.DeviceEvent.SetSimultaneousLanguages -> {
 
+            }
+            DeviceEventCapability.DeviceEvent.OpenMic -> {
+                if (dialogStartSide == MicSide.TARGET) {
+                    Log.e("TAG", "inininininininin")
+                    stopDialogRecording(MicSide.SOURCE)
+                    dialogStartSide = null
+                    return
+                }
+                switchToRecorder(MicSide.SOURCE)
             }
         }
     }

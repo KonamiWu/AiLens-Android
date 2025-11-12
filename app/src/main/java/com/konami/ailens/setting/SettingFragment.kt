@@ -27,11 +27,11 @@ class SettingFragment: Fragment() {
             val session = BLEService.instance.connectedSession.value
 
             session?.let {
-                it.disconnect()
                 removeBond(it.device)
+                it.disconnect()
             }
 
-            SharedPrefs.clearDeviceInfo(requireContext())
+            SharedPrefs.clearDeviceInfo()
             BLEService.instance.clearSession()
 
             // Navigate to AddDeviceActivity
@@ -55,6 +55,7 @@ class SettingFragment: Fragment() {
                 val method = device.javaClass.getMethod("removeBond")
                 val result = method.invoke(device)
             }
+            BLEService.instance.connectedSession.value?.add(command)
 
         } catch (e: Exception) {
             Log.e("SettingFragment", "Error removing bond: ${e.message}", e)

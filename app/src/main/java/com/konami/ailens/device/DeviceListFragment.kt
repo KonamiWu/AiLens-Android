@@ -25,6 +25,7 @@ import com.konami.ailens.SharedPrefs
 import com.konami.ailens.ble.BLEService
 import com.konami.ailens.ble.Glasses
 import com.konami.ailens.databinding.FragmentDeviceListBinding
+import com.konami.ailens.translation.VerticalSpaceItemDecoration
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -112,7 +113,7 @@ class DeviceListFragment: Fragment() {
 
         try {
             // Check if this is the currently saved device
-            val savedDeviceInfo = SharedPrefs.getDeviceInfo(requireContext())
+            val savedDeviceInfo = SharedPrefs.getDeviceInfo()
             val isCurrentDevice = savedDeviceInfo?.mac == device.address
 
             // If currently connected, disconnect first
@@ -129,7 +130,7 @@ class DeviceListFragment: Fragment() {
 
             if (result) {
                 if (isCurrentDevice) {
-                    SharedPrefs.clearDeviceInfo(requireContext())
+                    SharedPrefs.clearDeviceInfo()
                 }
                 // Refresh the list after a short delay to allow the bond state to update
                 viewLifecycleOwner.lifecycleScope.launch {
@@ -144,18 +145,6 @@ class DeviceListFragment: Fragment() {
 
     private fun refresh() {
         adapter.notifyDataSetChanged()
-    }
-
-    /**
-     * ItemDecoration that adds vertical spacing between RecyclerView items
-     */
-    class VerticalSpaceItemDecoration(private val verticalSpaceHeight: Int) : RecyclerView.ItemDecoration() {
-        override fun getItemOffsets(outRect: Rect, view: View, parent: RecyclerView, state: RecyclerView.State) {
-            // Don't add space after the last item
-            if (parent.getChildAdapterPosition(view) != parent.adapter!!.itemCount - 1) {
-                outRect.bottom = verticalSpaceHeight
-            }
-        }
     }
 
     class DeviceListAdapter(val onclick: (Glasses) -> Unit): RecyclerView.Adapter<DeviceListAdapter.ViewHolder>() {

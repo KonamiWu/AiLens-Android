@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:ignore="ContentDescription"
+    android:id="@+id/main"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintDimensionRatio="1500:874"
+        app:layout_constraintTop_toTopOf="parent"
+        android:src="@drawable/img_nav_bg" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fitsSystemWindows="true">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/navLayout"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/nav_bar_height"
+            app:layout_constraintTop_toTopOf="parent"
+            android:paddingHorizontal="@dimen/smart_translation_padding_horizontal">
+
+            <FrameLayout
+                android:layout_width="@dimen/nav_back_button_size"
+                android:layout_height="@dimen/nav_back_button_size"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent">
+
+                <Button
+                    android:id="@+id/backButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="#00000000"/>
+
+                <ImageView
+                    android:layout_width="@dimen/smart_translation_nav_back_icon_size"
+                    android:layout_height="@dimen/smart_translation_nav_back_icon_size"
+                    android:layout_gravity="center"
+                    android:src="@drawable/ic_nav_back" />
+
+            </FrameLayout>
+
+            <TextView
+                android:id="@+id/titleTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="?attr/appTextPrimary"
+                style="@style/SemiBold"
+                android:textSize="@dimen/smart_translation_title_text_size"
+                android:text="@string/smart_translation"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/interpretationLayout"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintDimensionRatio="343:168"
+            app:layout_constraintTop_toBottomOf="@id/navLayout"
+            android:layout_marginTop="@dimen/smart_translation_margin_top"
+            android:layout_marginHorizontal="@dimen/smart_translation_padding_horizontal"
+            android:background="@drawable/smart_translation_border_bg">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="@drawable/img_smart_translation_interpretation_bg" />
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="@drawable/img_smart_translation_interpretation_glasses" />
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="@drawable/img_smart_translation_interpretation_circuit" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:paddingHorizontal="@dimen/smart_translation_text_padding_horizontal"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/interpretationTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:text="@string/interpretation"
+                    android:textColor="?attr/appTextPrimary"
+                    android:textSize="@dimen/smart_translation_interpretation_title_text_size"
+                    style="@style/SemiBold" />
+
+                <TextView
+                    android:id="@+id/interpretationInfoTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:text="@string/smart_translation_info_1"
+                    android:textColor="?attr/appTextPrimary"
+                    android:textSize="@dimen/smart_translation_interpretation_info_text_size"
+                    android:layout_marginTop="@dimen/smart_translation_title_info_space"
+                    android:lineSpacingMultiplier="1.5"
+                    android:includeFontPadding="false"
+                    style="@style/SemiBold" />
+
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/interpretationButton"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@android:color/transparent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/twoWayLayout"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintDimensionRatio="343:168"
+            android:layout_marginHorizontal="@dimen/smart_translation_padding_horizontal"
+            app:layout_constraintTop_toBottomOf="@id/interpretationLayout"
+            android:layout_marginTop="@dimen/smart_translation_margin_top"
+            android:background="@drawable/smart_translation_border_bg">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="@drawable/img_smart_translation_two_way_bg" />
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="@drawable/img_smart_translation_two_way_glasses" />
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="@drawable/img_smart_translation_two_way_circuit" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:paddingHorizontal="@dimen/smart_translation_text_padding_horizontal"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/twoWayTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:text="@string/two_way_translation"
+                    android:textColor="?attr/appTextPrimary"
+                    android:textSize="@dimen/smart_translation_interpretation_title_text_size"
+                    style="@style/SemiBold" />
+
+                <TextView
+                    android:id="@+id/twoWayInfoTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:text="@string/smart_translation_info_2"
+                    android:textColor="?attr/appTextPrimary"
+                    android:textSize="@dimen/smart_translation_interpretation_info_text_size"
+                    android:layout_marginTop="@dimen/smart_translation_title_info_space"
+                    android:lineSpacingMultiplier="1.5"
+                    android:includeFontPadding="false"
+                    style="@style/SemiBold" />
+
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/twoWayButton"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@android:color/transparent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

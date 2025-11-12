@@ -15,22 +15,6 @@ class AgentCoordinator(private val agentCapability: AgentCapability,
 
     private val scope: CoroutineScope = CoroutineScope(Dispatchers.IO)
     init {
-//        scope.launch {
-//            agentCapability.isStart.collect { isStart ->
-//                agentDisplayCapabilities.forEach {
-//                    it.displayStartAgent()
-//                }
-//            }
-//        }
-//
-//        scope.launch {
-//            agentCapability.isReady.collect { isStart ->
-//                agentDisplayCapabilities.forEach {
-//                    it.displayStartAgent()
-//                }
-//            }
-//        }
-
         scope.launch {
             agentCapability.answer.collect { answer ->
                 agentDisplayCapabilities.forEach { display ->

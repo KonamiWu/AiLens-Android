@@ -11,6 +11,7 @@ interface DeviceEventCapability {
         data object LeaveSimultaneousTranslation : DeviceEvent()
         data object EnterAgent : DeviceEvent()
         data object LeaveAgent : DeviceEvent()
+        data object OpenMic : DeviceEvent()
         data class EnterNavigation(
             val destination: String,
             val travelMode: Orchestrator.TravelMode

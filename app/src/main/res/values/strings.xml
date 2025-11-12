@@ -19,6 +19,7 @@
     <string name="favorite_company">Company</string>
     <string name="back">Back</string>
 
+
     <string name="add_device">Add device</string>
     <string name="add_device_direction_1">Please refer to the following tutorial to pair the glasses</string>
     <string name="add_device_search_text1">Searching for devices...</string>
@@ -66,4 +67,45 @@
     <string name="notification_agent_connecting_status">AI Connecting</string>
     <string name="notification_service_running">Service running</string>
     <string name="notification_separator">, </string>
+
+<!--    common-->
+    <string name="start">Start</string>
+    <string name="phone">Phone</string>
+    <string name="glasses">Glasses</string>
+    <string name="pause">Pause</string>
+
+<!--    language selection-->
+    <string name="japanes">日文</string>
+    <string name="enblish">English</string>
+    <string name="chinese">中文</string>
+    <string name="espanol">Español</string>
+    <string name="francais">français </string>
+
+<!--    smart translation-->
+    <string name="smart_translation">Smart Translation</string>
+    <string name="interpretation">Interpretation</string>
+    <string name="two_way_translation">Two-way Translation</string>
+    <string name="smart_translation_info_1">Translate recognized speech to the selected language on glasses and App</string>
+    <string name="smart_translation_info_2">Translate conversations between two people using the glasses and App</string>
+
+<!--    Interpretation-->
+    <string name="bilingual_display">Bilingual Display</string>
+    <string name="bilingual_info">Show original and translation on glasses and app.</string>
+    <string name="interpretation_info">After completing the language setup, start the interpretation feature from your glasses to begin.</string>
+    <string name="interpretation_main_info">After completing the language setup, start the interpretation feature from your glasses to begin.</string>
+
+<!--    dialog translation-->
+
+    <string name="dialog_setting_info_phone_en">Your spoken words will appear on the right side, and the translated version will be sent to the person wearing the glasses.</string>
+    <string name="dialog_setting_info_phone_zh">你說的話會顯示在右側，翻譯後會傳送給戴眼鏡的人查看。</string>
+    <string name="dialog_setting_info_phone_es">Tus palabras habladas aparecerán en el lado derecho, y la versión traducida será enviada a la persona que lleva las gafas.</string>
+    <string name="dialog_setting_info_phone_fr">Vos paroles apparaîtront sur le côté droit, et la version traduite sera envoyée à la personne portant les lunettes.</string>
+    <string name="dialog_setting_info_phone_ja">あなたが話した内容は右側に表示され、翻訳後は眼鏡をかけている人に送信されます。</string>
+
+    <string name="dialog_setting_info_glasses_en">Translated speech from the person wearing the glasses will appear on the left side.</string>
+    <string name="dialog_setting_info_glasses_zh">戴眼鏡的人所說的話經過翻譯後，會顯示在左側。</string>
+    <string name="dialog_setting_info_glasses_es">El discurso traducido de la persona que lleva las gafas aparecerá en el lado izquierdo.</string>
+    <string name="dialog_setting_info_glasses_fr">La parole traduite de la personne portant les lunettes apparaîtra sur le côté gauche.</string>
+    <string name="dialog_setting_info_glasses_ja">眼鏡をかけている人の翻訳された音声は、左側に表示されます。</string>
 </resources>
+

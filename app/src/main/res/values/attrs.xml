@@ -4,7 +4,8 @@
         <attr name="cornerCut" format="dimension"/>
         <attr name="borderColor" format="color"/>
         <attr name="borderWidth" format="dimension"/>
-        <attr name="fillColor" format="color"/>/>
+        <attr name="fillColor" format="color"/>
+        <attr name="fillColorAlpha" format="float"/>
         <attr name="cutCorners" format="flags">
             <flag name="topLeft" value="1" />
             <flag name="topRight" value="2" />
@@ -22,6 +23,13 @@
             <enum name="horizontal" value="0" />
             <enum name="vertical" value="1" />
         </attr>
+    </declare-styleable>
+
+    <declare-styleable name="WaveView">
+        <attr name="dotSize" format="dimension" />
+        <attr name="dotSpacing" format="dimension" />
+        <attr name="dotColor" format="color" />
+        <attr name="waveBackgroundColor" format="color" />
     </declare-styleable>
 
     <attr name="appPrimary" format="color" />

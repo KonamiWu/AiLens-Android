@@ -75,7 +75,7 @@ class BLEService private constructor(private val context: Context) {
                 return
             if (sessions[address] == null) {
                 Log.e("TAG", "newDevice.name = ${newDevice.name}")
-                val newSession = Ailens(context, newDevice, null)
+                val newSession = AiLens(context, newDevice, null)
                 sessions[address] = newSession
                 collect(newSession)
                 _updateFlow.tryEmit(Unit)
@@ -167,10 +167,10 @@ class BLEService private constructor(private val context: Context) {
             Log.e(TAG, "BluetoothAdapter not available for retrieve")
             return
         }
-        val info = SharedPrefs.getDeviceInfo(context) ?: return
+        val info = SharedPrefs.getDeviceInfo() ?: return
         val device = try { adapter.getRemoteDevice(info.mac) } catch (_: IllegalArgumentException) { null } ?: return
         Log.e(TAG, "retrieve() creating new DeviceSession for device=${device.address}")
-        val newSession = Ailens(context, device, info.retrieveToken)
+        val newSession = AiLens(context, device, info.retrieveToken)
         Log.e(TAG, "retrieve() created newSession=$newSession, setting as connectedSession")
         _connectedSession.value = newSession
         collect(newSession)

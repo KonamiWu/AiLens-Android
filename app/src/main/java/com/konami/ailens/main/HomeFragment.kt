@@ -18,7 +18,6 @@ import com.konami.ailens.navigation.NavigationService
 import kotlinx.coroutines.launch
 import androidx.core.view.isInvisible
 import androidx.core.view.isVisible
-import com.konami.ailens.ble.command.ToggleMicCommand
 import com.konami.ailens.resolveAttrColor
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flatMapLatest
@@ -42,23 +41,18 @@ class HomeFragment: Fragment() {
         }
 
          binding.teleprompterButton.setOnClickListener {
-                 BLEService.instance.connectedSession.value?.add(ToggleMicCommand(true))
-             }
+         }
 
          binding.translationButton.setOnClickListener {
-                 BLEService.instance.connectedSession.value?.add(ToggleMicCommand(false))
-             }
+             findNavController().navigate(R.id.action_HomeFragment_to_SmartTranslationFragment)
+         }
 
         // Monitor connectedSession state changes
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 BLEService.instance.connectedSession
                     .flatMapLatest { session ->
-                        if (session == null) {
-                            flowOf(null to null)  // (session, state)
-                        } else {
-                            session.state.map { state -> session to state }
-                        }
+                        session?.state?.map { state -> session to state } ?: flowOf(null to null)  // (session, state)
                     }
                     .collect { (session, state) ->
                         if (session == null) {
@@ -98,6 +92,7 @@ class HomeFragment: Fragment() {
             }
         }
 
+        setViewStateDisconnectedWithoutAnimation()
         return binding.root
     }
 
@@ -145,6 +140,16 @@ class HomeFragment: Fragment() {
         fadeIn(binding.diconnectedTextView)
         fadeIn(binding.disconnectLayout)
         binding.glassesImageView.animate().alpha(0.5f).setDuration(300).start()
+    }
+
+    private fun setViewStateDisconnectedWithoutAnimation() {
+        binding.functionLayout.visibility = View.INVISIBLE
+        binding.batteryImageView.visibility = View.INVISIBLE
+        binding.batteryTextView.visibility = View.INVISIBLE
+        binding.infoImageView.visibility = View.INVISIBLE
+        binding.diconnectedTextView.visibility = View.INVISIBLE
+        binding.disconnectLayout.visibility = View.INVISIBLE
+        binding.glassesImageView.alpha = 0.5f
     }
 
     private fun fadeIn(view: View, duration: Long = 300) {
