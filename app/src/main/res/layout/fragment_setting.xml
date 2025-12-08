@@ -57,25 +57,71 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
+        <LinearLayout
+            android:id="@+id/nameLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/navigationBar"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="@dimen/setting_name_margin_top"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="@dimen/setting_glasses_icon_size"
+                android:layout_height="@dimen/setting_glasses_icon_size"
+                android:src="@drawable/ic_setting_glasses" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/setting_name_text_size"
+                android:textColor="?attr/appTextPrimary"
+                style="@style/SemiBold"
+                android:includeFontPadding="false"
+                android:layout_marginHorizontal="@dimen/setting_name_margin_horizontal"
+                android:text="AiLens 01A2" />
+
+            <ImageButton
+                android:layout_width="@dimen/setting_name_edit_size"
+                android:layout_height="@dimen/setting_name_edit_size"
+                android:src="@drawable/ic_setting_name_edit" />
+        </LinearLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintTop_toBottomOf="@id/nameLayout"
+            app:layout_constraintBottom_toTopOf="@id/buttonLayout"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            android:orientation="vertical" />
+
         <FrameLayout
             android:id="@+id/buttonLayout"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/add_device_button_height"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
-            style="@style/BigPrimaryButtonLayout">
+            android:layout_marginHorizontal="@dimen/add_device_button_margin_horizontal"
+            android:layout_marginBottom="@dimen/add_device_button_margin_bottom">
 
             <com.konami.ailens.main.CutCornerView
-                android:id="@+id/cutCornerView"
-                style="@style/BigPrimaryButtonCutCorner"/>
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:cornerCut="@dimen/add_device_button_corner_cut"
+                app:fillColor="?attr/appPrimary" />
 
             <Button
                 android:id="@+id/unbindButton"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:background="#00000000"
-                style="@style/BigPrimaryButtonText"
                 android:text="@string/unbind_device"
-                android:textColor="@color/app_text_button"
-                android:textSize="@dimen/big_bottom_button_text_size" />
-
+                android:textColor="?attr/appTextButton"
+                style="@style/Bold"/>
         </FrameLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>

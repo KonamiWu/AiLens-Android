@@ -194,6 +194,7 @@ class AppForegroundService : Service() {
                             val bluetoothRole = BluetoothRole(session, orchestrator)
                             val agentRole = AgentRole(orchestrator, BluetoothRecorder(session, true))
                             val navigationRole = NavigationRole()
+                            Log.e("TAG", "ininasdfasdfj;aksdfj;klj")
                             val interpretationRole = InterpretationRole(applicationContext, BluetoothRecorder(session, false))
                             val dialogRole = DialogTranslationRole(applicationContext, BluetoothRecorder(session, false), PhoneRecorder())
                             orchestrator.register(bluetoothRole)

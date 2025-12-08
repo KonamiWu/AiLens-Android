@@ -26,6 +26,7 @@ class InterpretationRole(private val context: Context, private val recorder: Rec
 
     override fun start() {
         service.start()
+        service.startRecording()
     }
 
     override fun stop() {

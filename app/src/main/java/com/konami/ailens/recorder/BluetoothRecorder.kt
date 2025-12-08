@@ -27,7 +27,6 @@ class BluetoothRecorder(
 
     override fun startRecording() {
         if (isRecording) return
-
         // reset channel
         if (!channel.isEmpty) {
             channel.tryReceive().getOrNull()

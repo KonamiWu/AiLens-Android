@@ -18,6 +18,10 @@ class CutCornerView @JvmOverloads constructor(
     var borderColor: Int = Color.WHITE
     var borderWidth: Float = 2f
     var fillColor: Int = Color.TRANSPARENT
+        set(value) {
+            field = value
+            invalidate()
+        }
     var fillColorAlpha: Float = 1f
         set(value) {
             field = value.coerceIn(0f, 1f)

@@ -79,28 +79,30 @@
 
         <FrameLayout
             android:id="@+id/buttonLayout"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/add_device_button_height"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
-            style="@style/BigPrimaryButtonLayout">
+            android:layout_marginHorizontal="@dimen/add_device_button_margin_horizontal"
+            android:layout_marginBottom="@dimen/add_device_button_margin_bottom">
 
             <com.konami.ailens.main.CutCornerView
-                android:id="@+id/cutCornerView"
-                style="@style/BigPrimaryButtonCutCorner"/>
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:cornerCut="@dimen/add_device_button_corner_cut"
+                app:fillColor="?attr/appPrimary" />
 
             <Button
                 android:id="@+id/startButton"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:background="#00000000"
-                style="@style/BigPrimaryButtonText"
                 android:text="@string/start"
-                android:textColor="@color/app_text_button"
-                android:textSize="@dimen/big_bottom_button_text_size" />
-
+                android:textColor="?attr/appTextButton"
+                android:textSize="@dimen/big_bottom_button_text_size"
+                style="@style/Bold"/>
         </FrameLayout>
-
-
-
-
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

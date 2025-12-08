@@ -9,6 +9,9 @@
         <!-- Set window background to match app background -->
         <item name="android:windowBackground">@color/app_background</item>
 
+        <!-- Activity transition animation -->
+        <item name="android:windowAnimationStyle">@style/ActivityAnimation</item>
+
         <item name="appPrimary">@color/app_primary</item>
         <item name="appPrimaryDark">@color/app_primary_dark</item>
         <item name="appBackground">@color/app_background</item>
@@ -23,12 +26,32 @@
         <item name="appTextButton">@color/app_text_button</item>
         <item name="appTextCaption">@color/app_text_caption</item>
         <item name="appTextPlaceholder">@color/app_text_placeholder</item>
+        <item name="appTextDisable">@color/app_text_disable</item>
 
-        <item name="appButtonGrey">@color/app_button_grey</item>
+        <item name="appButtonDisable">@color/app_button_disable</item>
         <item name="appIconDark">@color/app_icon_dark</item>
         <item name="appWhite">@color/app_white</item>
         <item name="appRed">@color/app_red</item>
         <item name="appGrey01">@color/app_grey01</item>
         <item name="appGrey02">@color/app_grey02</item>
     </style>
+
+    <style name="AiLensAlertDialog" parent="ThemeOverlay.MaterialComponents.Dialog">
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowIsFloating">false</item>
+    </style>
+
+    <style name="AiLensLoading" parent="ThemeOverlay.MaterialComponents.Dialog">
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowIsTranslucent">true</item>
+    </style>
+
+    <style name="ActivityAnimation" parent="@android:style/Animation.Activity">
+        <item name="android:activityOpenEnterAnimation">@anim/slide_in_right</item>
+        <item name="android:activityOpenExitAnimation">@anim/slide_out_left</item>
+        <item name="android:activityCloseEnterAnimation">@anim/slide_in_left</item>
+        <item name="android:activityCloseExitAnimation">@anim/slide_out_right</item>
+    </style>
+
 </resources>

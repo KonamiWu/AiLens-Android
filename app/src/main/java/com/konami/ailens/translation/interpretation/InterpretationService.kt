@@ -1,6 +1,7 @@
 package com.konami.ailens.translation.interpretation
 
 import android.content.Context
+import android.util.Log
 import com.konami.ailens.R
 import com.konami.ailens.orchestrator.Orchestrator
 import com.konami.ailens.recorder.Recorder

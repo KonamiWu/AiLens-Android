@@ -1,6 +1,7 @@
 [versions]
 agp = "8.13.0"
 kotlin = "2.2.20"
+securityCrypto = "1.1.0-alpha06"
 serialization = "1.9.0"
 coreKtx = "1.17.0"
 junit = "4.13.2"
@@ -30,9 +31,12 @@ placesApi = "5.0.0"
 speechsdk = "1.46.0"
 # Coroutines - 這個是你缺少的！
 coroutines = "1.10.2"
+workRuntimeKtx = "2.11.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
+androidx-security-crypto = { module = "androidx.security:security-crypto", version.ref = "securityCrypto" }
+androidx-work-runtime-ktx = { module = "androidx.work:work-runtime-ktx", version.ref = "workRuntimeKtx" }
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "serialization" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }

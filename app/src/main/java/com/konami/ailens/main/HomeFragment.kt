@@ -18,6 +18,7 @@ import com.konami.ailens.navigation.NavigationService
 import kotlinx.coroutines.launch
 import androidx.core.view.isInvisible
 import androidx.core.view.isVisible
+import com.konami.ailens.ble.command.ToggleMicCommand
 import com.konami.ailens.resolveAttrColor
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flatMapLatest
@@ -41,6 +42,7 @@ class HomeFragment: Fragment() {
         }
 
          binding.teleprompterButton.setOnClickListener {
+
          }
 
          binding.translationButton.setOnClickListener {

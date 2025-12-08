@@ -254,7 +254,6 @@ class Orchestrator private constructor(private val context: Context): Capability
             }
             DeviceEventCapability.DeviceEvent.OpenMic -> {
                 if (dialogStartSide == MicSide.TARGET) {
-                    Log.e("TAG", "inininininininin")
                     stopDialogRecording(MicSide.SOURCE)
                     dialogStartSide = null
                     return

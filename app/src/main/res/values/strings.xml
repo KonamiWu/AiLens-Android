@@ -73,6 +73,8 @@
     <string name="phone">Phone</string>
     <string name="glasses">Glasses</string>
     <string name="pause">Pause</string>
+    <string name="confirm">Confirm</string>
+    <string name="error">Error</string>
 
 <!--    language selection-->
     <string name="japanes">日文</string>
@@ -95,7 +97,6 @@
     <string name="interpretation_main_info">After completing the language setup, start the interpretation feature from your glasses to begin.</string>
 
 <!--    dialog translation-->
-
     <string name="dialog_setting_info_phone_en">Your spoken words will appear on the right side, and the translated version will be sent to the person wearing the glasses.</string>
     <string name="dialog_setting_info_phone_zh">你說的話會顯示在右側，翻譯後會傳送給戴眼鏡的人查看。</string>
     <string name="dialog_setting_info_phone_es">Tus palabras habladas aparecerán en el lado derecho, y la versión traducida será enviada a la persona que lleva las gafas.</string>
@@ -107,5 +108,38 @@
     <string name="dialog_setting_info_glasses_es">El discurso traducido de la persona que lleva las gafas aparecerá en el lado izquierdo.</string>
     <string name="dialog_setting_info_glasses_fr">La parole traduite de la personne portant les lunettes apparaîtra sur le côté gauche.</string>
     <string name="dialog_setting_info_glasses_ja">眼鏡をかけている人の翻訳された音声は、左側に表示されます。</string>
+
+<!--    sign up-->
+    <string name="sign_up">Sign up</string>
+    <string name="email">Email</string>
+    <string name="sign_up_already_have_account">Already have an account?</string>
+    <string name="log_in">Log in</string>
+    <string name="verification_code">Verification Code</string>
+    <string name="otp_sent">The verification was sent to</string>
+    <string name="get_verification_code">Get verification code</string>
+    <string name="display_name">Display Name</string>
+    <string name="password">Password</string>
+    <string name="confirm_password">Confirm Password</string>
+    <string name="password_invalid_hint">Password must be at least 8 characters</string>
+    <string name="confirm_password_invalid_hint">Password do not match</string>
+    <string name="signed_up_successfully">Singed Up Successfully</string>
+    <string name="forget_password">Forget password</string>
+    <string name="dont_have_account">Don\'t have an account yet?</string>
+    <string name="forget_password_hint">Please enter the email address you used to sign up</string>
+    <string name="set_new_password">Set a new password</string>
+    <string name="set_new_password_hint">After the new password is set, you can log in with the new password</string>
+    <string name="email_invalid_hint">Please enter a valid email address</string>
+    <string name="display_name_invalid_hint">Display Name is required</string>
+    <string name="display_name_error_hint">Display Name is required</string>
+    <string name="password_error_hint">Password must be at least 8 characters</string>
+    <string name="confirm_password_error_hint">Passwords do not match</string>
+    <string name="toggle_password_visibility">Toggle password visibility</string>
+    <string name="reset_password_successfully">Reset password successfully</string>
+
+<!--    setting-->
+    <string name="setting_power_saving">Power Saving</string>
+    <string name="setting_check_for_update">Check for Updates</string>
+    <string name="setting_factory_reset">Factory Reset</string>
+    <string name="setting_about">About</string>
 </resources>
 

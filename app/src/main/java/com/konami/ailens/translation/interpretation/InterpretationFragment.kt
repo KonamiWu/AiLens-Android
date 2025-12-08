@@ -19,6 +19,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.libraries.navigation.internal.acd.ho
 import com.konami.ailens.R
+import com.konami.ailens.ble.BLEService
+import com.konami.ailens.ble.command.ToggleMicCommand
 import com.konami.ailens.databinding.FragmentInterpretationBinding
 import com.konami.ailens.navigation.VerticalDivider
 import com.konami.ailens.orchestrator.Orchestrator

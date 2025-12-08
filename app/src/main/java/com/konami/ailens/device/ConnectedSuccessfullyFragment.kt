@@ -1,6 +1,7 @@
 package com.konami.ailens.device
 
 import android.annotation.SuppressLint
+import android.app.ActivityOptions
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -51,8 +52,14 @@ class ConnectedSuccessfullyFragment: Fragment() {
                         // Navigate to MainActivity with animation
                         val intent = Intent(requireActivity(), MainActivity::class.java)
                         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-                        startActivity(intent)
-                        requireActivity().overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left)
+
+                        val options = ActivityOptions.makeCustomAnimation(
+                            requireContext(),
+                            R.anim.flip_in,
+                            R.anim.flip_out
+                        )
+
+                        startActivity(intent, options.toBundle())
                         requireActivity().finish()
                     }
                 }
@@ -62,12 +69,5 @@ class ConnectedSuccessfullyFragment: Fragment() {
             return animation
         }
         return super.onCreateAnimation(transit, enter, nextAnim)
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-        // Start animation sequence
-
     }
 }

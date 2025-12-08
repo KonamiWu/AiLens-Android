@@ -13,13 +13,13 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import com.konami.ailens.MainActivity
 import com.konami.ailens.PermissionHelper
+import com.konami.ailens.R
 import com.konami.ailens.SharedPrefs
 import com.konami.ailens.ble.AppForegroundService
 import com.konami.ailens.databinding.ActivityAddDeviceBinding
 
 class AddDeviceActivity : AppCompatActivity() {
     private lateinit var binding: ActivityAddDeviceBinding
-    private val token = "eyJhbGciOiJIUzI1NiIsImtpZCI6ImxJN3FwamhzWFQ5RXJRMmMiLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL3phZXJvbG94aXJpbXNkcnVyem5lLnN1cGFiYXNlLmNvL2F1dGgvdjEiLCJzdWIiOiJiODczMGNjYi01YjkxLTRkNGItOTA4MS0xZmExYjBiYzRmYjEiLCJhdWQiOiJhdXRoZW50aWNhdGVkIiwiZXhwIjoxNzYxODIwNjYzLCJpYXQiOjE3NjEyMTU4NjMsImVtYWlsIjoiamVubnlAdGhpbmthci5jb20iLCJwaG9uZSI6IiIsImFwcF9tZXRhZGF0YSI6eyJwcm92aWRlciI6ImVtYWlsIiwicHJvdmlkZXJzIjpbImVtYWlsIl19LCJ1c2VyX21ldGFkYXRhIjp7ImVtYWlsIjoiamVubnlAdGhpbmthci5jb20iLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZSwicGhvbmVfdmVyaWZpZWQiOmZhbHNlLCJzdWIiOiJiODczMGNjYi01YjkxLTRkNGItOTA4MS0xZmExYjBiYzRmYjEifSwicm9sZSI6ImF1dGhlbnRpY2F0ZWQiLCJhYWwiOiJhYWwxIiwiYW1yIjpbeyJtZXRob2QiOiJwYXNzd29yZCIsInRpbWVzdGFtcCI6MTc2MTIxNTg2M31dLCJzZXNzaW9uX2lkIjoiZjQyOGE4ZmQtY2EwYS00YTRiLTg4N2EtMGIyOWZjYWRiYjdmIiwiaXNfYW5vbnltb3VzIjpmYWxzZX0.QAi8KDTBK5U5TNkAj_9Xsm0Qv4A8N_arDmPhXQHveYY"
     private val permissionLauncher =
         registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { result ->
             val deniedPermissions = result.filterValues { granted -> !granted }.keys
@@ -53,7 +53,14 @@ class AddDeviceActivity : AppCompatActivity() {
         if (deviceInfo != null) {
             val intent = Intent(this, MainActivity::class.java)
             intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-            startActivity(intent)
+
+            val options = android.app.ActivityOptions.makeCustomAnimation(
+                this,
+                R.anim.slide_in_right,
+                R.anim.slide_out_left
+            )
+
+            startActivity(intent, options.toBundle())
             finish()
             return
         }

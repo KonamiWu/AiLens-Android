@@ -32,14 +32,16 @@
             android:layout_height="wrap_content"
             android:textColor="?attr/appTextPrimary"
             android:textSize="@dimen/favorite_list_item_title_text_size"
-            android:text="Company"/>
+            android:text="Company"
+            style="@style/Regular"/>
 
         <TextView
             android:id="@+id/valueTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="?attr/appTextCaption"
-            android:textSize="@dimen/favorite_list_item_value_text_size"/>
+            android:textSize="@dimen/favorite_list_item_value_text_size"
+            style="@style/Regular"/>
 
     </LinearLayout>
 

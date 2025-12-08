@@ -17,8 +17,9 @@
     <color name="app_text_caption">#8A8E8D</color>
     <color name="app_text_button">#000A11</color>
     <color name="app_text_placeholder">#6B6B6B</color>
+    <color name="app_text_disable">#4A4A4A</color>
 
-    <color name="app_button_grey">#434343</color>
+    <color name="app_button_disable">#3E3E3E</color>
     <color name="app_icon_dark">#484A4C</color>
     <color name="app_white">#FFFFFF</color>
     <color name="app_red">#FF8A9B</color>
