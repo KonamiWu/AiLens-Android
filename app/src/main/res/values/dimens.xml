@@ -11,6 +11,11 @@
     <dimen name="language_item_section_height">20sp</dimen>
 
 <!--    new-->
+    <dimen name="loading_size">120dp</dimen>
+    <dimen name="loading_image_size">48dp</dimen>
+    <dimen name="loading_padding">32dp</dimen>
+    <dimen name="loading_corner_radius">32dp</dimen>
+
     <dimen name="home_disconnect_text1_size">16sp</dimen>
     <dimen name="home_disconnect_text2_size">16sp</dimen>
     <dimen name="home_disconnect_info_icon_size">20dp</dimen>
@@ -259,7 +264,7 @@
     <dimen name="big_bottom_button_text_size">16sp</dimen>
     <dimen name="big_bottom_button_margin_horizontal">32dp</dimen>
     <dimen name="big_bottom_button_margin_bottom">24dp</dimen>
-    <dimen name="big_bottom_button_cut_corner">5dp</dimen>
+    <dimen name="big_bottom_button_corner_cut">5.5dp</dimen>
 
 
     <dimen name="smart_translation_padding_horizontal">16dp</dimen>
@@ -350,4 +355,69 @@
     <dimen name="dialog_translation_content_margin_horizontal">32dp</dimen>
     <dimen name="dialog_translation_content_margin_bottom">24dp</dimen>
 
+    <dimen name="sign_up_title_text_size">24sp</dimen>
+    <dimen name="sign_up_padding">32dp</dimen>
+
+
+    <dimen name="sign_up_edit_text_size">14sp</dimen>
+    <dimen name="sign_up_edit_text_margin_top">60dp</dimen>
+    <dimen name="sign_up_edit_text_spacing">24dp</dimen>
+    <dimen name="sign_up_edit_text_invalid_hint_margin_left">4dp</dimen>
+    <dimen name="sign_up_login_in_margin_left">8dp</dimen>
+
+    <dimen name="sign_up_big_button_margin_top">55dp</dimen>
+    <dimen name="sign_up_big_button_height">52dp</dimen>
+
+    <dimen name="sign_up_hint_margin_top">8dp</dimen>
+    <dimen name="sign_up_hint_text_size">14sp</dimen>
+    <dimen name="sign_up_already_have_account_margin_top">6dp</dimen>
+    <dimen name="sign_up_verification_countdown_text_size">12sp</dimen>
+    <dimen name="sign_up_verification_sent_email_margin_top">4dp</dimen>
+    <dimen name="sign_up_verification_count_down_margin_top">4dp</dimen>
+    <dimen name="sign_up_verification_count_down_margin_end">4dp</dimen>
+
+    <!-- Alert Dialog -->
+    <dimen name="alert_dialog_width">320dp</dimen>
+    <dimen name="alert_dialog_padding_top">32dp</dimen>
+    <dimen name="alert_dialog_padding_bottom">22dp</dimen>
+    <dimen name="alert_dialog_padding_horizontal">24dp</dimen>
+    <dimen name="alert_dialog_icon_size">72dp</dimen>
+    <dimen name="alert_dialog_corner_cut">7dp</dimen>
+    <dimen name="alert_dialog_border_width">1dp</dimen>
+    <dimen name="alert_dialog_icon_margin_bottom">16dp</dimen>
+    <dimen name="alert_dialog_title_text_size">20sp</dimen>
+    <dimen name="alert_dialog_title_margin_bottom">20dp</dimen>
+    <dimen name="alert_dialog_message_text_size">14sp</dimen>
+    <dimen name="alert_dialog_message_line_height">21sp</dimen>
+    <dimen name="alert_dialog_message_margin_bottom">12dp</dimen>
+    <dimen name="alert_dialog_button_height">44dp</dimen>
+    <dimen name="alert_dialog_button_text_size">16sp</dimen>
+    <dimen name="alert_dialog_button_spacing">12dp</dimen>
+    <dimen name="alert_dialog_separator_width">1dp</dimen>
+
+    <!-- Sign Up -->
+    <dimen name="sign_up_password_padding_end">20dp</dimen>
+    <dimen name="sign_up_eye_button_size">16dp</dimen>
+    <dimen name="sign_up_eye_button_margin_right">4dp</dimen>
+
+    <!-- Toast Notification -->
+    <dimen name="toast_horizontal_margin">12dp</dimen>
+    <dimen name="toast_corner_cut">6dp</dimen>
+    <dimen name="toast_border_width">1dp</dimen>
+    <dimen name="toast_min_height">60dp</dimen>
+    <dimen name="toast_content_padding_start">16dp</dimen>
+    <dimen name="toast_content_padding_end">16dp</dimen>
+    <dimen name="toast_content_padding_vertical">16dp</dimen>
+    <dimen name="toast_icon_size">20dp</dimen>
+    <dimen name="toast_message_margin_start">18dp</dimen>
+    <dimen name="toast_message_text_size">14sp</dimen>
+
+    <!-- Login -->
+    <dimen name="login_forget_password_margin_top">8dp</dimen>
+    <dimen name="login_forget_password_text_size">12sp</dimen>
+    <dimen name="login_button_margin_top">32dp</dimen>
+
+<!--    forget password-->
+    <dimen name="forget_password_nav_back_margin_start">16dp</dimen>
+    <dimen name="forget_password_title_margin_top">32dp</dimen>
 </resources>

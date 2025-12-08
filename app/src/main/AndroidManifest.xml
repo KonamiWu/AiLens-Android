@@ -41,7 +41,7 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyB6p2cXCv73A0IcldS3jHXAHiBc7UFbotQ" />
         <activity
-            android:name=".device.AddDeviceActivity"
+            android:name=".login.LoginActivity"
             android:exported="true"
             android:theme="@style/Theme.AiLens">
             <intent-filter>
@@ -51,8 +51,24 @@
             </intent-filter>
         </activity>
 
+        <activity android:name=".signup.SignUpActivity"
+            android:exported="true"
+            android:theme="@style/Theme.AiLens">
+        </activity>
+
+        <activity android:name=".login.ForgetPasswordActivity"
+            android:exported="true"
+            android:theme="@style/Theme.AiLens">
+        </activity>
+
         <activity
             android:name=".MainActivity"
+            android:exported="true"
+            android:theme="@style/Theme.AiLens">
+        </activity>
+
+        <activity
+            android:name=".device.AddDeviceActivity"
             android:exported="true"
             android:theme="@style/Theme.AiLens">
         </activity>

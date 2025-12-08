@@ -9,9 +9,7 @@
     </style>
 
     <style name="BigPrimaryButtonCutCorner">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">match_parent</item>
-        <item name="cornerCut">@dimen/big_bottom_button_cut_corner</item>
+        <item name="cornerCut">@dimen/big_bottom_button_corner_cut</item>
         <item name="borderColor">#00000000</item>
         <item name="fillColor">?attr/appPrimary</item>
     </style>

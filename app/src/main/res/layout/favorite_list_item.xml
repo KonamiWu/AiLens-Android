@@ -40,7 +40,8 @@
                 android:layout_height="wrap_content"
                 android:textColor="?attr/appTextPrimary"
                 android:textSize="@dimen/favorite_list_item_title_text_size"
-                android:text="Company"/>
+                android:text="Company"
+                style="@style/Regular"/>
 
             <TextView
                 android:id="@+id/valueTextView"
@@ -48,7 +49,8 @@
                 android:layout_height="wrap_content"
                 android:textColor="?attr/appTextCaption"
                 android:textSize="@dimen/favorite_list_item_value_text_size"
-                android:text="No. 25, Sec. 2, Dunhua South Road"/>
+                android:text="No. 25, Sec. 2, Dunhua South Road"
+                style="@style/Regular"/>
 
         </LinearLayout>
 

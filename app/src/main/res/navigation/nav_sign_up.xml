@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_sign_up"
+    app:startDestination="@id/SendOTPFragment">
+
+    <fragment
+        android:id="@+id/SendOTPFragment"
+        android:name="com.konami.ailens.signup.SendOTPFragment"
+        tools:layout="@layout/fragment_send_otp">
+
+        <action android:id="@+id/action_SendOTPFragment_to_VerifyOTPFragment"
+            app:destination="@id/VerifyOTPFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/VerifyOTPFragment"
+        android:name="com.konami.ailens.signup.VerifyOTPFragment"
+        tools:layout="@layout/fragment_verify_otp">
+
+        <argument
+            android:name="email"
+            app:argType="string" />
+
+        <action android:id="@+id/action_VerifyOTPFragment_to_SignUpFragment"
+            app:destination="@id/SignUpFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/SignUpFragment"
+        android:name="com.konami.ailens.signup.SignUpFragment"
+        tools:layout="@layout/fragment_sign_up">
+
+        <argument
+            android:name="email"
+            app:argType="string" />
+    </fragment>
+
+</navigation>

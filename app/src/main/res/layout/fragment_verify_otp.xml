@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:ignore="ContentDescription"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintDimensionRatio="1500:874"
+        app:layout_constraintTop_toTopOf="parent"
+        android:src="@drawable/img_nav_bg" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:fitsSystemWindows="true"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:padding="@dimen/sign_up_padding"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
+
+            <TextView
+                android:id="@+id/titleTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                android:text="@string/verification_code"
+                android:textColor="?attr/appPrimary"
+                style="@style/SemiBold"
+                android:includeFontPadding="false"
+                android:textSize="@dimen/sign_up_title_text_size" />
+
+            <TextView
+                android:id="@+id/descriptionTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/titleTextView"
+                android:layout_marginTop="@dimen/sign_up_hint_margin_top"
+                android:text="@string/otp_sent"
+                android:textColor="?attr/appTextPrimary"
+                android:includeFontPadding="false"
+                style="@style/Regular"
+                android:textSize="@dimen/sign_up_hint_text_size" />
+
+            <TextView
+                android:id="@+id/emailTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/descriptionTextView"
+                android:layout_marginTop="@dimen/sign_up_verification_sent_email_margin_top"
+                android:textColor="?attr/appTextPrimary"
+                android:includeFontPadding="false"
+                style="@style/Regular"
+                android:textSize="@dimen/sign_up_hint_text_size"
+                tools:text="example@email.com" />
+
+            <EditText
+                android:id="@+id/otpEditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="number"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/emailTextView"
+                android:layout_marginTop="@dimen/sign_up_edit_text_margin_top"
+                android:autofillHints="smsOTPCode"
+                android:hint="@string/verification_code"
+                android:textColorHint="@color/app_text_placeholder"
+                style="@style/Regular"
+                android:textSize="@dimen/sign_up_edit_text_size"
+                android:textColor="@color/app_text_primary" />
+
+            <TextView
+                android:id="@+id/countDownTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@id/otpEditText"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginTop="@dimen/sign_up_verification_count_down_margin_top"
+                android:layout_marginEnd="@dimen/sign_up_verification_count_down_margin_end"
+                android:textColor="?attr/appTextSecondary"
+                style="@style/Regular"
+                android:textSize="@dimen/sign_up_hint_text_size"
+                tools:text="40s" />
+
+            <TextView
+                android:id="@+id/getOTPTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@id/otpEditText"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginTop="@dimen/sign_up_verification_count_down_margin_top"
+                android:layout_marginEnd="@dimen/sign_up_verification_count_down_margin_end"
+                android:text="@string/get_verification_code"
+                android:textColor="?attr/appTextSecondary"
+                style="@style/SemiBold"
+                android:textSize="@dimen/sign_up_hint_text_size"
+                android:visibility="gone" />
+
+            <com.konami.ailens.main.CutCornerView
+                android:id="@+id/buttonLayout"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/sign_up_big_button_height"
+                app:layout_constraintTop_toBottomOf="@id/otpEditText"
+                android:layout_marginTop="@dimen/sign_up_big_button_margin_top"
+                app:borderWidth="0dp"
+                app:cornerCut="@dimen/big_bottom_button_corner_cut"
+                app:borderColor="@android:color/transparent"
+                app:fillColor="?attr/appButtonDisable">
+
+                <Button
+                    android:id="@+id/nextButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@android:color/transparent"
+                    android:textColor="?attr/appTextDisable"
+                    android:textSize="@dimen/big_bottom_button_text_size"
+                    style="@style/Bold"
+                    android:text="@string/next" />
+
+            </com.konami.ailens.main.CutCornerView>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

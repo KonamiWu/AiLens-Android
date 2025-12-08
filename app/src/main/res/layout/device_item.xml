@@ -35,7 +35,8 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/bluetooth_item_horizontalPadding"
             app:layout_constraintLeft_toRightOf="@id/bgImageView"
-            app:layout_constraintBottom_toTopOf="@id/centerView"/>
+            app:layout_constraintBottom_toTopOf="@id/centerView"
+            style="@style/Regular"/>
 
         <TextView
             android:id="@+id/macTextView"
@@ -45,7 +46,8 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/bluetooth_item_horizontalPadding"
             app:layout_constraintLeft_toRightOf="@id/bgImageView"
-            app:layout_constraintTop_toBottomOf="@id/centerView"/>
+            app:layout_constraintTop_toBottomOf="@id/centerView"
+            style="@style/Regular"/>
 
         <TextView
             android:id="@+id/stateTextView"
@@ -55,7 +57,8 @@
             android:layout_height="wrap_content"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"/>
+            app:layout_constraintBottom_toBottomOf="parent"
+            style="@style/Regular"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

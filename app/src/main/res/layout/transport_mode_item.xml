@@ -20,5 +20,6 @@
         android:layout_marginStart="6dp"
         android:text="Walking"
         android:textColor="?attr/appPrimary"
-        android:textSize="14sp" />
+        android:textSize="14sp"
+        style="@style/Regular" />
 </LinearLayout>

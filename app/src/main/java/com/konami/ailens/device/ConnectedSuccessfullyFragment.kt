@@ -51,8 +51,14 @@ class ConnectedSuccessfullyFragment: Fragment() {
                         // Navigate to MainActivity with animation
                         val intent = Intent(requireActivity(), MainActivity::class.java)
                         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-                        startActivity(intent)
-                        requireActivity().overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left)
+
+                        val options = android.app.ActivityOptions.makeCustomAnimation(
+                            requireContext(),
+                            R.anim.slide_in_right,
+                            R.anim.slide_out_left
+                        )
+
+                        startActivity(intent, options.toBundle())
                         requireActivity().finish()
                     }
                 }

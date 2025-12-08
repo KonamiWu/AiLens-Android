@@ -44,7 +44,8 @@
     <attr name="appTextCaption" format="color" />
     <attr name="appTextButton" format="color" />
     <attr name="appTextPlaceholder" format="color" />
-    <attr name="appButtonGrey" format="color" />
+    <attr name="appTextDisable" format="color" />
+    <attr name="appButtonDisable" format="color" />
     <attr name="appIconDark" format="color" />
     <attr name="appWhite" format="color" />
     <attr name="appRed" format="color" />

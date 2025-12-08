@@ -71,13 +71,13 @@ dependencies {
     implementation(libs.azure.speech.sdk)
 
     // WorkManager for background tasks
-    implementation("androidx.work:work-runtime-ktx:2.9.0")
+    implementation(libs.androidx.work.runtime.ktx)
 
     coreLibraryDesugaring(libs.desugar.jdk.libs)
 
     implementation(libs.bundles.google.maps.navigation)
     implementation(libs.bundles.coroutines)
-
+    implementation(libs.androidx.security.crypto)
     configurations.all {
         exclude(group = "com.google.android.gms", module = "play-services-maps")
     }

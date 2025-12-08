@@ -13,6 +13,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import com.konami.ailens.MainActivity
 import com.konami.ailens.PermissionHelper
+import com.konami.ailens.R
 import com.konami.ailens.SharedPrefs
 import com.konami.ailens.ble.AppForegroundService
 import com.konami.ailens.databinding.ActivityAddDeviceBinding
@@ -53,7 +54,14 @@ class AddDeviceActivity : AppCompatActivity() {
         if (deviceInfo != null) {
             val intent = Intent(this, MainActivity::class.java)
             intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-            startActivity(intent)
+
+            val options = android.app.ActivityOptions.makeCustomAnimation(
+                this,
+                R.anim.slide_in_right,
+                R.anim.slide_out_left
+            )
+
+            startActivity(intent, options.toBundle())
             finish()
             return
         }

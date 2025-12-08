@@ -10,6 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import com.konami.ailens.R
 import com.konami.ailens.SharedPrefs
 import com.konami.ailens.ble.BLEService
 import com.konami.ailens.ble.command.UnbindCommand
@@ -37,7 +38,14 @@ class SettingFragment: Fragment() {
             // Navigate to AddDeviceActivity
             val intent = Intent(requireActivity(), AddDeviceActivity::class.java)
             intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-            startActivity(intent)
+
+            val options = android.app.ActivityOptions.makeCustomAnimation(
+                requireContext(),
+                R.anim.slide_in_right,
+                R.anim.slide_out_left
+            )
+
+            startActivity(intent, options.toBundle())
             requireActivity().finish()
         }
 
