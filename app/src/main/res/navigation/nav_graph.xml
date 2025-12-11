@@ -154,7 +154,23 @@
     <fragment
         android:id="@+id/settingFragment"
         android:name="com.konami.ailens.setting.SettingFragment"
-        tools:layout="@layout/fragment_setting"/>
+        tools:layout="@layout/fragment_setting">
+
+        <action android:id="@+id/action_SettingFragment_to_PowerSavingFragment"
+            app:destination="@id/PowerSavingFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
+
+        <action android:id="@+id/action_SettingFragment_to_CheckUpdateFragment"
+            app:destination="@id/CheckUpdateFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
+
+    </fragment>
 
     <fragment
         android:id="@+id/FaceDetectionFragment"
@@ -203,4 +219,14 @@
         android:id="@+id/DialogTranslationFragment"
         android:name="com.konami.ailens.translation.dialog.DialogTranslationFragment"
         tools:layout="@layout/fragment_dialog_translation" />
+
+    <fragment
+        android:id="@+id/PowerSavingFragment"
+        android:name="com.konami.ailens.setting.PowerSavingFragment"
+        tools:layout="@layout/fragment_power_saving" />
+
+    <fragment
+        android:id="@+id/CheckUpdateFragment"
+        android:name="com.konami.ailens.setting.CheckUpdateFragment"
+        tools:layout="@layout/fragment_check_update" />
 </navigation>

@@ -64,7 +64,7 @@ class SettingFragment: Fragment() {
         }
 
         binding.backButton.setOnClickListener {
-            findNavController().popBackStack()
+            requireActivity().onBackPressedDispatcher.onBackPressed()
         }
 
         val adapter = Adapter(settingListItems)
@@ -98,7 +98,7 @@ class SettingFragment: Fragment() {
         }
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): Holder {
-            val binding = SettingListItemBinding.inflate(LayoutInflater.from(parent.context))
+            val binding = SettingListItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
             return Holder(binding.root)
         }
 
@@ -106,6 +106,9 @@ class SettingFragment: Fragment() {
             val item = items[position]
             holder.imageView.setImageDrawable(item.icon)
             holder.titleTextView.text = item.title
+            holder.itemView.setOnClickListener {
+                item.execute()
+            }
         }
 
         override fun getItemCount(): Int = items.size

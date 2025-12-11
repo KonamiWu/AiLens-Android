@@ -418,11 +418,11 @@
     <dimen name="forget_password_title_margin_top">32dp</dimen>
 
 <!--    setting-->
-    <dimen name="setting_padding_horizontal">32dp</dimen>
     <dimen name="setting_name_margin_top">17dp</dimen>
     <dimen name="setting_name_text_size">16sp</dimen>
     <dimen name="setting_name_margin_horizontal">8dp</dimen>
     <dimen name="setting_name_edit_size">32dp</dimen>
+    <dimen name="setting_recycler_view_margin_horizontal">16dp</dimen>
     <dimen name="setting_glasses_icon_size">24dp</dimen>
     <dimen name="setting_list_icon_size">16dp</dimen>
     <dimen name="setting_list_margin_top">40dp</dimen>
@@ -434,4 +434,29 @@
     <dimen name="setting_item_padding_horizontal">16dp</dimen>
     <dimen name="setting_item_text_size">14sp</dimen>
     <dimen name="setting_next_arrow_size">16dp</dimen>
+
+<!--    power saving-->
+    <dimen name="power_saving_top_margin">40dp</dimen>
+    <dimen name="power_saving_padding_horizontal">16dp</dimen>
+    <dimen name="power_saving_divider_margin_vertical">24dp</dimen>
+    <dimen name="power_saving_item_padding_horizontal">16dp</dimen>
+    <dimen name="power_saving_item_title_text_size">14sp</dimen>
+    <dimen name="power_saving_item_description_text_size">11sp</dimen>
+    <dimen name="power_saving_item_description_margin_end">20dp</dimen>
+    <dimen name="power_saving_item_description_margin_top">10dp</dimen>
+    
+<!--    check update-->
+    <dimen name="check_update_padding_horizontal">32dp</dimen>
+    <dimen name="check_update_version_text_size">24sp</dimen>
+    <dimen name="check_update_version_margin_top">16sp</dimen>
+    <dimen name="check_update_version_size_text_size">14sp</dimen>
+    <dimen name="check_update_version_size_margin_top">8dp</dimen>
+    <dimen name="check_update_version_description_text_size">12sp</dimen>
+    <dimen name="check_update_version_description_margin_top">44dp</dimen>
+    <dimen name="check_update_completion_icon_size">62dp</dimen>
+    <dimen name="check_update_completion_icon_margin_top">44dp</dimen>
+    <dimen name="check_update_completion_text_size">16sp</dimen>
+    <dimen name="check_update_completion_text_margin_top">24dp</dimen>
+    <dimen name="check_update_completion_version_text_size">14sp</dimen>
+    <dimen name="check_update_completion_version_margin_top">12dp</dimen>
 </resources>

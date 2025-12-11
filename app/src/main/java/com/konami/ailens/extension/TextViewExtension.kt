@@ -1,12 +1,16 @@
 package com.konami.ailens.extension
 
+import android.os.Build
+import android.text.Html
+import android.text.Spannable
+import android.text.SpannableStringBuilder
+import android.text.style.BulletSpan
+import android.text.style.LeadingMarginSpan
 import android.widget.TextView
+import androidx.core.text.buildSpannedString
+import androidx.core.text.inSpans
 
-/**
- * Simple cross-fade text animation.
- * Fades out -> changes text -> fades in.
- * Safe for rapid calls (will cancel previous animation first).
- */
+
 fun TextView.crossfadeOverlay(
     newText: CharSequence,
     duration: Long = 300L

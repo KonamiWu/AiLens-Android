@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/main"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:ignore="ContentDescription"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <ImageView
+        android:id="@+id/navBgImageView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintDimensionRatio="1500:874"
+        app:layout_constraintTop_toTopOf="parent"
+        android:src="@drawable/img_nav_bg" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fitsSystemWindows="true">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/navigationBar"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/nav_bar_height"
+            android:fitsSystemWindows="true"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            >
+
+            <ImageButton
+                android:id="@+id/backButton"
+                android:layout_width="@dimen/nav_back_button_size"
+                android:layout_height="@dimen/nav_back_button_size"
+                android:src="@drawable/ic_nav_back"
+                android:background="#00000000"
+                android:contentDescription="@string/back"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:layout_marginStart="8dp"/>
+
+            <TextView
+                android:id="@+id/titleTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/setting_power_saving"
+                android:textColor="?attr/appTextPrimary"
+                android:textSize="@dimen/nav_title_text_size"
+                style="@style/SemiBold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/navigationBar"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:orientation="vertical"
+            android:paddingHorizontal="@dimen/power_saving_padding_horizontal">
+
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingHorizontal="@dimen/power_saving_item_padding_horizontal">
+
+                <TextView
+                    android:id="@+id/powerSavingTitleTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toTopOf="@id/powerSavingSwitch"
+                    app:layout_constraintBottom_toBottomOf="@id/powerSavingSwitch"
+                    app:layout_constraintStart_toStartOf="parent"
+                    android:textSize="@dimen/power_saving_item_title_text_size"
+                    android:text="@string/power_saving_mode"
+                    android:textColor="?attr/appTextPrimary"
+                    android:includeFontPadding="false"
+                    style="@style/Medium" />
+
+                <androidx.appcompat.widget.SwitchCompat
+                    android:id="@+id/powerSavingSwitch"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    android:checked="false"
+                    android:thumb="@drawable/switch_thumb"
+                    app:track="@drawable/switch_track"
+                    app:thumbTint="@color/switch_thumb_tint"
+                    app:trackTint="@color/switch_track_tint"/>
+
+                <TextView
+                    android:id="@+id/powerSavingDescriptionTextView"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/powerSavingTitleTextView"
+                    app:layout_constraintEnd_toStartOf="@id/powerSavingSwitch"
+                    android:layout_marginEnd="@dimen/power_saving_item_description_margin_end"
+                    android:layout_marginTop="@dimen/power_saving_item_description_margin_top"
+                    android:textColor="?attr/appTextSecondary"
+                    android:includeFontPadding="false"
+                    android:lineSpacingMultiplier="1.5"
+                    android:textSize="@dimen/power_saving_item_description_text_size"/>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="?attr/appBorderDarkGray"
+                android:layout_marginVertical="@dimen/power_saving_divider_margin_vertical" />
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingHorizontal="@dimen/power_saving_item_padding_horizontal">
+
+                <TextView
+                    android:id="@+id/lowBatteryAlertTitleTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toTopOf="@id/lowBatteryAlertSwitch"
+                    app:layout_constraintBottom_toBottomOf="@id/lowBatteryAlertSwitch"
+                    app:layout_constraintStart_toStartOf="parent"
+                    android:textSize="@dimen/power_saving_item_title_text_size"
+                    android:text="@string/power_saving_low_battery_alert"
+                    android:textColor="?attr/appTextPrimary"
+                    android:includeFontPadding="false"
+                    style="@style/Medium" />
+
+                <androidx.appcompat.widget.SwitchCompat
+                    android:id="@+id/lowBatteryAlertSwitch"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    android:checked="false"
+                    android:thumb="@drawable/switch_thumb"
+                    app:track="@drawable/switch_track"
+                    app:thumbTint="@color/switch_thumb_tint"
+                    app:trackTint="@color/switch_track_tint"/>
+
+                <TextView
+                    android:id="@+id/lowBatteryAlertDescriptionTextView"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/lowBatteryAlertTitleTextView"
+                    app:layout_constraintEnd_toStartOf="@id/lowBatteryAlertSwitch"
+                    android:layout_marginEnd="@dimen/power_saving_item_description_margin_end"
+                    android:layout_marginTop="@dimen/power_saving_item_description_margin_top"
+                    android:textColor="?attr/appTextSecondary"
+                    android:includeFontPadding="false"
+                    android:lineSpacingMultiplier="1.5"
+                    android:textSize="@dimen/power_saving_item_description_text_size"
+                    style="@style/Regular" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </LinearLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
