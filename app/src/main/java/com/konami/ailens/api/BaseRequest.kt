@@ -69,9 +69,9 @@ abstract class BaseRequest<T>(
             url
         }
 
-        Log.e("BaseRequest", "Request: $method $fullUrl")
+//        Log.e("BaseRequest", "Request: $method $fullUrl")
         if (data != null) {
-            Log.e("BaseRequest", "Body: ${String(data!!)}")
+//            Log.e("BaseRequest", "Body: ${String(data!!)}")
         }
 
         val connection = URL(fullUrl).openConnection() as? HttpURLConnection

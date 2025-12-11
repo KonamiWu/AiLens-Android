@@ -1,162 +1,188 @@
 package com.konami.ailens.ui
 
-import android.animation.Animator
-import android.animation.AnimatorListenerAdapter
-import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
 import android.app.Dialog
+import android.content.DialogInterface
 import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.Window
 import android.view.animation.AccelerateDecelerateInterpolator
-import android.view.animation.Animation
-import android.view.animation.AnimationUtils
+import android.view.animation.LinearInterpolator
 import androidx.core.graphics.drawable.toDrawable
-import androidx.core.view.doOnLayout
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.FragmentActivity
+import androidx.fragment.app.FragmentManager
 import com.konami.ailens.R
 import com.konami.ailens.databinding.DialogLoadingBinding
 
 class LoadingDialogFragment : DialogFragment() {
 
     private var _binding: DialogLoadingBinding? = null
-    private val binding get() = _binding!!
+    private val binding: DialogLoadingBinding? get() = _binding
 
-    private val animationDuration = 350L
-    private val initialScale = 0.8f
-    private val initialAlpha = 0.2f
+    private var spinAnimator: ObjectAnimator? = null
 
-    private var isAnimatingDismiss = false
-    private var rotateAnimation: Animation? = null
+    private var isDismissing = false
+    private var completions = mutableListOf<() -> Unit>()
+    private var completionsFired = false
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        // Use a style that keeps default dim
-        val dialog = Dialog(requireContext(), R.style.AiLensLoading)
-        _binding = DialogLoadingBinding.inflate(LayoutInflater.from(context))
+        val dialog = Dialog(requireContext(), R.style.AiLensLoadingDialog)
 
+        _binding = DialogLoadingBinding.inflate(LayoutInflater.from(context))
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
-        dialog.setContentView(binding.root)
+        dialog.setContentView(requireNotNull(_binding).root)
+
         dialog.window?.setBackgroundDrawable(Color.TRANSPARENT.toDrawable())
         dialog.setCancelable(false)
         isCancelable = false
 
-        setInitialAnimationState()
+        binding?.main?.apply {
+            alpha = 0f
+            scaleX = 0.92f
+            scaleY = 0.92f
+        }
 
         return dialog
     }
 
     override fun onStart() {
         super.onStart()
-        
-        binding.loadingImageView.doOnLayout {
-            animateShow()
-        }
+
+        startSpinner()
+
+        binding?.main?.post { playEnterAnim() }
     }
 
     override fun onStop() {
-        binding.main.clearAnimation()
-        rotateAnimation = null
+        stopSpinner()
         super.onStop()
     }
 
     override fun onDestroyView() {
-        super.onDestroyView()
         _binding = null
+        super.onDestroyView()
     }
 
-    private fun setInitialAnimationState() {
-        binding.main.scaleX = initialScale
-        binding.main.scaleY = initialScale
-        binding.main.alpha = initialAlpha
-    }
+    fun dismiss(completion: (() -> Unit)?) {
+        if (completion != null) completions.add(completion)
 
-    private fun startRotateIfNeeded() {
-        if (rotateAnimation == null) {
-            rotateAnimation = AnimationUtils.loadAnimation(requireContext(), R.anim.rotate_loading)
-        }
-        binding.loadingImageView.startAnimation(rotateAnimation)
-    }
-
-    private fun animateShow() {
-        binding.main.pivotX = binding.main.width / 2f
-        binding.main.pivotY = binding.main.height / 2f
-
-        val alpha = ObjectAnimator.ofFloat(binding.main, View.ALPHA, initialAlpha, 1f)
-        val scaleX = ObjectAnimator.ofFloat(binding.main, View.SCALE_X, initialScale, 1f)
-        val scaleY = ObjectAnimator.ofFloat(binding.main, View.SCALE_Y, initialScale, 1f)
-
-        AnimatorSet().apply {
-            playTogether(alpha, scaleX, scaleY)
-            duration = animationDuration
-            interpolator = AccelerateDecelerateInterpolator()
-            addListener(object : AnimatorListenerAdapter() {
-                override fun onAnimationStart(animation: Animator) {
-                    startRotateIfNeeded()
-                }
-            })
-            start()
-        }
-    }
-
-    private fun animateDismiss(onEnd: () -> Unit) {
-        binding.main.pivotX = binding.main.width / 2f
-        binding.main.pivotY = binding.main.height / 2f
-
-        val alpha = ObjectAnimator.ofFloat(binding.main, View.ALPHA, 1f, 0f)
-        val scaleX = ObjectAnimator.ofFloat(binding.main, View.SCALE_X, 1f, initialScale)
-        val scaleY = ObjectAnimator.ofFloat(binding.main, View.SCALE_Y, 1f, initialScale)
-
-        AnimatorSet().apply {
-            playTogether(alpha, scaleX, scaleY)
-            duration = animationDuration
-            interpolator = AccelerateDecelerateInterpolator()
-            addListener(object : AnimatorListenerAdapter() {
-                override fun onAnimationEnd(animation: Animator) {
-                    binding.main.clearAnimation()
-                    rotateAnimation = null
-                    onEnd()
-                }
-            })
-            start()
-        }
-    }
-
-    override fun dismiss() {
-        dismissWithAnimation()
-    }
-
-    override fun dismissAllowingStateLoss() {
-        dismissWithAnimation(allowStateLoss = true)
-    }
-
-    private fun dismissWithAnimation(allowStateLoss: Boolean = false) {
-        if (isAnimatingDismiss) return
-        if (_binding == null) {
-            if (allowStateLoss) super.dismissAllowingStateLoss() else super.dismiss()
+        if (!isAdded) {
+            fireCompletionsIfNeeded()
             return
         }
 
-        isAnimatingDismiss = true
-        animateDismiss {
-            isAnimatingDismiss = false
-            if (allowStateLoss) super.dismissAllowingStateLoss() else super.dismiss()
+        if (isDismissing) return
+        isDismissing = true
+
+        val main = binding?.main
+        if (main == null) {
+            safeDismiss()
+            return
         }
+
+        main.animate()
+            .alpha(0f)
+            .scaleX(0.92f)
+            .scaleY(0.92f)
+            .setDuration(220L)
+            .setInterpolator(AccelerateDecelerateInterpolator())
+            .withEndAction { safeDismiss() }
+            .start()
+    }
+
+    override fun dismiss() {
+        dismiss(completion = null)
+    }
+
+    override fun dismissAllowingStateLoss() {
+        dismiss(completion = null)
+    }
+
+    override fun onDismiss(dialog: DialogInterface) {
+        super.onDismiss(dialog)
+        fireCompletionsIfNeeded()
+    }
+
+    // ----------------------------
+    // Private
+    // ----------------------------
+
+    private fun playEnterAnim() {
+        val main = binding?.main ?: return
+        main.animate()
+            .alpha(1f)
+            .scaleX(1f)
+            .scaleY(1f)
+            .setDuration(220L)
+            .setInterpolator(AccelerateDecelerateInterpolator())
+            .start()
+    }
+
+    private fun startSpinner() {
+        val iv = binding?.loadingImageView ?: return
+        if (spinAnimator?.isRunning == true) return
+
+        spinAnimator = ObjectAnimator.ofFloat(iv, View.ROTATION, 0f, 360f).apply {
+            duration = 900L
+            repeatCount = ObjectAnimator.INFINITE
+            interpolator = LinearInterpolator()
+            start()
+        }
+    }
+
+    private fun stopSpinner() {
+        spinAnimator?.cancel()
+        spinAnimator = null
+        binding?.loadingImageView?.rotation = 0f
+    }
+
+    private fun safeDismiss() {
+        val fm = parentFragmentManager
+        if (!isAdded) {
+            fireCompletionsIfNeeded()
+            return
+        }
+
+        if (fm.isStateSaved) {
+            super.dismissAllowingStateLoss()
+        } else {
+            super.dismiss()
+        }
+    }
+
+    private fun fireCompletionsIfNeeded() {
+        if (completionsFired) return
+        completionsFired = true
+
+        val list = completions.toList()
+        completions.clear()
+        list.forEach { runCatching { it() } }
     }
 
     companion object {
         private const val TAG = "AiLensLoading"
 
-        fun show(activity: FragmentActivity) {
-            if (activity.supportFragmentManager.findFragmentByTag(TAG) != null) return
-            LoadingDialogFragment().show(activity.supportFragmentManager, TAG)
+        fun show(activity: FragmentActivity) = show(activity.supportFragmentManager)
+
+        fun show(fm: FragmentManager) {
+            if (fm.isStateSaved) return
+            if (fm.findFragmentByTag(TAG) != null) return
+            LoadingDialogFragment().show(fm, TAG)
         }
 
-        fun dismiss(activity: FragmentActivity) {
-            (activity.supportFragmentManager.findFragmentByTag(TAG) as? LoadingDialogFragment)
-                ?.dismissAllowingStateLoss()
+        fun dismiss(activity: FragmentActivity, completion: (() -> Unit)? = null) =
+            dismiss(activity.supportFragmentManager, completion)
+
+        fun dismiss(fm: FragmentManager, completion: (() -> Unit)? = null) {
+            val frag = fm.findFragmentByTag(TAG) as? LoadingDialogFragment
+            if (frag == null) {
+                completion?.invoke()
+                return
+            }
+            frag.dismiss(completion)
         }
     }
 }

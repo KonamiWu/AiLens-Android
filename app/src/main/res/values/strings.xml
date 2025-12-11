@@ -75,6 +75,7 @@
     <string name="pause">Pause</string>
     <string name="confirm">Confirm</string>
     <string name="error">Error</string>
+    <string name="cancel">Cancel</string>
 
 <!--    language selection-->
     <string name="japanes">日文</string>
@@ -141,5 +142,46 @@
     <string name="setting_check_for_update">Check for Updates</string>
     <string name="setting_factory_reset">Factory Reset</string>
     <string name="setting_about">About</string>
+    <string name="setting_logout">Logout</string>
+
+<!--    power saving-->
+    <string name="power_saving_mode">Smart Power Saving Mode</string>
+    <string name="power_saving_intro">Reduces power usage when on.</string>
+    <string name="power_saving_bullet_glasses_removed">Glasses Removed: Reduces sync, disables notifications, and turns off the screen automatically.</string>
+    <string name="power_saving_bullet_mono_view">Shows a monoscopic view after 10 minutes of inactivity to save power.</string>
+
+    <string name="power_saving_low_battery_alert">Low Battery Alert</string>
+    <string name="power_saving_low_battery_intro">Reduces power usage when on.</string>
+    <string name="power_saving_low_battery_blow">When the battery drops below 30%, a monoscopic view is shown to save power.</string>
+
+<!--    check update-->
+    <string name="check_update_firmware_update">Firmware Update</string>
+    <string name="check_update_update_now">Update Now</string>
+    <string name="check_update_updating">Updating %.1f%%</string>
+    <string name="check_update_download">Download</string>
+    <string name="check_update_downloading">Downloading %.1f%%</string>
+    <string name="check_update_completion_text">Already on the latest version.</string>
+    <string name="check_update_get_device_info_failed">Get Device Info Failed</string>
+    <string name="check_update_get_last_firmware_info_failed">Unable to fetch the lastest version</string>
+    <string name="check_update_download_last_firmware_info_failed">Unable to Download the lastest version</string>
+    <string name="check_update_update_failed">Update Failed</string>
+
+<!--    factory reset-->
+    <string name="factory_reset">Factory Reset</string>
+    <string name="factory_reset_title_1">Factory Reset</string>
+    <string name="factory_reset_title_1_content_1">Clears teleprompter, schedule, and contacts data.</string>
+    <string name="factory_reset_title_1_content_2">The system and app settings will be reset.</string>
+    <string name="factory_reset_title_1_content_3">Clear health-related data.</string>
+    <string name="factory_reset_title_2">Prevent unexpected issues</string>
+    <string name="factory_reset_title_2_content_1">Ensure a stable network connection.</string>
+    <string name="factory_reset_title_2_content_2">The Bluetooth on the glasses is currently connected.</string>
+    <string name="factory_reset_title_2_content_3">The glasses’ battery is above 10%.</string>
+    <string name="factory_reset_tip">Tip: After the operation, open your phone’s Bluetooth settings, select the device, and choose “Forget This Device.”</string>
+    <string name="factory_reset_read_notice">Please read the notice</string>
+
+<!--    about-->
+    <string name="about_thinkar">ThinkAR</string>
+    <string name="about_firmware_version">Firmware Version</string>
+    <string name="about_bluetooth_address">Bluetooth address</string>
 </resources>
 

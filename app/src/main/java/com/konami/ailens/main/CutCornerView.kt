@@ -15,8 +15,8 @@ class CutCornerView @JvmOverloads constructor(
 ) : FrameLayout(context, attrs, defStyleAttr) {
 
     var cornerCut = 12f
-    var borderColor: Int = Color.WHITE
-    var borderWidth: Float = 2f
+    var borderColor: Int = Color.TRANSPARENT
+    var borderWidth: Float = 0f
     var fillColor: Int = Color.TRANSPARENT
         set(value) {
             field = value
@@ -34,12 +34,24 @@ class CutCornerView @JvmOverloads constructor(
             field = value
             invalidate()
         }
+    var progress: Float = 0f
+        set(value) {
+            field = value.coerceIn(0f, 1f)
+            invalidate()
+        }
+    var progressColor: Int = Color.WHITE
+        set(value) {
+            field = value
+            invalidate()
+        }
 
     private var cornerProgress = floatArrayOf(0f, 0f, 0f, 0f)
 
     private val shapePath = Path()
     private val borderPath = Path()
+    private val progressPath = Path()
     private val fillPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply { style = Paint.Style.FILL }
+    private val progressPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply { style = Paint.Style.FILL }
     private val borderPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         style = Paint.Style.STROKE
         strokeCap = Paint.Cap.BUTT
@@ -127,6 +139,16 @@ class CutCornerView @JvmOverloads constructor(
         fillPaint.alpha = (combinedAlpha * 255).toInt()
         canvas.drawPath(shapePath, fillPaint)
 
+        if (progress > 0f) {
+            val progressWidth = w * progress
+            progressPath.reset()
+            progressPath.addRect(0f, 0f, progressWidth, h, Path.Direction.CW)
+            progressPath.op(shapePath, Path.Op.INTERSECT)
+
+            progressPaint.color = progressColor
+            canvas.drawPath(progressPath, progressPaint)
+        }
+
         canvas.restoreToCount(saveCount)
 
         borderPaint.color = borderColor
@@ -153,6 +175,21 @@ class CutCornerView @JvmOverloads constructor(
 
     fun animateToCorners(targetFlags: Int, duration: Long = 800L) {
         animateCornerChange(targetFlags, duration)
+    }
+
+    fun animateProgress(targetProgress: Float, duration: Long = 300L) {
+        val startProgress = progress
+        val endProgress = targetProgress.coerceIn(0f, 1f)
+
+        ValueAnimator.ofFloat(0f, 1f).apply {
+            this.duration = duration
+            interpolator = DecelerateInterpolator()
+            addUpdateListener {
+                val f = it.animatedFraction
+                progress = startProgress + (endProgress - startProgress) * f
+            }
+            start()
+        }
     }
 
     private fun animateCornerChange(targetFlags: Int, duration: Long) {

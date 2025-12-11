@@ -12,6 +12,6 @@ class CheckUpdateSettingListItem(private val navController: NavController): Sett
         get() = navController.context.getString(R.string.setting_check_for_update)
 
     override fun execute() {
-
+        navController.navigate(R.id.action_SettingFragment_to_CheckUpdateFragment)
     }
 }

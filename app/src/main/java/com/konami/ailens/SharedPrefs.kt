@@ -39,6 +39,7 @@ object SharedPrefs {
     private const val DIALOG_SOURCE_LANGUAGE = "twoWaySource"
     private const val DIALOG_TARGET_LANGUAGE = "twoWayTarget"
     private const val DIALOG_BILINGUAL = "bilingual"
+    private const val KEY_NAVIGATION_TERMS_ACCEPTED = "navigationTermsAccepted"
     private const val MAX_HISTORY_SIZE = 5
     private val tokenManager = TokenManager()
     private lateinit var prefs: SharedPreferences
@@ -49,6 +50,12 @@ object SharedPrefs {
         prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
         instance = this
     }
+
+    var navigationTermsAccepted: Boolean
+        get() = prefs.getBoolean(KEY_NAVIGATION_TERMS_ACCEPTED, false)
+        set(value) {
+            prefs.edit { putBoolean(KEY_NAVIGATION_TERMS_ACCEPTED, value) }
+        }
 
     var homeFavorite: FavoriteLocation?
         get() {
@@ -228,5 +235,11 @@ object SharedPrefs {
 
     fun clearDeviceInfo() {
         prefs.edit { remove(KEY_DEVICE_INFO) }
+    }
+
+    fun cleanUp() {
+        prefs.edit {
+            clear()
+        }
     }
 }

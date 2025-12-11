@@ -12,6 +12,6 @@ class AboutSettingListItem(private val navController: NavController): SettingLis
         get() = navController.context.getString(R.string.setting_about)
 
     override fun execute() {
-
+        navController.navigate(R.id.action_SettingFragment_to_AboutFragment)
     }
 }

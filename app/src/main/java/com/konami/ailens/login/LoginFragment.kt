@@ -25,6 +25,7 @@ import com.konami.ailens.resolveAttrColor
 import com.konami.ailens.signup.SignUpActivity
 import com.konami.ailens.ui.Alert
 import com.konami.ailens.ui.LoadingDialogFragment
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class LoginFragment : Fragment() {
@@ -122,18 +123,13 @@ class LoginFragment : Fragment() {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 launch {
                     viewModel.showAddDeviceEvent.collect {
-                        LoadingDialogFragment.dismiss(requireActivity())
-                        val intent = Intent(requireActivity(), AddDeviceActivity::class.java)
-                        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                        LoadingDialogFragment.dismiss(requireActivity()) {
+                            val intent = Intent(requireActivity(), AddDeviceActivity::class.java)
+                            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
 
-                        val options = android.app.ActivityOptions.makeCustomAnimation(
-                            requireContext(),
-                            R.anim.flip_in,
-                            R.anim.flip_out
-                        )
-
-                        startActivity(intent, options.toBundle())
-                        requireActivity().finish()
+                            val options = android.app.ActivityOptions.makeCustomAnimation(requireContext(), R.anim.flip_in, R.anim.flip_out)
+                            startActivity(intent, options.toBundle())
+                        }
                     }
                 }
 
@@ -202,7 +198,6 @@ class LoginFragment : Fragment() {
         )
 
         startActivity(intent, options.toBundle())
-        requireActivity().finish()
     }
 
     private fun forgetPasswordAction() {
@@ -216,7 +211,6 @@ class LoginFragment : Fragment() {
         )
 
         startActivity(intent, options.toBundle())
-        requireActivity().finish()
     }
 
     private fun showEmailInvalid() {

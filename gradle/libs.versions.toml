@@ -32,6 +32,7 @@ speechsdk = "1.46.0"
 # Coroutines - 這個是你缺少的！
 coroutines = "1.10.2"
 workRuntimeKtx = "2.11.0"
+markwon = "4.6.2"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -83,6 +84,8 @@ kotlinx-coroutines-android = { group = "org.jetbrains.kotlinx", name = "kotlinx-
 kotlinx-coroutines-play-services = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-play-services", version.ref = "coroutines" }
 
 azure-speech-sdk = { group = "com.microsoft.cognitiveservices.speech", name = "client-sdk", version.ref = "speechsdk" }
+
+markwon-core = { group = "io.noties.markwon", name = "core", version.ref = "markwon" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

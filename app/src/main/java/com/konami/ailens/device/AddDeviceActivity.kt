@@ -61,7 +61,6 @@ class AddDeviceActivity : AppCompatActivity() {
             )
 
             startActivity(intent, options.toBundle())
-            finish()
             return
         }
 

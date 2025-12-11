@@ -10,6 +10,7 @@ import android.bluetooth.le.ScanSettings
 import android.content.Context
 import android.util.Log
 import com.konami.ailens.SharedPrefs
+import com.konami.ailens.ble.ota.AiRing
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -66,15 +67,19 @@ class BLEService private constructor(private val context: Context) {
     val connectedSession = _connectedSession.asStateFlow()
 
     private var reconnectJob: kotlinx.coroutines.Job? = null  // Track reconnect job
-
+    private var ring: AiRing? = null
     private val scanCallback = object : ScanCallback() {
         override fun onScanResult(callbackType: Int, result: ScanResult) {
             val newDevice = result.device ?: return
+            val name = newDevice.name
+            if (name != null && name.contains("Ai Ring") && ring == null) {
+                ring = AiRing(context, newDevice, null)
+                ring?.connect()
+            }
             val address = newDevice.address ?: return
             if (_connectedSession.value?.device?.address == address)
                 return
             if (sessions[address] == null) {
-                Log.e("TAG", "newDevice.name = ${newDevice.name}")
                 val newSession = AiLens(context, newDevice, null)
                 sessions[address] = newSession
                 collect(newSession)

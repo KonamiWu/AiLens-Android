@@ -262,7 +262,7 @@ class AddressPickerFragment: Fragment(), NavigationMapFragment.Callbacks {
                 state = AddressState(this@AddressPickerFragment, true)
                 binding.destinationEditText.text?.clear()
             } else {
-                requireActivity().onBackPressedDispatcher.onBackPressed()
+                findNavController().popBackStack()
             }
         }
 

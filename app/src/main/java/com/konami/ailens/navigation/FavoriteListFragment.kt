@@ -28,7 +28,7 @@ class FavoriteListFragment: Fragment() {
 
         // Setup back button
         binding.backButton.setOnClickListener {
-            findNavController().navigateUp()
+            findNavController().popBackStack()
         }
 
         // Setup RecyclerView

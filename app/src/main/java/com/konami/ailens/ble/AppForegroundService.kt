@@ -73,11 +73,11 @@ class AppForegroundService : Service() {
                 PowerManager.ACTION_DEVICE_IDLE_MODE_CHANGED -> {
                     val powerManager = getSystemService(Context.POWER_SERVICE) as PowerManager
                     val isDozing = powerManager.isDeviceIdleMode
-                    Log.w("AppForegroundService", "Doze mode changed: isDozing=$isDozing")
+                    Log.e("AppForegroundService", "Doze mode changed: isDozing=$isDozing")
 
                     if (!isDozing && agentService.isConnected.value && !agentService.isReady.value) {
                         // Exited doze mode, reconnect agent if needed
-                        Log.d("AppForegroundService", "Exited doze mode, checking agent connection")
+                        Log.e("AppForegroundService", "Exited doze mode, checking agent connection")
                         serviceScope.launch {
                             if (!agentService.isConnected.value) {
                                 reconnectAgent()
@@ -134,11 +134,11 @@ class AppForegroundService : Service() {
                     startForeground(NOTIFICATION_ID, createNotification())
                 }
                 isForegroundStarted = true
-                Log.d("AppForegroundService", "Service started in foreground")
+                Log.e("AppForegroundService", "Service started in foreground")
             } else {
                 // Already in foreground, just update notification
                 updateNotificationForCurrentState()
-                Log.d("AppForegroundService", "Service already running, notification updated")
+                Log.e("AppForegroundService", "Service already running, notification updated")
             }
         } catch (e: Exception) {
             Log.e("AppForegroundService", "Failed to start/update foreground service: ${e.message}", e)
@@ -194,7 +194,6 @@ class AppForegroundService : Service() {
                             val bluetoothRole = BluetoothRole(session, orchestrator)
                             val agentRole = AgentRole(orchestrator, BluetoothRecorder(session, true))
                             val navigationRole = NavigationRole()
-                            Log.e("TAG", "ininasdfasdfj;aksdfj;klj")
                             val interpretationRole = InterpretationRole(applicationContext, BluetoothRecorder(session, false))
                             val dialogRole = DialogTranslationRole(applicationContext, BluetoothRecorder(session, false), PhoneRecorder())
                             orchestrator.register(bluetoothRole)
@@ -295,7 +294,7 @@ class AppForegroundService : Service() {
                 "AiLens::AppForegroundServiceWakeLock"
             ).apply {
                 acquire()
-                Log.d("AppForegroundService", "Wake lock acquired")
+                Log.e("AppForegroundService", "Wake lock acquired")
             }
         } catch (e: Exception) {
             Log.e("AppForegroundService", "Failed to acquire wake lock: ${e.message}")
@@ -310,7 +309,7 @@ class AppForegroundService : Service() {
             wakeLock?.let {
                 if (it.isHeld) {
                     it.release()
-                    Log.d("AppForegroundService", "Wake lock released")
+                    Log.e("AppForegroundService", "Wake lock released")
                 }
             }
             wakeLock = null
@@ -327,7 +326,7 @@ class AppForegroundService : Service() {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 val filter = IntentFilter(PowerManager.ACTION_DEVICE_IDLE_MODE_CHANGED)
                 registerReceiver(dozeModeReceiver, filter)
-                Log.d("AppForegroundService", "Doze mode receiver registered")
+                Log.e("AppForegroundService", "Doze mode receiver registered")
             }
         } catch (e: Exception) {
             Log.e("AppForegroundService", "Failed to register doze mode receiver: ${e.message}")
@@ -341,7 +340,7 @@ class AppForegroundService : Service() {
         try {
             val session = bleService.connectedSession.value
             if (session != null && session.state.value == Glasses.State.CONNECTED) {
-                Log.d("AppForegroundService", "Reconnecting agent after doze mode")
+                Log.e("AppForegroundService", "Reconnecting agent after doze mode")
                 AgentService.instance.connect(
                     getString(R.string.token),
                     Environment.Dev.config,

@@ -60,7 +60,6 @@ class ConnectedSuccessfullyFragment: Fragment() {
                         )
 
                         startActivity(intent, options.toBundle())
-                        requireActivity().finish()
                     }
                 }
 

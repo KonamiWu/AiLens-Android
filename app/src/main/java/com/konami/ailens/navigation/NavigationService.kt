@@ -13,6 +13,7 @@ import com.google.android.gms.maps.model.LatLng as GmsLatLng
 import com.google.android.libraries.navigation.*
 import com.google.android.libraries.mapsplatform.turnbyturn.model.NavInfo
 import com.google.android.libraries.mapsplatform.turnbyturn.model.StepInfo
+import com.konami.ailens.SharedPrefs
 import android.location.Geocoder
 import android.util.DisplayMetrics
 import java.util.Locale
@@ -71,8 +72,33 @@ class NavigationService(private val context: Context) : NavigationCapability, Na
     override val mapView: View?
         get() = navigationView
 
+    private var isInitializing = false
+
     fun initializeNavigator(activity: Activity) {
-        NavigationApi.getNavigator(activity, this@NavigationService)
+        Log.e("NavigationService", "initializeNavigator called")
+        if (navigator != null) {
+            Log.e("NavigationService", "Navigator already exists, skipping initialization")
+            return
+        }
+
+        if (isInitializing) {
+            Log.e("NavigationService", "Already initializing, skipping")
+            return
+        }
+
+        isInitializing = true
+
+        // 檢查用戶是否已經接受過 Terms
+        val termsAccepted = SharedPrefs.navigationTermsAccepted
+        val termsCheckOption = if (termsAccepted) {
+            Log.e("NavigationService", "Terms already accepted, using SKIPPED option")
+            TermsAndConditionsCheckOption.SKIPPED
+        } else {
+            Log.e("NavigationService", "Terms not accepted yet, using ENABLED option")
+            TermsAndConditionsCheckOption.ENABLED
+        }
+
+        NavigationApi.getNavigator(activity, this@NavigationService, termsCheckOption)
     }
 
     private fun focusCurrentLocation() {
@@ -374,18 +400,48 @@ class NavigationService(private val context: Context) : NavigationCapability, Na
     // NavigationApi.NavigatorListener implementation
     override fun onNavigatorReady(nav: Navigator) {
         Log.e("NavigationService", "onNavigatorReady called")
+        Log.e("NavigationService", "Current navigator: $navigator, new nav: $nav")
+
+        // 如果已經有 navigator 且是同一個實例，跳過
+        if (navigator != null && navigator === nav) {
+            Log.e("NavigationService", "Navigator already initialized (same instance), skipping")
+            isInitializing = false
+            return
+        }
+
+        // 如果是不同的 navigator 實例，清理舊的
+        if (navigator != null && navigator !== nav) {
+            Log.e("NavigationService", "New navigator instance detected, cleaning up old one")
+            try {
+                navigator?.stopGuidance()
+                navigator?.clearDestinations()
+            } catch (e: Exception) {
+                Log.e("NavigationService", "Error cleaning up old navigator: ${e.message}")
+            }
+        }
+
         navigator = nav
+        isInitializing = false
+
+        // 用戶已經接受 Terms（否則不會到達這裡），保存狀態
+        if (!SharedPrefs.navigationTermsAccepted) {
+            Log.e("NavigationService", "Saving terms acceptance state")
+            SharedPrefs.navigationTermsAccepted = true
+        }
 
         // Set audio guidance to enabled by default
         // This ensures voice prompts work from the start
         nav.setAudioGuidance(Navigator.AudioGuidance.VOICE_ALERTS_AND_GUIDANCE)
 
-        navigationView = NavigationView(context.applicationContext).also { nv ->
-            nv.onCreate(Bundle())
-            nv.setEtaCardEnabled(false)  // Hide bottom ETA card
-            nv.setHeaderEnabled(false)     // Keep top header for turn-by-turn instructions
-            nv.getMapAsync { gm ->
-                googleMap = gm
+        // 只在第一次初始化時創建 NavigationView
+        if (navigationView == null) {
+            navigationView = NavigationView(context.applicationContext).also { nv ->
+                nv.onCreate(Bundle())
+                nv.setEtaCardEnabled(false)  // Hide bottom ETA card
+                nv.setHeaderEnabled(false)     // Keep top header for turn-by-turn instructions
+                nv.getMapAsync { gm ->
+                    googleMap = gm
+                }
             }
         }
 
@@ -395,6 +451,8 @@ class NavigationService(private val context: Context) : NavigationCapability, Na
     }
 
     override fun onError(errorCode: Int) {
+        isInitializing = false
+
         val errorMessage = when (errorCode) {
             NavigationApi.ErrorCode.NOT_AUTHORIZED -> "NOT_AUTHORIZED - API key issue or not enabled"
             NavigationApi.ErrorCode.TERMS_NOT_ACCEPTED -> "TERMS_NOT_ACCEPTED - Terms need to be accepted"

@@ -125,7 +125,6 @@ class ResetPasswordFragment : Fragment() {
                         )
 
                         startActivity(intent, options.toBundle())
-                        requireActivity().finish()
                     }
                 }
 

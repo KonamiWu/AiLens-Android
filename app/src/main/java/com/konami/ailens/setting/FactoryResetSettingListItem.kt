@@ -12,6 +12,6 @@ class FactoryResetSettingListItem(private val navController: NavController): Set
         get() = navController.context.getString(R.string.setting_factory_reset)
 
     override fun execute() {
-
+        navController.navigate(R.id.action_SettingFragment_to_FactoryResetFragment)
     }
 }

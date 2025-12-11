@@ -12,6 +12,6 @@ class PowerSavingSettingListItem(private val navController: NavController): Sett
         get() = navController.context.getString(R.string.setting_power_saving)
 
     override fun execute() {
-
+        navController.navigate(R.id.action_SettingFragment_to_PowerSavingFragment)
     }
 }

@@ -59,7 +59,7 @@
                 style="@style/Regular"
                 android:includeFontPadding="false"
                 android:textSize="@dimen/sign_up_edit_text_size"
-                android:text="jenny@thinkar.com"
+                android:text="lulu@thinkar.com"
                 android:textColor="?attr/appTextPrimary"
                 android:imeOptions="actionNext" />
 
@@ -93,7 +93,7 @@
                 android:textSize="@dimen/sign_up_edit_text_size"
                 android:textColor="?attr/appTextPrimary"
                 android:imeOptions="actionDone"
-                android:text="Thinkar16888"
+                android:text="Exex2357"
                 tools:ignore="RtlSymmetry" />
 
             <ImageView

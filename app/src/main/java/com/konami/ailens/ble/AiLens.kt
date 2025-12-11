@@ -27,9 +27,6 @@ import com.konami.ailens.ble.Glasses.State
 
 @SuppressLint("MissingPermission")
 class AiLens(private val context: Context, override var device: BluetoothDevice, private val retrieveToken: ByteArray? = null): Glasses {
-
-
-
     override var onStreamData: ((ByteArray) -> Unit)? = null
     override var deviceEventHandler: DeviceEventCapability? = null
     private val _batteryFlow = MutableStateFlow<Pair<Int, Boolean>>(Pair(0, false))
@@ -179,7 +176,7 @@ class AiLens(private val context: Context, override var device: BluetoothDevice,
                 _state.value = State.DISCONNECTED
                 return
             }
-            Log.e(TAG, "onServicesDiscovered: session=$this")
+//            Log.e(TAG, "onServicesDiscovered: session=$this")
             var foundHandshaking = false
 
             gatt.services?.forEach { service ->
@@ -204,7 +201,7 @@ class AiLens(private val context: Context, override var device: BluetoothDevice,
                     }
                 }
             }
-            Log.e(TAG, "Total descriptors in queue: ${descriptorQueue.size}")
+//            Log.e(TAG, "Total descriptors in queue: ${descriptorQueue.size}")
 
             // iOS-style: start handshaking immediately when found, like iOS does
             if (foundHandshaking && !handShakingStart) {
@@ -217,7 +214,7 @@ class AiLens(private val context: Context, override var device: BluetoothDevice,
         }
 
         override fun onDescriptorWrite(gatt: BluetoothGatt, descriptor: BluetoothGattDescriptor, status: Int) {
-            Log.e(TAG, "onDescriptorWrite: characteristic=${descriptor.characteristic.uuid}, status=$status, remaining=${descriptorQueue.size}")
+//            Log.e(TAG, "onDescriptorWrite: characteristic=${descriptor.characteristic.uuid}, status=$status, remaining=${descriptorQueue.size}")
 
             // Just continue writing the next descriptor
             // Handshaking is already started in onServicesDiscovered (iOS-style)
@@ -499,7 +496,7 @@ class AiLens(private val context: Context, override var device: BluetoothDevice,
     }
 
     private fun ByteArray.hexString(): String {
-        return joinToString(" ") { "%02X ".format(it) }
+        return joinToString(" ") { "%02X".format(it) }
     }
 
     companion object {

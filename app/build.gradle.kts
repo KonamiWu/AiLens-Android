@@ -78,6 +78,7 @@ dependencies {
     implementation(libs.bundles.google.maps.navigation)
     implementation(libs.bundles.coroutines)
     implementation(libs.androidx.security.crypto)
+    implementation(libs.markwon.core)
     configurations.all {
         exclude(group = "com.google.android.gms", module = "play-services-maps")
     }

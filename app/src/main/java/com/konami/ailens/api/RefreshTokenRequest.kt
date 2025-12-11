@@ -80,6 +80,6 @@ class RefreshTokenRequest(token: String): BaseRequest<RefreshTokenRequest.Refres
     }
     override fun parseResponse(statusCode: Int, response: String): RefreshTokenResponse {
         val json = Json { ignoreUnknownKeys = true }
-        return Json.decodeFromString(response)
+        return json.decodeFromString(response)
     }
 }

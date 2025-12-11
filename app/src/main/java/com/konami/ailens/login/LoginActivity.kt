@@ -2,6 +2,7 @@ package com.konami.ailens.login
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import com.konami.ailens.MainActivity
 import com.konami.ailens.R
@@ -40,7 +41,5 @@ class LoginActivity: AppCompatActivity() {
         )
 
         startActivity(intent, options.toBundle())
-        finish()
     }
-
 }

@@ -1,6 +1,7 @@
 package com.konami.ailens.ble
 
 import com.konami.ailens.ble.command.BLECommand
+import com.konami.ailens.ble.command.VoidCommand
 import java.util.concurrent.locks.ReentrantLock
 import kotlin.concurrent.withLock
 
@@ -40,14 +41,16 @@ class CommandExecutor(private val session: Glasses) {
             // Execute the command
             command.execute(session)
 
-            // Wait for completion or timeout (300ms)
-            val deadline = System.currentTimeMillis() + 300
+
+//            val timeout = if (command is VoidCommand) 1000L else 5000L  // VoidCommand: 1s, others: 5s
+            val timeout = 1000L
+            val deadline = System.currentTimeMillis() + timeout
             while (!canProceed) {
                 val remaining = deadline - System.currentTimeMillis()
                 if (remaining <= 0) {
                     // Timeout → fail the command
                     pendingCommand?.let {
-                        it.completion?.invoke(Result.failure(Exception("Timeout")))
+                        it.completion?.invoke(Result.failure(Exception("Command timeout($it) after ${timeout}ms")))
                         pendingCommand = null
                     }
                     break
@@ -57,7 +60,7 @@ class CommandExecutor(private val session: Glasses) {
                 if (remainingNanos <= 0) {
                     // Timeout reached
                     pendingCommand?.let {
-                        it.completion?.invoke(Result.failure(Exception("Timeout")))
+                        it.completion?.invoke(Result.failure(Exception("Command timeout($it) after ${timeout}ms")))
                         pendingCommand = null
                     }
                     break
@@ -81,14 +84,15 @@ class CommandExecutor(private val session: Glasses) {
      * Completes the pending command and allows the next one to run.
      */
     fun next(result: ByteArray) {
-        lock.withLock {
+        val command = lock.withLock {
             canProceed = true
-            pendingCommand?.let {
-                it.complete(result)
-                pendingCommand = null
-            }
+            val cmd = pendingCommand
+            pendingCommand = null
             condition.signal()
+            cmd
         }
+
+        command?.complete(result)
     }
 
     /**

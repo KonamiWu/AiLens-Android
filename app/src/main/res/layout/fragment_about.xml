@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/main"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:ignore="ContentDescription"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <ImageView
+        android:id="@+id/navBgImageView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintDimensionRatio="1500:874"
+        app:layout_constraintTop_toTopOf="parent"
+        android:src="@drawable/img_nav_bg" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fitsSystemWindows="true">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/navigationBar"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/nav_bar_height"
+            android:fitsSystemWindows="true"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
+
+            <ImageButton
+                android:id="@+id/backButton"
+                android:layout_width="@dimen/nav_back_button_size"
+                android:layout_height="@dimen/nav_back_button_size"
+                android:src="@drawable/ic_nav_back"
+                android:background="#00000000"
+                android:contentDescription="@string/back"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:layout_marginStart="8dp"/>
+
+            <TextView
+                android:id="@+id/titleTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/setting_about"
+                android:textColor="?attr/appTextPrimary"
+                android:textSize="@dimen/nav_title_text_size"
+                style="@style/SemiBold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/navigationBar"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:orientation="vertical"
+            android:paddingHorizontal="@dimen/about_padding_horizontal"
+            android:paddingTop="@dimen/about_padding_top">
+
+            <TextView
+                android:id="@+id/appNameTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/about_thinkar"
+                android:textColor="?attr/appTextPrimary"
+                android:textSize="@dimen/about_app_name_text_size"
+                android:includeFontPadding="false"
+                android:layout_marginStart="@dimen/about_padding_horizontal"
+                style="@style/SemiBold" />
+
+            <TextView
+                android:id="@+id/appVersionTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/about_app_version_margin_top"
+                android:layout_marginStart="@dimen/about_padding_horizontal"
+                android:textColor="?attr/appTextSecondary"
+                android:textSize="@dimen/about_version_text_size"
+                android:includeFontPadding="false"
+                style="@style/Regular"
+                tools:text="V1.0" />
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/firmwareVersionLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/about_item_margin_top"
+                android:paddingHorizontal="@dimen/power_saving_item_padding_horizontal">
+
+                <TextView
+                    android:id="@+id/firmwareVersionLabelTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:text="@string/about_firmware_version"
+                    android:textColor="?attr/appTextPrimary"
+                    android:textSize="@dimen/about_item_text_size"
+                    android:includeFontPadding="false"
+                    style="@style/Regular" />
+
+                <TextView
+                    android:id="@+id/firmwareVersionTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:textColor="?attr/appTextSecondary"
+                    android:textSize="@dimen/about_item_text_size"
+                    android:includeFontPadding="false"
+                    style="@style/Regular" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="?attr/appBorderDarkGray"
+                android:layout_marginVertical="@dimen/about_divider_margin_vertical" />
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingHorizontal="@dimen/power_saving_item_padding_horizontal">
+
+                <TextView
+                    android:id="@+id/bluetoothAddressLabelTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:text="@string/about_bluetooth_address"
+                    android:textColor="?attr/appTextPrimary"
+                    android:textSize="@dimen/about_item_text_size"
+                    android:includeFontPadding="false"
+                    style="@style/Regular" />
+
+                <TextView
+                    android:id="@+id/bluetoothAddressTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:textColor="?attr/appTextSecondary"
+                    android:textSize="@dimen/about_item_text_size"
+                    android:includeFontPadding="false"
+                    style="@style/Regular" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </LinearLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

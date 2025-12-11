@@ -11,4 +11,9 @@ object API {
     const val SEND_OTP = "$DOMAIN/api/v1/auth/send-otp"
     const val VERIFY_OTP = "$DOMAIN/api/v1/auth/verify-otp"
     const val DELETE_ACCOUNT = "$DOMAIN/api/v1/auth/delete-account"
+
+    // OTA Firmware API
+//    const val FIRMWARE_LAST = "$DOMAIN/api/v2/firmware/last"
+    const val FIRMWARE_LAST = "$DOMAIN/api/v1/firmware/latest"
+    const val DOWNLOAD_FIRMWARE = "$DOMAIN/api/v1/firmware/download"
 }

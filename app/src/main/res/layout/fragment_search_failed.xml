@@ -95,6 +95,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:borderColor="?attr/appPrimary"
+            app:borderWidth="1dp"
             app:cornerCut="@dimen/search_failed_button_corner_cut" />
 
         <Button

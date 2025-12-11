@@ -2,6 +2,7 @@ package com.konami.ailens.main
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -19,6 +20,8 @@ import kotlinx.coroutines.launch
 import androidx.core.view.isInvisible
 import androidx.core.view.isVisible
 import com.konami.ailens.ble.command.ToggleMicCommand
+import com.konami.ailens.ble.command.ota.GetVersionListCommand
+import com.konami.ailens.ble.command.ota.RebootCommand
 import com.konami.ailens.resolveAttrColor
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flatMapLatest
@@ -42,7 +45,8 @@ class HomeFragment: Fragment() {
         }
 
          binding.teleprompterButton.setOnClickListener {
-
+             val command = RebootCommand()
+             BLEService.instance.connectedSession.value?.add(command)
          }
 
          binding.translationButton.setOnClickListener {

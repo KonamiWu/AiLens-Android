@@ -89,7 +89,6 @@ class ForgetPasswordFragment : Fragment() {
             )
 
             startActivity(intent, options.toBundle())
-            requireActivity().finish()
         }
     }
 

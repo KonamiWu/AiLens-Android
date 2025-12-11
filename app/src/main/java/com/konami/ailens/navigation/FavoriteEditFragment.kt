@@ -71,7 +71,7 @@ class FavoriteEditFragment : Fragment() {
 
         // Setup back button
         binding.backButton.setOnClickListener {
-            findNavController().navigateUp()
+            findNavController().popBackStack()
         }
 
         // Setup AutoComplete RecyclerView

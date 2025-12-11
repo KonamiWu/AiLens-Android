@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/main"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:ignore="ContentDescription"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <ImageView
+        android:id="@+id/navBgImageView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintDimensionRatio="1500:874"
+        app:layout_constraintTop_toTopOf="parent"
+        android:src="@drawable/img_nav_bg" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fitsSystemWindows="true">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/navigationBar"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/nav_bar_height"
+            android:fitsSystemWindows="true"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            >
+
+            <ImageButton
+                android:id="@+id/backButton"
+                android:layout_width="@dimen/nav_back_button_size"
+                android:layout_height="@dimen/nav_back_button_size"
+                android:src="@drawable/ic_nav_back"
+                android:background="#00000000"
+                android:contentDescription="@string/back"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:layout_marginStart="8dp"/>
+
+            <TextView
+                android:id="@+id/titleTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/factory_reset"
+                android:textColor="?attr/appTextPrimary"
+                android:textSize="@dimen/nav_title_text_size"
+                style="@style/SemiBold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/navigationBar"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginTop="@dimen/factory_reset_title_margin_top"
+            android:orientation="vertical"
+            android:paddingHorizontal="@dimen/power_saving_padding_horizontal">
+
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingHorizontal="@dimen/power_saving_item_padding_horizontal">
+
+                <TextView
+                    android:id="@+id/factoryResetTitle1TextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    android:textSize="@dimen/factory_reset_title_text_size"
+                    android:text="@string/factory_reset_title_1"
+                    android:textColor="?attr/appTextPrimary"
+                    android:includeFontPadding="false"
+                    style="@style/SemiBold" />
+
+
+                <TextView
+                    android:id="@+id/factoryResetDescription1TextView"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/factoryResetTitle1TextView"
+                    android:layout_marginEnd="@dimen/power_saving_item_description_margin_end"
+                    android:layout_marginTop="@dimen/power_saving_item_description_margin_top"
+                    android:textColor="?attr/appTextSecondary"
+                    android:includeFontPadding="false"
+                    android:lineSpacingMultiplier="1.5"
+                    android:textSize="@dimen/factory_reset_item_text_size"
+                    style="@style/Regular" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/factory_reset_section_spacing"
+                android:paddingHorizontal="@dimen/power_saving_item_padding_horizontal">
+
+                <TextView
+                    android:id="@+id/factoryResetTitle2TextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    android:textSize="@dimen/power_saving_item_title_text_size"
+                    android:text="@string/factory_reset_title_2"
+                    android:textColor="?attr/appTextPrimary"
+                    android:includeFontPadding="false"
+                    style="@style/SemiBold" />
+
+
+                <TextView
+                    android:id="@+id/factoryResetDescription2TextView"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/factoryResetTitle2TextView"
+                    android:layout_marginEnd="@dimen/power_saving_item_description_margin_end"
+                    android:layout_marginTop="@dimen/power_saving_item_description_margin_top"
+                    android:textColor="?attr/appTextSecondary"
+                    android:includeFontPadding="false"
+                    android:lineSpacingMultiplier="1.5"
+                    android:textSize="@dimen/factory_reset_item_text_size"
+                    style="@style/Regular" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <com.konami.ailens.main.CutCornerView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/factory_reset_margin_horizontal"
+                android:paddingVertical="@dimen/factory_reset_tip_padding_vertical"
+                android:paddingHorizontal="@dimen/factory_reset_tip_padding_horizontal"
+                android:layout_marginTop="@dimen/factory_reset_tip_margin_top"
+                app:fillColor="?attr/appSurface1"
+                app:cutCorners="topLeft|bottomRight"
+                app:cornerCut="@dimen/factory_reset_tip_corner_cut">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <ImageView
+                        android:id="@+id/tipImageView"
+                        android:layout_width="@dimen/factory_reset_tip_size"
+                        android:layout_height="@dimen/factory_reset_tip_size"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        android:src="@drawable/ic_setting_tip" />
+
+                    <TextView
+                        android:id="@+id/tipsTextView"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintStart_toEndOf="@id/tipImageView"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        android:layout_marginStart="@dimen/factory_reset_tip_text_margin_left"
+                        android:textSize="@dimen/factory_reset_tip_text_size"
+                        android:textColor="?attr/appTextPrimary"
+                        android:lineSpacingMultiplier="1.5"
+                        style="@style/Regular"
+                        android:text="@string/factory_reset_tip" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+            </com.konami.ailens.main.CutCornerView>
+
+        </LinearLayout>
+
+        <FrameLayout
+            android:id="@+id/buttonLayout"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/add_device_button_height"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginHorizontal="@dimen/add_device_button_margin_horizontal"
+            android:layout_marginBottom="@dimen/add_device_button_margin_bottom">
+
+            <com.konami.ailens.main.CutCornerView
+                android:id="@+id/cutCornerView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:cornerCut="@dimen/add_device_button_corner_cut"
+                app:fillColor="?attr/appButtonDisable" />
+
+            <Button
+                android:id="@+id/resetButton"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="#00000000"
+                android:text="@string/factory_reset_read_notice"
+                android:textSize="@dimen/big_bottom_button_text_size"
+                android:textColor="?attr/appTextDisable"
+                style="@style/Bold"/>
+
+        </FrameLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

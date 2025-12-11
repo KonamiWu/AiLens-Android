@@ -156,7 +156,6 @@ class SendOTPFragment : Fragment() {
         )
 
         startActivity(intent, options.toBundle())
-        requireActivity().finish()
     }
 
     private fun validateEmail(): Boolean {
