@@ -182,8 +182,15 @@ class FirmwareUpdateService : Service() {
         kotlin.coroutines.coroutineContext.ensureActive()
 
         // Step 5: Transfer firmware data
-        var sentBytes = 0uL
         var totalSentPackets = 0
+        var totalPacketsCount = 0
+
+        for (section in updateSections) {
+            val sectionData = section.fullData
+            val binType = (section.header.fwDataType and 0xFFu).toUByte()
+            val framer = CommonDataFramer(binType = binType, data = sectionData, mtu = glasses.mtu)
+            totalPacketsCount += framer.getPacketCount()
+        }
 
         for ((sectionIndex, section) in updateSections.withIndex()) {
             kotlin.coroutines.coroutineContext.ensureActive()
@@ -218,11 +225,10 @@ class FirmwareUpdateService : Service() {
                 Log.e(TAG, "Device confirmed packet $packetIndex (index=${response.index})")
 
                 totalSentPackets++
-                sentBytes += packet.size.toULong()
 
-                val overallProgress = sentBytes.toFloat() / totalUpdateLength.toFloat() * 100
-                _progress.value = overallProgress / 100f
-                updateNotification("Transferring firmware... $overallProgress%", overallProgress)
+                val overallProgress = totalSentPackets.toFloat() / totalPacketsCount.toFloat()
+                _progress.value = overallProgress
+                updateNotification("Transferring firmware... ${(overallProgress * 100).toInt()}%", overallProgress)
             }
 
             Log.e(TAG, "Section ${sectionIndex + 1} completed")

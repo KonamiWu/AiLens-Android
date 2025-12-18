@@ -76,6 +76,7 @@
     <string name="confirm">Confirm</string>
     <string name="error">Error</string>
     <string name="cancel">Cancel</string>
+    <string name="save">Save</string>
 
 <!--    language selection-->
     <string name="japanes">日文</string>
@@ -138,11 +139,20 @@
     <string name="reset_password_successfully">Reset password successfully</string>
 
 <!--    setting-->
+    <string name="setting_notification">Notification</string>
+    <string name="setting_brightness">Display and Brightness</string>
     <string name="setting_power_saving">Power Saving</string>
     <string name="setting_check_for_update">Check for Updates</string>
     <string name="setting_factory_reset">Factory Reset</string>
     <string name="setting_about">About</string>
     <string name="setting_logout">Logout</string>
+
+<!--    display and brightness-->
+    <string name="display_brightness_automatic">Automatic Brightness</string>
+    <string name="display_brightness_screen_timeout">Screen Timeout</string>
+    <string name="display_brightness_seconds">seconds</string>
+    <string name="display_brightness_minutes">minutes</string>
+    <string name="display_brightness_always_on">Always On</string>
 
 <!--    power saving-->
     <string name="power_saving_mode">Smart Power Saving Mode</string>
@@ -183,5 +193,8 @@
     <string name="about_thinkar">ThinkAR</string>
     <string name="about_firmware_version">Firmware Version</string>
     <string name="about_bluetooth_address">Bluetooth address</string>
+
+<!--    edit device name-->
+    <string name="edit_device_name">Edit Device Name</string>
 </resources>
 

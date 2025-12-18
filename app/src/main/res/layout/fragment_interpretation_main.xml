@@ -217,18 +217,14 @@
 
                     </LinearLayout>
 
-                    <androidx.appcompat.widget.SwitchCompat
+                    <com.konami.ailens.view.AnimatedSwitch
                         android:id="@+id/bilingualSwitch"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
-                        android:checked="false"
-                        android:thumb="@drawable/switch_thumb"
-                        app:track="@drawable/switch_track"
-                        app:thumbTint="@color/switch_thumb_tint"
-                        app:trackTint="@color/switch_track_tint"/>
+                        android:checked="false"/>
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 

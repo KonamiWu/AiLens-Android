@@ -19,7 +19,10 @@ import com.konami.ailens.navigation.NavigationService
 import kotlinx.coroutines.launch
 import androidx.core.view.isInvisible
 import androidx.core.view.isVisible
+import com.konami.ailens.SharedPrefs
+import com.konami.ailens.ble.command.GetNotificationSettingsCommand
 import com.konami.ailens.ble.command.ToggleMicCommand
+import com.konami.ailens.ble.command.ToggleNotificationCommand
 import com.konami.ailens.ble.command.ota.GetVersionListCommand
 import com.konami.ailens.ble.command.ota.RebootCommand
 import com.konami.ailens.resolveAttrColor
@@ -45,11 +48,13 @@ class HomeFragment: Fragment() {
         }
 
          binding.teleprompterButton.setOnClickListener {
-             val command = RebootCommand()
-             BLEService.instance.connectedSession.value?.add(command)
+             BLEService.instance.connectedSession.value?.add(ToggleNotificationCommand(true))
+//             BLEService.instance.connectedSession.value?.add(ToggleNotificationCommand.line(true))
+//             BLEService.instance.connectedSession.value?.add(ToggleNotificationCommand.sms(true))
          }
 
          binding.translationButton.setOnClickListener {
+//             BLEService.instance.connectedSession.value?.add(ToggleNotificationCommand(false))
              findNavController().navigate(R.id.action_HomeFragment_to_SmartTranslationFragment)
          }
 
@@ -64,7 +69,6 @@ class HomeFragment: Fragment() {
                         if (session == null) {
                             setViewStateDisconnected()
                         } else {
-                            binding.nameTextView.text = session.device.name
                             when (state) {
                                 Glasses.State.CONNECTED -> setViewStateConnected()
                                 else -> setViewStateDisconnected()
@@ -100,6 +104,15 @@ class HomeFragment: Fragment() {
 
         setViewStateDisconnectedWithoutAnimation()
         return binding.root
+    }
+
+    override fun onStart() {
+        super.onStart()
+        val name = SharedPrefs.deviceName
+        if (name == null)
+            binding.nameTextView.text = BLEService.instance.connectedSession.value?.device?.name
+        else
+            binding.nameTextView.text = name
     }
 
     private fun setBatteryImage(level: Int) {

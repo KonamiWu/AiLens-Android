@@ -1,8 +1,6 @@
 package com.konami.ailens.translation.interpretation
 
-import android.animation.ValueAnimator
 import android.annotation.SuppressLint
-import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -10,9 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.animation.LinearInterpolator
 import android.widget.TextView
-import androidx.annotation.ColorInt
 import androidx.annotation.RequiresApi
-import androidx.appcompat.widget.SwitchCompat
 import androidx.core.view.doOnLayout
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
@@ -20,8 +16,7 @@ import com.konami.ailens.R
 import com.konami.ailens.databinding.FragmentInterpretationMainBinding
 import com.konami.ailens.extension.crossfadeOverlay
 import com.konami.ailens.orchestrator.Orchestrator
-import com.konami.ailens.resolveAttrColor
-import com.konami.ailens.translation.LanguageSelectionFragment
+import com.konami.ailens.selection.SelectionFragment
 import kotlin.math.PI
 
 class InterpretationMainFragment: Fragment() {
@@ -31,21 +26,6 @@ class InterpretationMainFragment: Fragment() {
         binding = FragmentInterpretationMainBinding.inflate(inflater, container, false)
         binding.bilingualSwitch.setOnCheckedChangeListener { _, isChecked ->
             Orchestrator.instance.bilingual = isChecked
-            if (isChecked) {
-                binding.bilingualSwitch.animateColors(
-                    fromThumb = requireContext().resolveAttrColor(R.attr.appSurface1),
-                    toThumb   = requireContext().resolveAttrColor(R.attr.appSurface1),
-                    fromTrack = requireContext().resolveAttrColor(R.attr.appBackground),
-                    toTrack   = requireContext().resolveAttrColor(R.attr.appPrimary)
-                )
-            } else {
-                binding.bilingualSwitch.animateColors(
-                    fromThumb = requireContext().resolveAttrColor(R.attr.appSurface1),
-                    toThumb   = requireContext().resolveAttrColor(R.attr.appSurface1),
-                    fromTrack = requireContext().resolveAttrColor(R.attr.appPrimary),
-                    toTrack   = requireContext().resolveAttrColor(R.attr.appBackground)
-                )
-            }
         }
 
         updateLanguageText(false)
@@ -101,7 +81,10 @@ class InterpretationMainFragment: Fragment() {
             Orchestrator.instance.interpretationTargetLanguage
         }
 
-        val dialog = LanguageSelectionFragment.newInstance(currentLanguage) { selectedLanguage ->
+        val dialog = SelectionFragment.newInstance(
+            items = Orchestrator.Language.entries.toList(),
+            currentItem = currentLanguage
+        ) { selectedLanguage ->
             if (isSource) {
                 Orchestrator.instance.interpretationSourceLanguage = selectedLanguage
             } else {
@@ -110,38 +93,6 @@ class InterpretationMainFragment: Fragment() {
             updateLanguageText(true)
         }
 
-        dialog.show(childFragmentManager, "LanguageSelection")
-    }
-
-    fun SwitchCompat.animateColors(
-        @ColorInt fromThumb: Int,
-        @ColorInt toThumb: Int,
-        @ColorInt fromTrack: Int,
-        @ColorInt toTrack: Int,
-        duration: Long = 200
-    ) {
-        val thumb = thumbDrawable?.mutate()
-        val track = trackDrawable?.mutate()
-        if (thumb == null || track == null) return
-
-        val animator = ValueAnimator.ofFloat(0f, 1f).apply {
-            this.duration = duration
-            addUpdateListener {
-                val f = it.animatedFraction
-
-                fun lerpColor(from: Int, to: Int): Int {
-                    val a = ((Color.alpha(from) + (Color.alpha(to) - Color.alpha(from)) * f).toInt())
-                    val r = ((Color.red(from) + (Color.red(to) - Color.red(from)) * f).toInt())
-                    val g = ((Color.green(from) + (Color.green(to) - Color.green(from)) * f).toInt())
-                    val b = ((Color.blue(from) + (Color.blue(to) - Color.blue(from)) * f).toInt())
-                    return Color.argb(a, r, g, b)
-                }
-
-                thumb.setTint(lerpColor(fromThumb, toThumb))
-                track.setTint(lerpColor(fromTrack, toTrack))
-                invalidate()
-            }
-        }
-        animator.start()
+        dialog.show(childFragmentManager, "Selection")
     }
 }

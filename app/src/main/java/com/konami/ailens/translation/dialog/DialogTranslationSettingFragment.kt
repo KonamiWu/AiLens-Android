@@ -15,7 +15,7 @@ import com.konami.ailens.SharedPrefs
 import com.konami.ailens.databinding.FragmentDialogTranslationSettingBinding
 import com.konami.ailens.orchestrator.Orchestrator
 import com.konami.ailens.orchestrator.capability.DialogTranslationCapability
-import com.konami.ailens.translation.LanguageSelectionFragment
+import com.konami.ailens.selection.SelectionFragment
 import com.konami.ailens.translation.VerticalSpaceItemDecoration
 
 class DialogTranslationSettingFragment: Fragment() {
@@ -45,12 +45,15 @@ class DialogTranslationSettingFragment: Fragment() {
 
     private fun showLanguageSelection(isSource: Boolean) {
         val currentLanguage = if (isSource) {
-            Orchestrator.instance.interpretationSourceLanguage
+            Orchestrator.instance.dialogSourceLanguage
         } else {
-            Orchestrator.instance.interpretationTargetLanguage
+            Orchestrator.instance.dialogTargetLanguage
         }
 
-        val dialog = LanguageSelectionFragment.newInstance(currentLanguage) { selectedLanguage ->
+        val dialog = SelectionFragment.newInstance(
+            items = Orchestrator.Language.entries.toList(),
+            currentItem = currentLanguage
+        ) { selectedLanguage ->
             if (isSource) {
                 Orchestrator.instance.dialogSourceLanguage = selectedLanguage
                 SharedPrefs.dialogSourceLanguage = selectedLanguage
@@ -61,7 +64,7 @@ class DialogTranslationSettingFragment: Fragment() {
             adapter.notifyItemRangeChanged(0, 4)
         }
 
-        dialog.show(childFragmentManager, "LanguageSelection")
+        dialog.show(childFragmentManager, "Selection")
     }
 
     class Adapter(private val context: Context, private val languageOnClickAction: (Boolean) -> Unit): RecyclerView.Adapter<RecyclerView.ViewHolder>() {

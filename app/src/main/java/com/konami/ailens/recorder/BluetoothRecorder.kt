@@ -16,10 +16,6 @@ class BluetoothRecorder(
     private val session: Glasses, private val isAgent: Boolean
 ) : Recorder {
 
-    init {
-        Log.e("BluetoothRecorder", "BluetoothRecorder created with session=$session")
-    }
-
     private val channel = Channel<ByteArray>(capacity = Channel.UNLIMITED)
     override val frames: Flow<ByteArray> = channel.receiveAsFlow()
 

@@ -53,14 +53,24 @@ object FirmwareManager {
     private val _state = MutableStateFlow<DownloadState>(DownloadState.Idle)
     val state: StateFlow<DownloadState> = _state.asStateFlow()
 
-    private val _firmwareInfo = MutableStateFlow(FirmwareInfo())
-    val firmwareInfo: StateFlow<FirmwareInfo> = _firmwareInfo.asStateFlow()
+    private val _firmwareInfo = MutableStateFlow<FirmwareInfo?>(null)
+    val firmwareInfo: StateFlow<FirmwareInfo?> = _firmwareInfo.asStateFlow()
 
     private val _downloadProgress = MutableStateFlow(0f)
     val downloadProgress: StateFlow<Float> = _downloadProgress.asStateFlow()
 
 
     private var localFirmwarePath: File? = null
+
+    /**
+     * Reset all state
+     */
+    fun reset() {
+        _state.value = DownloadState.Idle
+        _firmwareInfo.value = null
+        _downloadProgress.value = 0f
+        localFirmwarePath = null
+    }
 
     /**
      * Check for firmware update
@@ -80,7 +90,7 @@ object FirmwareManager {
                 Log.e("FirmwareManager", "Device info: $deviceInfo")
 
                 // Update current version
-                _firmwareInfo.value = _firmwareInfo.value.copy(
+                _firmwareInfo.value = FirmwareInfo(
                     currentVersion = deviceInfo.version
                 )
 
@@ -107,14 +117,14 @@ object FirmwareManager {
             )
 
             val response = request.execute()
-            handleVersionResponse(response)
+            handleVersionResponse(response, version)
 
         } catch (e: Exception) {
             _state.value = DownloadState.DownloadFailed(context.getString(R.string.check_update_get_last_firmware_info_failed))
         }
     }
 
-    private suspend fun handleVersionResponse(response: GetFirmwareVersionRequest.FirmwareVersionResponse) {
+    private suspend fun handleVersionResponse(response: GetFirmwareVersionRequest.FirmwareVersionResponse, currentVersion: String) {
         // Check if update is available
         if (!response.hasUpdate) {
             _state.value = DownloadState.NoDownload
@@ -148,7 +158,7 @@ object FirmwareManager {
         val fileSavePath = "ota/glass/${firmware.version}/ota.bin"
 
         _firmwareInfo.value = FirmwareInfo(
-            currentVersion = _firmwareInfo.value.currentVersion,
+            currentVersion = _firmwareInfo.value?.currentVersion ?: currentVersion,
             newestVersion = firmware.version,
             updateDetails = firmware.releasenotes,
             fileSize = "",  // Size not provided in this API response
@@ -172,7 +182,7 @@ object FirmwareManager {
      */
     fun downloadFirmware() {
         val info = _firmwareInfo.value
-        if (info.downloadURL.isEmpty()) {
+        if (info == null || info.downloadURL.isEmpty()) {
             _state.value = DownloadState.DownloadFailed(context.getString(R.string.check_update_download_last_firmware_info_failed))
             return
         }
@@ -213,7 +223,7 @@ object FirmwareManager {
      */
     fun cancelDownload() {
         val info = _firmwareInfo.value
-        if (info.fileSavePath.isNotEmpty()) {
+        if (info != null && info.fileSavePath.isNotEmpty()) {
             val saveFile = getFullFilePath(info.fileSavePath)
             if (saveFile.exists()) {
                 saveFile.delete()
@@ -242,14 +252,6 @@ object FirmwareManager {
      */
     fun getLocalFirmwarePath(): File? = localFirmwarePath
 
-    /**
-     * Reset state to idle
-     */
-    fun resetState() {
-        _state.value = DownloadState.Idle
-        _downloadProgress.value = 0f
-    }
-
     private fun getFullFilePath(relativePath: String): File {
         val context = AiLensApplication.instance.applicationContext
         val filesDir = context.getExternalFilesDir(null) ?: context.filesDir
@@ -260,7 +262,7 @@ object FirmwareManager {
      * Get version display text
      */
     fun getVersionDisplayText(): String {
-        val info = _firmwareInfo.value
+        val info = _firmwareInfo.value ?: return ""
         return if (info.newestVersion.isEmpty() || info.newestVersion == info.currentVersion) {
             "V${info.currentVersion}"
         } else {

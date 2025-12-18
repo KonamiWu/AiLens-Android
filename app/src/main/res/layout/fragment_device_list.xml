@@ -55,15 +55,15 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/text2"
-            app:layout_constraintBottom_toTopOf="@id/tryAgainLayout"
+            app:layout_constraintBottom_toTopOf="@id/tryAgainButton"
             android:layout_marginTop="@dimen/device_list_item_recycler_view_margin_top"
             android:layout_marginHorizontal="@dimen/device_list_item_recycler_view_margin_horizontal"
             android:layout_marginBottom="@dimen/device_list_item_recycler_view_margin_bottom"
             android:orientation="vertical"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
 
-        <FrameLayout
-            android:id="@+id/tryAgainLayout"
+        <com.konami.ailens.main.CutCornerButton
+            android:id="@+id/tryAgainButton"
             android:layout_width="match_parent"
             android:layout_height="@dimen/device_list_try_again_button_height"
             app:layout_constraintStart_toStartOf="parent"
@@ -71,26 +71,9 @@
             app:layout_constraintBottom_toBottomOf="parent"
             android:layout_marginHorizontal="@dimen/device_list_try_again_button_margin_horizontal"
             android:layout_marginBottom="@dimen/device_list_try_again_button_margin_bottom"
-            android:visibility="gone">
-
-            <com.konami.ailens.main.CutCornerView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                app:cornerCut="@dimen/device_list_try_again_button_corner_cut"
-                app:borderWidth="1dp"
-                app:borderColor="?attr/appPrimary" />
-
-            <Button
-                android:id="@+id/tryAgainButton"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="#00000000"
-                android:textSize="@dimen/device_list_try_again_button_text_size"
-                android:textColor="?attr/appPrimary"
-                style="@style/Bold"
-                android:text="@string/try_again" />
-
-        </FrameLayout>
+            android:text="@string/try_again"
+            style="@style/NegativeBigCornerButton"
+            android:visibility="gone" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

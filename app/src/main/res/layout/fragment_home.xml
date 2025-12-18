@@ -125,7 +125,6 @@
                 android:textSize="@dimen/main_name_text_size"
                 android:textColor="?attr/appPrimary"
                 android:includeFontPadding="false"
-                android:text="AiLens 01A2"
                 style="@style/SemiBold" />
 
             <com.konami.ailens.main.CutCornerView

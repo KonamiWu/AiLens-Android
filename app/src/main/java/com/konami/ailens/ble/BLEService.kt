@@ -46,7 +46,6 @@ class BLEService private constructor(private val context: Context) {
                 synchronized(this) {
                     if (_instance == null) {
                         _instance = BLEService(context.applicationContext)
-                        Log.d(TAG, "BLEService initialized (no permissions required at this stage)")
                     }
                 }
             }
@@ -67,16 +66,11 @@ class BLEService private constructor(private val context: Context) {
     val connectedSession = _connectedSession.asStateFlow()
 
     private var reconnectJob: kotlinx.coroutines.Job? = null  // Track reconnect job
-    private var ring: AiRing? = null
     private val scanCallback = object : ScanCallback() {
         override fun onScanResult(callbackType: Int, result: ScanResult) {
             val newDevice = result.device ?: return
-            val name = newDevice.name
-            if (name != null && name.contains("Ai Ring") && ring == null) {
-                ring = AiRing(context, newDevice, null)
-                ring?.connect()
-            }
             val address = newDevice.address ?: return
+
             if (_connectedSession.value?.device?.address == address)
                 return
             if (sessions[address] == null) {
@@ -103,17 +97,14 @@ class BLEService private constructor(private val context: Context) {
      */
     fun startScan(onlyAiLens: Boolean = true) {
         val adapter = bluetoothAdapter ?: run {
-            Log.e(TAG, "BluetoothAdapter not available")
             return
         }
 
         if (!adapter.isEnabled) {
-            Log.e(TAG, "Bluetooth not enabled")
             return
         }
 
         val scanner = adapter.bluetoothLeScanner ?: run {
-            Log.e(TAG, "BLE scanner not available")
             return
         }
         val settings = ScanSettings.Builder()
@@ -133,12 +124,9 @@ class BLEService private constructor(private val context: Context) {
         } else {
             scanner.startScan(null, settings, scanCallback)
         }
-        Log.e(TAG, "startScan(onlyAiLens=$onlyAiLens)")
     }
 
     private fun cleanupSessions() {
-        Log.e(TAG, "Cleaning up ${sessions.size} sessions and ${sessionJobs.size} jobs")
-
         // Cancel all monitoring jobs
         sessionJobs.values.forEach { it.cancel() }
         sessionJobs.clear()
@@ -155,7 +143,6 @@ class BLEService private constructor(private val context: Context) {
     }
 
     fun stopScan() {
-        Log.e(TAG, "stopScan")
         bluetoothAdapter?.bluetoothLeScanner?.stopScan(scanCallback)
     }
 
@@ -174,9 +161,7 @@ class BLEService private constructor(private val context: Context) {
         }
         val info = SharedPrefs.getDeviceInfo() ?: return
         val device = try { adapter.getRemoteDevice(info.mac) } catch (_: IllegalArgumentException) { null } ?: return
-        Log.e(TAG, "retrieve() creating new DeviceSession for device=${device.address}")
         val newSession = AiLens(context, device, info.retrieveToken)
-        Log.e(TAG, "retrieve() created newSession=$newSession, setting as connectedSession")
         _connectedSession.value = newSession
         collect(newSession)
         _updateFlow.tryEmit(Unit)
@@ -189,7 +174,6 @@ class BLEService private constructor(private val context: Context) {
      * Call this after unbinding/disconnecting device.
      */
     fun clearSession() {
-        Log.d(TAG, "Clearing BLE session")
         reconnectJob?.cancel()
         reconnectJob = null
         _connectedSession.value = null
@@ -212,9 +196,7 @@ class BLEService private constructor(private val context: Context) {
                     // Update connectedSession to this newly connected session
                     _connectedSession.value = session
                     _updateFlow.tryEmit(Unit)
-                    Log.d(TAG, "Device connected: $address")
                 } else if (it == Glasses.State.DISCONNECTED) {
-                    Log.e(TAG, "Device disconnected: $address, scheduling reconnect...")
                     // Cancel this job first to avoid conflict
                     sessionJobs.remove(address)?.cancel()
                     // Schedule reconnect and track the job
@@ -228,6 +210,5 @@ class BLEService private constructor(private val context: Context) {
         }
 
         sessionJobs[address] = job
-        Log.d(TAG, "Started monitoring session: $address (total: ${sessionJobs.size})")
     }
 }

@@ -31,7 +31,6 @@ class DeviceListViewModel: ViewModel() {
         super.onCleared()
         job?.cancel()
         job = null
-        Log.d("DeviceListViewModel", "onCleared - job cancelled")
     }
 
     fun stopSearch() {

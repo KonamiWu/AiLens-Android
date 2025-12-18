@@ -32,6 +32,18 @@
         <attr name="waveBackgroundColor" format="color" />
     </declare-styleable>
 
+    <declare-styleable name="CutCornerButton">
+        <attr name="cornerCut" />
+        <attr name="borderColor" />
+        <attr name="borderWidth" />
+        <attr name="fillColor" />
+        <attr name="fillColorAlpha" />
+        <attr name="pressColor" format="color"/>
+        <attr name="disableFillColor" format="color"/>
+        <attr name="disableTextColor" format="color"/>
+        <attr name="cutCorners" />
+    </declare-styleable>
+
     <attr name="appPrimary" format="color" />
     <attr name="appPrimaryDark" format="color" />
     <attr name="appBackground" format="color" />

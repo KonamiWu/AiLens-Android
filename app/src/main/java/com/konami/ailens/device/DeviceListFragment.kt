@@ -91,11 +91,11 @@ class DeviceListFragment: Fragment() {
         // Stop search and show try again button after 10 seconds
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                delay(5000)
+                delay(10000)
                 viewModel.stopSearch()
-                binding.tryAgainLayout.visibility = View.VISIBLE
-                binding.tryAgainLayout.alpha = 0f
-                binding.tryAgainLayout.animate().alpha(1f).setDuration(1000).start()
+                binding.tryAgainButton.visibility = View.VISIBLE
+                binding.tryAgainButton.alpha = 0f
+                binding.tryAgainButton.animate().alpha(1f).setDuration(1000).start()
             }
         }
     }

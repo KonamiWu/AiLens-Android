@@ -13,7 +13,7 @@ class CheckUpdateViewModel(private val glasses: Glasses?): ViewModel() {
 
     // Expose FirmwareManager states
     val state: StateFlow<FirmwareManager.DownloadState> = FirmwareManager.state
-    val firmwareInfo: StateFlow<FirmwareManager.FirmwareInfo> = FirmwareManager.firmwareInfo
+    val firmwareInfo: StateFlow<FirmwareManager.FirmwareInfo?> = FirmwareManager.firmwareInfo
     val downloadProgress: StateFlow<Float> = FirmwareManager.downloadProgress
 
     // Delegate to FirmwareManager

@@ -1,12 +1,16 @@
 package com.konami.ailens.login
 
+import android.animation.ArgbEvaluator
+import android.animation.ValueAnimator
 import android.app.Activity
+import android.app.ActivityOptions
 import android.content.Intent
 import android.content.res.ColorStateList
 import android.os.Build
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -34,8 +38,10 @@ class LoginFragment : Fragment() {
     private var _binding: FragmentLoginBinding? = null
     private val binding get() = _binding!!
 
-    private var hasAttemptedLogin = false
+    private var hasAttemptedLogin = true
     private var isPasswordVisible = false
+    private var emailTintAnimator: ValueAnimator? = null
+    private var isEmailValid = true
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -127,7 +133,7 @@ class LoginFragment : Fragment() {
                             val intent = Intent(requireActivity(), AddDeviceActivity::class.java)
                             intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
 
-                            val options = android.app.ActivityOptions.makeCustomAnimation(requireContext(), R.anim.flip_in, R.anim.flip_out)
+                            val options = ActivityOptions.makeCustomAnimation(requireContext(), R.anim.flip_in, R.anim.flip_out)
                             startActivity(intent, options.toBundle())
                         }
                     }
@@ -191,7 +197,7 @@ class LoginFragment : Fragment() {
         val intent = Intent(requireActivity(), SignUpActivity::class.java)
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
 
-        val options = android.app.ActivityOptions.makeCustomAnimation(
+        val options = ActivityOptions.makeCustomAnimation(
             requireContext(),
             R.anim.flip_in,
             R.anim.flip_out
@@ -204,7 +210,7 @@ class LoginFragment : Fragment() {
         val intent = Intent(requireActivity(), ForgetPasswordActivity::class.java)
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
 
-        val options = android.app.ActivityOptions.makeCustomAnimation(
+        val options = ActivityOptions.makeCustomAnimation(
             requireContext(),
             R.anim.flip_in,
             R.anim.flip_out
@@ -214,31 +220,54 @@ class LoginFragment : Fragment() {
     }
 
     private fun showEmailInvalid() {
-        val redColor = requireContext().resolveAttrColor(R.attr.appRed)
-        val colorStateList = ColorStateList(
-            arrayOf(intArrayOf()),
-            intArrayOf(redColor)
-        )
-        binding.emailEditText.backgroundTintList = colorStateList
+        if (isEmailValid) {
+            isEmailValid = false
+            val grayColor = requireContext().resolveAttrColor(R.attr.appBorderDarkGray)
+            val redColor = requireContext().resolveAttrColor(R.attr.appRed)
 
-        binding.emailErrorLabel.animate()
-            .alpha(1f)
-            .setDuration(250)
-            .start()
+            animateEmailTintColor(grayColor, redColor)
+
+            binding.emailErrorLabel.animate()
+                .alpha(1f)
+                .setDuration(250)
+                .start()
+        }
     }
 
     private fun showEmailValid() {
-        val grayColor = requireContext().resolveAttrColor(R.attr.appBorderDarkGray)
-        val colorStateList = ColorStateList(
-            arrayOf(intArrayOf()),
-            intArrayOf(grayColor)
-        )
-        binding.emailEditText.backgroundTintList = colorStateList
+        if (!isEmailValid) {
+            isEmailValid = true
+            val grayColor = requireContext().resolveAttrColor(R.attr.appBorderDarkGray)
+            val redColor = requireContext().resolveAttrColor(R.attr.appRed)
 
-        binding.emailErrorLabel.animate()
-            .alpha(0f)
-            .setDuration(250)
-            .start()
+            animateEmailTintColor(redColor, grayColor)
+
+            binding.emailErrorLabel.animate()
+                .alpha(0f)
+                .setDuration(250)
+                .start()
+        }
+    }
+
+    private fun animateEmailTintColor(fromColor: Int, toColor: Int) {
+        emailTintAnimator?.cancel()
+
+        emailTintAnimator = ValueAnimator.ofFloat(0f, 1f).apply {
+            duration = 250L
+            val colorEvaluator = ArgbEvaluator()
+
+            addUpdateListener { animator ->
+                val fraction = animator.animatedFraction
+                val color = colorEvaluator.evaluate(fraction, fromColor, toColor) as Int
+                val colorStateList = ColorStateList(
+                    arrayOf(intArrayOf()),
+                    intArrayOf(color)
+                )
+                binding.emailEditText.backgroundTintList = colorStateList
+            }
+
+            start()
+        }
     }
 
     private fun updateLoginButton() {
@@ -246,25 +275,7 @@ class LoginFragment : Fragment() {
         val password = binding.passwordEditText.text.toString()
 
         val shouldEnable = email.isNotEmpty() && password.isNotEmpty() && viewModel.isValidEmail(email)
-        setLoginButton(shouldEnable)
-    }
-
-    private fun setLoginButton(enabled: Boolean) {
-        binding.loginButton.isEnabled = enabled
-
-        binding.buttonLayout.fillColor = if (enabled) {
-            requireContext().resolveAttrColor(R.attr.appPrimary)
-        } else {
-            requireContext().resolveAttrColor(R.attr.appButtonDisable)
-        }
-
-        binding.loginButton.setTextColor(
-            if (enabled) {
-                requireContext().resolveAttrColor(R.attr.appTextButton)
-            } else {
-                requireContext().resolveAttrColor(R.attr.appTextDisable)
-            }
-        )
+        binding.loginButton.isEnabled = shouldEnable
     }
 
     private fun passwordEyeAction() {
@@ -286,6 +297,7 @@ class LoginFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
+        emailTintAnimator?.cancel()
         LoadingDialogFragment.dismiss(requireActivity())
         _binding = null
     }

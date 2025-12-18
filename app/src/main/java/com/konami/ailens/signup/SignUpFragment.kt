@@ -1,5 +1,7 @@
 package com.konami.ailens.signup
 
+import android.animation.ArgbEvaluator
+import android.animation.ValueAnimator
 import android.content.res.ColorStateList
 import android.os.Bundle
 import android.text.Editable
@@ -29,11 +31,19 @@ class SignUpFragment : Fragment() {
     private var _binding: FragmentSignUpBinding? = null
     private val binding get() = _binding!!
 
-    private var hasAttemptedSignUp = true
+    private var hasAttemptedSignUp = false
     private lateinit var email: String
 
     private var isPasswordVisible = false
     private var isConfirmPasswordVisible = false
+
+    private var displayNameTintAnimator: ValueAnimator? = null
+    private var passwordTintAnimator: ValueAnimator? = null
+    private var confirmPasswordTintAnimator: ValueAnimator? = null
+
+    private var isDisplayNameValid = true
+    private var isPasswordValid = true
+    private var isConfirmPasswordValid = true
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -139,7 +149,6 @@ class SignUpFragment : Fragment() {
                 launch {
                     viewModel.signUpSuccessEvent.collect {
                         LoadingDialogFragment.dismiss(requireActivity())
-                        Log.e("SignUpFragment", "Sign up success")
                         Toast.show(requireActivity(), requireContext().getString(R.string.signed_up_successfully))
                     }
                 }
@@ -251,8 +260,7 @@ class SignUpFragment : Fragment() {
         } else {
             areAllFieldsFilled()
         }
-
-        setSignUpButton(shouldEnable)
+        binding.signUpButton.isEnabled = shouldEnable
     }
 
     private fun updateUIForValidation(validation: ValidationResult) {
@@ -276,104 +284,128 @@ class SignUpFragment : Fragment() {
     }
 
     private fun showDisplayNameInvalid() {
-        val redColor = requireContext().resolveAttrColor(R.attr.appRed)
-        val colorStateList = ColorStateList(
-            arrayOf(intArrayOf()),
-            intArrayOf(redColor)
-        )
-        binding.displayNameEditText.backgroundTintList = colorStateList
+        if (isDisplayNameValid) {
+            isDisplayNameValid = false
+            val grayColor = requireContext().resolveAttrColor(R.attr.appBorderDarkGray)
+            val redColor = requireContext().resolveAttrColor(R.attr.appRed)
+            animateTintColor(displayNameTintAnimator, grayColor, redColor) { animator ->
+                displayNameTintAnimator = animator
+            }
 
-        binding.displayNameErrorLabel.animate()
-            .alpha(1f)
-            .setDuration(250)
-            .start()
+            binding.displayNameErrorLabel.animate()
+                .alpha(1f)
+                .setDuration(250)
+                .start()
+        }
     }
 
     private fun showDisplayNameValid() {
-        val grayColor = requireContext().resolveAttrColor(R.attr.appBorderDarkGray)
-        val colorStateList = ColorStateList(
-            arrayOf(intArrayOf()),
-            intArrayOf(grayColor)
-        )
-        binding.displayNameEditText.backgroundTintList = colorStateList
+        if (!isDisplayNameValid) {
+            isDisplayNameValid = true
+            val grayColor = requireContext().resolveAttrColor(R.attr.appBorderDarkGray)
+            val redColor = requireContext().resolveAttrColor(R.attr.appRed)
+            animateTintColor(displayNameTintAnimator, redColor, grayColor) { animator ->
+                displayNameTintAnimator = animator
+            }
 
-        binding.displayNameErrorLabel.animate()
-            .alpha(0f)
-            .setDuration(250)
-            .start()
+            binding.displayNameErrorLabel.animate()
+                .alpha(0f)
+                .setDuration(250)
+                .start()
+        }
     }
 
     private fun showPasswordInvalid() {
-        val redColor = requireContext().resolveAttrColor(R.attr.appRed)
-        val colorStateList = ColorStateList(
-            arrayOf(intArrayOf()),
-            intArrayOf(redColor)
-        )
-        binding.passwordEditText.backgroundTintList = colorStateList
+        if (isPasswordValid) {
+            isPasswordValid = false
+            val grayColor = requireContext().resolveAttrColor(R.attr.appBorderDarkGray)
+            val redColor = requireContext().resolveAttrColor(R.attr.appRed)
+            animateTintColor(passwordTintAnimator, grayColor, redColor, binding.passwordEditText) { animator ->
+                passwordTintAnimator = animator
+            }
 
-        binding.passwordErrorLabel.animate()
-            .alpha(1f)
-            .setDuration(250)
-            .start()
+            binding.passwordErrorLabel.animate()
+                .alpha(1f)
+                .setDuration(250)
+                .start()
+        }
     }
 
     private fun showPasswordValid() {
-        val grayColor = requireContext().resolveAttrColor(R.attr.appBorderDarkGray)
-        val colorStateList = ColorStateList(
-            arrayOf(intArrayOf()),
-            intArrayOf(grayColor)
-        )
-        binding.passwordEditText.backgroundTintList = colorStateList
+        if (!isPasswordValid) {
+            isPasswordValid = true
+            val grayColor = requireContext().resolveAttrColor(R.attr.appBorderDarkGray)
+            val redColor = requireContext().resolveAttrColor(R.attr.appRed)
+            animateTintColor(passwordTintAnimator, redColor, grayColor, binding.passwordEditText) { animator ->
+                passwordTintAnimator = animator
+            }
 
-        binding.passwordErrorLabel.animate()
-            .alpha(0f)
-            .setDuration(250)
-            .start()
+            binding.passwordErrorLabel.animate()
+                .alpha(0f)
+                .setDuration(250)
+                .start()
+        }
     }
 
     private fun showConfirmPasswordInvalid() {
-        val redColor = requireContext().resolveAttrColor(R.attr.appRed)
-        val colorStateList = ColorStateList(
-            arrayOf(intArrayOf()),
-            intArrayOf(redColor)
-        )
-        binding.confirmPasswordEditText.backgroundTintList = colorStateList
+        if (isConfirmPasswordValid) {
+            isConfirmPasswordValid = false
+            val grayColor = requireContext().resolveAttrColor(R.attr.appBorderDarkGray)
+            val redColor = requireContext().resolveAttrColor(R.attr.appRed)
+            animateTintColor(confirmPasswordTintAnimator, grayColor, redColor, binding.confirmPasswordEditText) { animator ->
+                confirmPasswordTintAnimator = animator
+            }
 
-        binding.confirmPasswordErrorLabel.animate()
-            .alpha(1f)
-            .setDuration(250)
-            .start()
+            binding.confirmPasswordErrorLabel.animate()
+                .alpha(1f)
+                .setDuration(250)
+                .start()
+        }
     }
 
     private fun showConfirmPasswordValid() {
-        val grayColor = requireContext().resolveAttrColor(R.attr.appBorderDarkGray)
-        val colorStateList = ColorStateList(
-            arrayOf(intArrayOf()),
-            intArrayOf(grayColor)
-        )
-        binding.confirmPasswordEditText.backgroundTintList = colorStateList
+        if (!isConfirmPasswordValid) {
+            isConfirmPasswordValid = true
+            val grayColor = requireContext().resolveAttrColor(R.attr.appBorderDarkGray)
+            val redColor = requireContext().resolveAttrColor(R.attr.appRed)
+            animateTintColor(confirmPasswordTintAnimator, redColor, grayColor, binding.confirmPasswordEditText) { animator ->
+                confirmPasswordTintAnimator = animator
+            }
 
-        binding.confirmPasswordErrorLabel.animate()
-            .alpha(0f)
-            .setDuration(250)
-            .start()
+            binding.confirmPasswordErrorLabel.animate()
+                .alpha(0f)
+                .setDuration(250)
+                .start()
+        }
     }
 
-    private fun setSignUpButton(enabled: Boolean) {
-        binding.signUpButton.isEnabled = enabled
-        binding.buttonLayout.fillColor = if (enabled) {
-            requireContext().resolveAttrColor(R.attr.appPrimary)
-        } else {
-            requireContext().resolveAttrColor(R.attr.appButtonDisable)
+    private fun animateTintColor(
+        currentAnimator: ValueAnimator?,
+        fromColor: Int,
+        toColor: Int,
+        editText: android.widget.EditText = binding.displayNameEditText,
+        onAnimatorCreated: (ValueAnimator) -> Unit
+    ) {
+        currentAnimator?.cancel()
+
+        val animator = ValueAnimator.ofFloat(0f, 1f).apply {
+            duration = 250L
+            val colorEvaluator = ArgbEvaluator()
+
+            addUpdateListener { animator ->
+                val fraction = animator.animatedFraction
+                val color = colorEvaluator.evaluate(fraction, fromColor, toColor) as Int
+                val colorStateList = ColorStateList(
+                    arrayOf(intArrayOf()),
+                    intArrayOf(color)
+                )
+                editText.backgroundTintList = colorStateList
+            }
+
+            start()
         }
 
-        binding.signUpButton.setTextColor(
-            if (enabled) {
-                requireContext().resolveAttrColor(R.attr.appTextButton)
-            } else {
-                requireContext().resolveAttrColor(R.attr.appTextDisable)
-            }
-        )
+        onAnimatorCreated(animator)
     }
 
     private fun hideKeyboard() {
@@ -383,6 +415,9 @@ class SignUpFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
+        displayNameTintAnimator?.cancel()
+        passwordTintAnimator?.cancel()
+        confirmPasswordTintAnimator?.cancel()
         LoadingDialogFragment.dismiss(requireActivity())
         _binding = null
     }

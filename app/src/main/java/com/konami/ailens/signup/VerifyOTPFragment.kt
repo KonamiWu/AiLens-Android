@@ -171,25 +171,7 @@ class VerifyOTPFragment : Fragment() {
     }
 
     private fun updateNextButton() {
-        setNextButton(isOTPFilled())
-    }
-
-    private fun setNextButton(enabled: Boolean) {
-        binding.nextButton.isEnabled = enabled
-
-        binding.buttonLayout.fillColor = if (enabled) {
-            requireContext().resolveAttrColor(R.attr.appPrimary)
-        } else {
-            requireContext().resolveAttrColor(R.attr.appButtonDisable)
-        }
-
-        binding.nextButton.setTextColor(
-            if (enabled) {
-                requireContext().resolveAttrColor(R.attr.appTextButton)
-            } else {
-                requireContext().resolveAttrColor(R.attr.appTextDisable)
-            }
-        )
+        binding.nextButton.isEnabled = isOTPFilled()
     }
 
     private fun startCountDown() {

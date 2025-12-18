@@ -74,35 +74,21 @@
                 android:textColor="?attr/appRed"
                 android:textSize="@dimen/sign_up_hint_text_size"/>
 
-            <com.konami.ailens.main.CutCornerView
-                android:id="@+id/buttonLayout"
+            <com.konami.ailens.main.CutCornerButton
+                android:id="@+id/nextButton"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/sign_up_big_button_height"
+                android:layout_height="@dimen/big_bottom_button_height"
                 app:layout_constraintTop_toBottomOf="@id/emailEditText"
                 android:layout_marginTop="@dimen/sign_up_big_button_margin_top"
-                app:cornerCut="@dimen/big_bottom_button_corner_cut"
-                app:borderWidth="0dp"
-                app:borderColor="@android:color/transparent"
-                app:fillColor="?attr/appButtonDisable">
-
-                <Button
-                    android:id="@+id/nextButton"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:background="@android:color/transparent"
-                    android:textColor="?attr/appTextDisable"
-                    android:textSize="@dimen/big_bottom_button_text_size"
-                    style="@style/Bold"
-                    android:text="@string/next" />
-
-            </com.konami.ailens.main.CutCornerView>
+                android:text="@string/next"
+                style="@style/PositiveBigCornerButton" />
 
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:layout_marginTop="@dimen/sign_up_already_have_account_margin_top"
-                app:layout_constraintTop_toBottomOf="@id/buttonLayout"
+                app:layout_constraintTop_toBottomOf="@id/nextButton"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent">
 

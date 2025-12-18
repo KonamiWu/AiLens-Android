@@ -1,5 +1,7 @@
 package com.konami.ailens.signup
 
+import android.animation.ArgbEvaluator
+import android.animation.ValueAnimator
 import android.content.Intent
 import android.content.res.ColorStateList
 import android.os.Bundle
@@ -30,6 +32,8 @@ class SendOTPFragment : Fragment() {
     private val binding get() = _binding!!
 
     private var hasAttemptedNext = false
+    private var emailTintAnimator: ValueAnimator? = null
+    private var isEmailValid = true
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -174,45 +178,48 @@ class SendOTPFragment : Fragment() {
         } else {
             isEmailFilled()
         }
-
-        setNextButton(shouldEnable)
-    }
-
-    private fun setNextButton(enabled: Boolean) {
-        binding.nextButton.isEnabled = enabled
-        binding.buttonLayout.fillColor = if (enabled) {
-            requireContext().resolveAttrColor(R.attr.appPrimary)
-        } else {
-            requireContext().resolveAttrColor(R.attr.appButtonDisable)
-        }
-
-        binding.nextButton.setTextColor(
-            if (enabled) {
-                requireContext().resolveAttrColor(R.attr.appTextButton)
-            } else {
-                requireContext().resolveAttrColor(R.attr.appTextDisable)
-            }
-        )
+        binding.nextButton.isEnabled = shouldEnable
     }
 
     private fun showEmailInvalid() {
-        binding.invalidTextView.visibility = View.VISIBLE
-        val redColor = requireContext().resolveAttrColor(R.attr.appRed)
-        val colorStateList = ColorStateList(
-            arrayOf(intArrayOf()),
-            intArrayOf(redColor)
-        )
-        binding.emailEditText.backgroundTintList = colorStateList
+        if (isEmailValid) {
+            isEmailValid = false
+            binding.invalidTextView.visibility = View.VISIBLE
+            val grayColor = requireContext().resolveAttrColor(R.attr.appBorderDarkGray)
+            val redColor = requireContext().resolveAttrColor(R.attr.appRed)
+            animateEmailTintColor(grayColor, redColor)
+        }
     }
 
     private fun showEmailValid() {
-        binding.invalidTextView.visibility = View.INVISIBLE
-        val grayColor = requireContext().resolveAttrColor(R.attr.appBorderDarkGray)
-        val colorStateList = ColorStateList(
-            arrayOf(intArrayOf()),
-            intArrayOf(grayColor)
-        )
-        binding.emailEditText.backgroundTintList = colorStateList
+        if (!isEmailValid) {
+            isEmailValid = true
+            binding.invalidTextView.visibility = View.INVISIBLE
+            val grayColor = requireContext().resolveAttrColor(R.attr.appBorderDarkGray)
+            val redColor = requireContext().resolveAttrColor(R.attr.appRed)
+            animateEmailTintColor(redColor, grayColor)
+        }
+    }
+
+    private fun animateEmailTintColor(fromColor: Int, toColor: Int) {
+        emailTintAnimator?.cancel()
+
+        emailTintAnimator = ValueAnimator.ofFloat(0f, 1f).apply {
+            duration = 250L
+            val colorEvaluator = ArgbEvaluator()
+
+            addUpdateListener { animator ->
+                val fraction = animator.animatedFraction
+                val color = colorEvaluator.evaluate(fraction, fromColor, toColor) as Int
+                val colorStateList = ColorStateList(
+                    arrayOf(intArrayOf()),
+                    intArrayOf(color)
+                )
+                binding.emailEditText.backgroundTintList = colorStateList
+            }
+
+            start()
+        }
     }
 
     private fun hideKeyboard() {
@@ -223,6 +230,7 @@ class SendOTPFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
+        emailTintAnimator?.cancel()
         LoadingDialogFragment.dismiss(requireActivity())
         _binding = null
     }

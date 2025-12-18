@@ -22,6 +22,7 @@ import com.konami.ailens.orchestrator.role.Role
 import com.konami.ailens.orchestrator.capability.NavigationCapability
 import com.konami.ailens.orchestrator.coordinator.DialogTranslationCoordinator
 import com.konami.ailens.orchestrator.coordinator.InterpretationCoordinator
+import com.konami.ailens.selection.SelectionItem
 import io.socket.client.Ack
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
@@ -34,12 +35,16 @@ class Orchestrator private constructor(private val context: Context): Capability
         data object NavigateToAgent : UINavigationEvent()
     }
 
-    enum class Language(val code: String, val title: String) {
+    enum class Language(val code: String, val title: String) : SelectionItem {
         ENGLISH("en-US", "English"),
         ESPANOL("es-ES", "Español"),
         FRANCAIS("fr-FR", "Français"),
         CHINESE("zh-TW", "中文"),
         JAPANESE("ja-JP", "日本語");
+
+        override val id: String get() = code
+        override val displayText: String get() = title
+
         companion object {
             val interpretationSourceDefault: Language = CHINESE
             val interpretationTargetDefault: Language = ENGLISH

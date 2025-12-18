@@ -167,29 +167,14 @@
                 android:alpha="0" />
 
             <!-- Sign Up Button -->
-            <com.konami.ailens.main.CutCornerView
-                android:id="@+id/buttonLayout"
+            <com.konami.ailens.main.CutCornerButton
+                android:id="@+id/signUpButton"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/sign_up_big_button_height"
+                android:layout_height="@dimen/big_bottom_button_height"
                 app:layout_constraintTop_toBottomOf="@id/confirmPasswordErrorLabel"
                 android:layout_marginTop="@dimen/sign_up_big_button_margin_top"
-                app:cornerCut="@dimen/big_bottom_button_corner_cut"
-                app:borderWidth="0dp"
-                app:borderColor="@android:color/transparent"
-                app:fillColor="?attr/appButtonDisable">
-
-                <Button
-                    android:id="@+id/signUpButton"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:background="@android:color/transparent"
-                    android:textColor="?attr/appTextDisable"
-                    android:textSize="@dimen/big_bottom_button_text_size"
-                    style="@style/Bold"
-                    android:includeFontPadding="false"
-                    android:text="@string/sign_up" />
-
-            </com.konami.ailens.main.CutCornerView>
+                android:text="@string/sign_up"
+                style="@style/PositiveBigCornerButton" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

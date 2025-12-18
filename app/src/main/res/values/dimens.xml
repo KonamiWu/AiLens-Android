@@ -11,6 +11,12 @@
     <dimen name="language_item_section_height">20sp</dimen>
 
 <!--    new-->
+    <dimen name="big_bottom_button_height">52dp</dimen>
+    <dimen name="big_bottom_button_text_size">16sp</dimen>
+    <dimen name="big_bottom_button_margin_horizontal">32dp</dimen>
+    <dimen name="big_bottom_button_margin_bottom">24dp</dimen>
+    <dimen name="big_bottom_button_corner_cut">5.5dp</dimen>
+
     <dimen name="loading_size">120dp</dimen>
     <dimen name="loading_image_size">48dp</dimen>
     <dimen name="loading_padding">32dp</dimen>
@@ -186,7 +192,6 @@
     <dimen name="add_device_button_corner_cut">6dp</dimen>
     <dimen name="add_device_button_margin_horizontal">32dp</dimen>
     <dimen name="add_device_button_margin_bottom">50dp</dimen>
-    <dimen name="add_device_button_height">52dp</dimen>
     <dimen name="add_device_search_bg_margin_top">30dp</dimen>
     <dimen name="add_device_search_zoom_margin_top">120dp</dimen>
     <dimen name="add_device_search_text1_margin_top">46dp</dimen>
@@ -225,7 +230,6 @@
     <dimen name="connection_failed_text1_margin_bottom">10dp</dimen>
     <dimen name="connection_failed_text2_margin_bottom">130dp</dimen>
     <dimen name="connection_failed_button_height">52dp</dimen>
-    <dimen name="connection_failed_button_corner_cut">4dp</dimen>
     <dimen name="connection_failed_button_margin_horizontal">32dp</dimen>
     <dimen name="connection_failed_button_margin_bottom">24dp</dimen>
     <dimen name="connection_failed_button_text_size">16sp</dimen>
@@ -250,18 +254,10 @@
     <dimen name="search_failed_text2_size">14sp</dimen>
     <dimen name="search_failed_text2_margin_bottom">62dp</dimen>
     <dimen name="search_failed_button_margin_horizontal">32dp</dimen>
-    <dimen name="search_failed_button_height">52dp</dimen>
     <dimen name="search_failed_button_text_size">16sp</dimen>
     <dimen name="search_failed_button_spacing">16dp</dimen>
     <dimen name="search_failed_button_margin_bottom">24dp</dimen>
     <dimen name="search_failed_button_corner_cut">4dp</dimen>
-
-    <dimen name="big_bottom_button_height">52dp</dimen>
-    <dimen name="big_bottom_button_text_size">16sp</dimen>
-    <dimen name="big_bottom_button_margin_horizontal">32dp</dimen>
-    <dimen name="big_bottom_button_margin_bottom">24dp</dimen>
-    <dimen name="big_bottom_button_corner_cut">5.5dp</dimen>
-
 
     <dimen name="smart_translation_padding_horizontal">16dp</dimen>
     <dimen name="smart_translation_title_text_size">17sp</dimen>
@@ -362,7 +358,6 @@
     <dimen name="sign_up_login_in_margin_left">8dp</dimen>
 
     <dimen name="sign_up_big_button_margin_top">55dp</dimen>
-    <dimen name="sign_up_big_button_height">52dp</dimen>
 
     <dimen name="sign_up_hint_margin_top">8dp</dimen>
     <dimen name="sign_up_hint_text_size">14sp</dimen>
@@ -434,6 +429,11 @@
     <dimen name="setting_item_padding_horizontal">16dp</dimen>
     <dimen name="setting_item_text_size">14sp</dimen>
     <dimen name="setting_next_arrow_size">16dp</dimen>
+    <dimen name="setting_slider_track_height">2dp</dimen>
+    <dimen name="setting_slider_thumb_size">12dp</dimen>
+    <dimen name="setting_slider_padding_horizontal">6dp</dimen>
+    <dimen name="setting_slider_margin_horizontal">-6dp</dimen>
+    <dimen name="setting_slider_margin_top">16dp</dimen>
 
 <!--    power saving-->
     <dimen name="power_saving_top_margin">40dp</dimen>
@@ -444,7 +444,16 @@
     <dimen name="power_saving_item_description_text_size">11sp</dimen>
     <dimen name="power_saving_item_description_margin_end">20dp</dimen>
     <dimen name="power_saving_item_description_margin_top">10dp</dimen>
-    
+
+<!--    display and brightness-->
+    <dimen name="display_brightness_margin_top">20dp</dimen>
+    <dimen name="display_brightness_padding_horizontal">16dp</dimen>
+    <dimen name="display_brightness_item_padding_horizontal">16dp</dimen>
+    <dimen name="display_brightness_item_title_text_size">14sp</dimen>
+    <dimen name="display_brightness_item_value_text_size">14sp</dimen>
+    <dimen name="display_brightness_item_value_margin_top">8dp</dimen>
+    <dimen name="display_brightness_divider_margin_top">26dp</dimen>
+
 <!--    check update-->
     <dimen name="check_update_padding_horizontal">32dp</dimen>
     <dimen name="check_update_version_text_size">24sp</dimen>
@@ -484,4 +493,11 @@
     <dimen name="about_divider_margin_vertical">24dp</dimen>
     <dimen name="about_item_margin_top">62dp</dimen>
     <dimen name="about_item_text_size">14sp</dimen>
+
+<!--    edit device name-->
+    <dimen name="edit_device_name_padding">32dp</dimen>
+    <dimen name="edit_device_name_edit_text_margin_top">16dp</dimen>
+    <dimen name="edit_device_name_title_text_size">24sp</dimen>
+    <dimen name="edit_device_name_edit_text_size">14sp</dimen>
+    <dimen name="edit_device_name_button_margin_top">62dp</dimen>
 </resources>

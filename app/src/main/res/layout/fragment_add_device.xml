@@ -28,7 +28,7 @@
         android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/buttonLayout"
+        app:layout_constraintBottom_toTopOf="@id/addButton"
         android:layout_marginBottom="@dimen/add_device_direction_margin_bottom"
         android:textColor="?attr/appTextPrimary"
         android:textSize="@dimen/add_device_direction_text_size"
@@ -37,30 +37,16 @@
         android:lineSpacingMultiplier="1.5"
         android:text="@string/add_device_direction_1" />
 
-    <FrameLayout
-        android:id="@+id/buttonLayout"
+    <com.konami.ailens.main.CutCornerButton
+        android:id="@+id/addButton"
         android:layout_width="0dp"
-        android:layout_height="@dimen/add_device_button_height"
+        android:layout_height="@dimen/big_bottom_button_height"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         android:layout_marginHorizontal="@dimen/add_device_button_margin_horizontal"
-        android:layout_marginBottom="@dimen/add_device_button_margin_bottom">
-
-        <com.konami.ailens.main.CutCornerView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:cornerCut="@dimen/add_device_button_corner_cut"
-            app:fillColor="?attr/appPrimary" />
-
-        <Button
-            android:id="@+id/addButton"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="#00000000"
-            android:text="@string/add_device"
-            android:textColor="?attr/appTextButton"
-            style="@style/Bold"/>
-    </FrameLayout>
+        android:layout_marginBottom="@dimen/add_device_button_margin_bottom"
+        android:text="@string/add_device"
+        style="@style/PositiveBigCornerButton" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

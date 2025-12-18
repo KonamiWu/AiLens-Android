@@ -34,6 +34,7 @@ class FactoryResetFragment: Fragment() {
 
         binding.resetButton.setOnClickListener {
             BLEService.instance.connectedSession.value?.add(FactoryResetCommand())
+            findNavController().popBackStack()
         }
 
         setFactoryResetDescription1TextView()

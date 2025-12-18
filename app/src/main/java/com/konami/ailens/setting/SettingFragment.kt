@@ -8,8 +8,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.TextView
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
@@ -19,10 +18,14 @@ import com.konami.ailens.api.SessionManager
 import com.konami.ailens.ble.BLEService
 import com.konami.ailens.ble.command.UnbindCommand
 import com.konami.ailens.databinding.FragmentSettingBinding
-import com.konami.ailens.databinding.SettingListItemBinding
 import com.konami.ailens.device.AddDeviceActivity
+import com.konami.ailens.login.LoginActivity
 import com.konami.ailens.navigation.VerticalDivider
 import com.konami.ailens.resolveAttrColor
+import com.konami.ailens.setting.item.SettingItem
+import com.konami.ailens.setting.item.SettingViewHolder
+import com.konami.ailens.setting.item.SimpleSettingItem
+import com.konami.ailens.setting.item.SwitchSettingItem
 
 @SuppressLint("MissingPermission")
 class SettingFragment: Fragment() {
@@ -59,12 +62,79 @@ class SettingFragment: Fragment() {
             findNavController().popBackStack()
         }
 
-        val settingListItems = listOf(
-            PowerSavingSettingListItem(findNavController()),
-            CheckUpdateSettingListItem(findNavController()),
-            FactoryResetSettingListItem(findNavController()),
-            AboutSettingListItem(findNavController()),
-            LogoutSettingListItem(requireActivity())
+        binding.editNameButton.setOnClickListener {
+            findNavController().navigate(R.id.action_SettingFragment_to_EditDeviceNameFragment)
+        }
+
+        val settingListItems: List<SettingItem> = listOf(
+            SwitchSettingItem(
+                icon = ContextCompat.getDrawable(requireContext(), R.drawable.ic_setting_notification),
+                title = getString(R.string.setting_notification),
+                isOn = false,
+                onToggle = { isOn ->
+                    Log.e("SettingFragment", "Notification: $isOn")
+                }
+            ),
+
+            SimpleSettingItem(
+                icon = ContextCompat.getDrawable(requireContext(), R.drawable.ic_setting_brightness),
+                title = getString(R.string.setting_brightness),
+                onClick = {
+                    findNavController().navigate(R.id.action_SettingFragment_to_DisplayBrightnessFragment)
+                }
+            ),
+
+            SimpleSettingItem(
+                icon = ContextCompat.getDrawable(requireContext(), R.drawable.ic_setting_power_saving),
+                title = getString(R.string.setting_power_saving),
+                onClick = {
+                    findNavController().navigate(R.id.action_SettingFragment_to_PowerSavingFragment)
+                }
+            ),
+
+            SimpleSettingItem(
+                icon = ContextCompat.getDrawable(requireContext(), R.drawable.ic_setting_check_update),
+                title = getString(R.string.setting_check_for_update),
+                onClick = {
+                    findNavController().navigate(R.id.action_SettingFragment_to_CheckUpdateFragment)
+                }
+            ),
+
+            SimpleSettingItem(
+                icon = ContextCompat.getDrawable(requireContext(), R.drawable.ic_setting_factory_reset),
+                title = getString(R.string.setting_factory_reset),
+                onClick = {
+                    findNavController().navigate(R.id.action_SettingFragment_to_FactoryResetFragment)
+                }
+            ),
+
+            SimpleSettingItem(
+                icon = ContextCompat.getDrawable(requireContext(), R.drawable.ic_setting_about),
+                title = getString(R.string.setting_about),
+                onClick = {
+                    findNavController().navigate(R.id.action_SettingFragment_to_AboutFragment)
+                }
+            ),
+
+            SimpleSettingItem(
+                icon = ContextCompat.getDrawable(requireContext(), R.drawable.ic_setting_about),
+                title = getString(R.string.setting_logout),
+                onClick = {
+                    BLEService.instance.clearSession()
+                    SessionManager.logout()
+                    SharedPrefs.instance.cleanUp()
+                    val intent = Intent(requireActivity(), LoginActivity::class.java)
+                    intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+
+                    val options = android.app.ActivityOptions.makeCustomAnimation(
+                        requireContext(),
+                        R.anim.flip_in,
+                        R.anim.flip_out
+                    )
+
+                    startActivity(intent, options.toBundle())
+                }
+            )
         )
 
         val adapter = Adapter(settingListItems)
@@ -74,6 +144,15 @@ class SettingFragment: Fragment() {
         binding.recyclerView.addItemDecoration(divider)
 
         return binding.root
+    }
+
+    override fun onStart() {
+        super.onStart()
+        val name = SharedPrefs.deviceName
+        if (name == null)
+            binding.nameTextView.text = BLEService.instance.connectedSession.value?.device?.name
+        else
+            binding.nameTextView.text = name
     }
 
     private fun removeBond(device: BluetoothDevice) {
@@ -90,25 +169,19 @@ class SettingFragment: Fragment() {
         }
     }
 
-    class Adapter(private val items: List<SettingListItem>): RecyclerView.Adapter<Adapter.Holder>() {
+    class Adapter(private val items: List<SettingItem>): RecyclerView.Adapter<SettingViewHolder>() {
 
-        class Holder(view: View): RecyclerView.ViewHolder(view) {
-            val imageView: ImageView = view.findViewById(R.id.imageView)
-            val titleTextView: TextView = view.findViewById(R.id.titleTextView)
+        override fun getItemViewType(position: Int): Int {
+            return items[position].viewType
         }
 
-        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): Holder {
-            val binding = SettingListItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-            return Holder(binding.root)
+        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SettingViewHolder {
+            val item = items.first { it.viewType == viewType }
+            return item.createViewHolder(parent)
         }
 
-        override fun onBindViewHolder(holder: Holder, position: Int) {
-            val item = items[position]
-            holder.imageView.setImageDrawable(item.icon)
-            holder.titleTextView.text = item.title
-            holder.itemView.setOnClickListener {
-                item.execute()
-            }
+        override fun onBindViewHolder(holder: SettingViewHolder, position: Int) {
+            items[position].bind(holder)
         }
 
         override fun getItemCount(): Int = items.size

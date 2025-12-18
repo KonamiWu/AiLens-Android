@@ -122,29 +122,14 @@
                 android:textSize="@dimen/login_forget_password_text_size" />
 
             <!-- Login Button -->
-            <com.konami.ailens.main.CutCornerView
-                android:id="@+id/buttonLayout"
+            <com.konami.ailens.main.CutCornerButton
+                android:id="@+id/loginButton"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/sign_up_big_button_height"
+                android:layout_height="@dimen/big_bottom_button_height"
                 app:layout_constraintTop_toBottomOf="@id/forgetPasswordTextView"
                 android:layout_marginTop="@dimen/login_button_margin_top"
-                app:cornerCut="@dimen/big_bottom_button_corner_cut"
-                app:borderWidth="0dp"
-                app:borderColor="@android:color/transparent"
-                app:fillColor="?attr/appButtonDisable">
-
-                <Button
-                    android:id="@+id/loginButton"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:background="@android:color/transparent"
-                    android:textColor="?attr/appTextDisable"
-                    android:textSize="@dimen/big_bottom_button_text_size"
-                    style="@style/Bold"
-                    android:includeFontPadding="false"
-                    android:text="@string/log_in" />
-
-            </com.konami.ailens.main.CutCornerView>
+                android:text="@string/log_in"
+                style="@style/PositiveBigCornerButton" />
 
             <!-- Don't have account -->
             <LinearLayout
@@ -152,7 +137,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:layout_marginTop="@dimen/sign_up_already_have_account_margin_top"
-                app:layout_constraintTop_toBottomOf="@id/buttonLayout"
+                app:layout_constraintTop_toBottomOf="@id/loginButton"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent">
 
@@ -177,6 +162,7 @@
                     android:layout_marginStart="@dimen/sign_up_login_in_margin_left" />
 
             </LinearLayout>
+
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>

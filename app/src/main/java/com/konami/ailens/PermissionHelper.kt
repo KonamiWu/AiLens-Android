@@ -14,9 +14,6 @@ object PermissionHelper {
     fun getAllRequiredPermissions(): Array<String> {
         val permissions = mutableListOf<String>()
 
-        // Camera
-        permissions += Manifest.permission.CAMERA
-
         // Microphone
         permissions += Manifest.permission.RECORD_AUDIO
 

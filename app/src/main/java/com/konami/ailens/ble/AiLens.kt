@@ -24,6 +24,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import java.util.UUID
 import com.konami.ailens.ble.Glasses.State
+import com.konami.ailens.ble.command.ToggleNotificationCommand
 
 @SuppressLint("MissingPermission")
 class AiLens(private val context: Context, override var device: BluetoothDevice, private val retrieveToken: ByteArray? = null): Glasses {
@@ -337,14 +338,12 @@ class AiLens(private val context: Context, override var device: BluetoothDevice,
                     }
                 } else {
                     // Retrieve path: already paired device with token
-                    Log.e("TAG", "Retrieve: device already paired")
                     scope.launch {
                         delay(500)
                         add {
                             sendRaw(getPhoneSystemModelCommand)
                         }
-                        Log.e("TAG", "Setting CONNECTED state after init command completed")
-                        _state.value = State.CONNECTED
+//                        _state.value = State.CONNECTED
                     }
                 }
             }
@@ -418,8 +417,11 @@ class AiLens(private val context: Context, override var device: BluetoothDevice,
             }
 
             value.startsWith(btConnectionCheck) -> {
-                if (value.size == 11 && value[9] == 0x01.toByte()) {
+                if (value.size == 11 && (value[9] == 0x01.toByte() || value[9] == 0x00.toByte())) {
                     _state.value = State.CONNECTED
+
+                    if (SharedPrefs.deviceName == null)
+                        SharedPrefs.deviceName = device.name
                 }
             }
 

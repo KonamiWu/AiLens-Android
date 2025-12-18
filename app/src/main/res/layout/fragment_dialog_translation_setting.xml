@@ -80,7 +80,7 @@
         <FrameLayout
             android:id="@+id/buttonLayout"
             android:layout_width="0dp"
-            android:layout_height="@dimen/add_device_button_height"
+            android:layout_height="@dimen/big_bottom_button_height"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"

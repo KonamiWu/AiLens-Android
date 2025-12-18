@@ -122,21 +122,6 @@
     </fragment>
 
     <fragment
-        android:id="@+id/FunctionFragment"
-        android:name="com.konami.ailens.function.FunctionFragment"
-        tools:layout="@layout/fragment_function">
-
-        <action
-            android:id="@+id/action_FunctionFragment_to_FaceDetectionFragment"
-            app:destination="@id/FaceDetectionFragment"
-            app:enterAnim="@anim/slide_in_right"
-            app:exitAnim="@anim/slide_out_left"
-            app:popEnterAnim="@anim/slide_in_left"
-            app:popExitAnim="@anim/slide_out_right"/>
-
-    </fragment>
-
-    <fragment
         android:id="@+id/settingFragment"
         android:name="com.konami.ailens.setting.SettingFragment"
         tools:layout="@layout/fragment_setting">
@@ -169,12 +154,21 @@
             app:popEnterAnim="@anim/slide_in_left"
             app:popExitAnim="@anim/slide_out_right" />
 
-    </fragment>
+        <action android:id="@+id/action_SettingFragment_to_EditDeviceNameFragment"
+            app:destination="@id/EditDeviceNameFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
 
-    <fragment
-        android:id="@+id/FaceDetectionFragment"
-        android:name="com.konami.ailens.facedetection.FaceDetectionFragment"
-        tools:layout="@layout/fragment_face_detection"/>
+        <action android:id="@+id/action_SettingFragment_to_DisplayBrightnessFragment"
+            app:destination="@id/DisplayBrightnessFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
+
+    </fragment>
 
     <fragment
         android:id="@+id/smartTranslationFragment"
@@ -238,5 +232,15 @@
         android:id="@+id/AboutFragment"
         android:name="com.konami.ailens.setting.AboutFragment"
         tools:layout="@layout/fragment_about" />
+
+    <fragment
+        android:id="@+id/EditDeviceNameFragment"
+        android:name="com.konami.ailens.setting.EditDeviceNameFragment"
+        tools:layout="@layout/fragment_edit_device_name" />
+
+    <fragment
+        android:id="@+id/DisplayBrightnessFragment"
+        android:name="com.konami.ailens.setting.DisplayBrightnessFragment"
+        tools:layout="@layout/fragment_display_brightness" />
 
 </navigation>

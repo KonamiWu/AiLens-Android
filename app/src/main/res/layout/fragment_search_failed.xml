@@ -47,7 +47,7 @@
         android:id="@+id/text2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintBottom_toTopOf="@id/unbindLayout"
+        app:layout_constraintBottom_toTopOf="@id/unbindButton"
         android:layout_marginHorizontal="@dimen/search_failed_button_margin_horizontal"
         android:layout_marginBottom="@dimen/search_failed_text2_margin_bottom"
         android:text="@string/search_failed_text2"
@@ -57,57 +57,24 @@
         android:lineSpacingMultiplier="1.5"
         android:gravity="center" />
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/unbindLayout"
+    <com.konami.ailens.main.CutCornerButton
+        android:id="@+id/unbindButton"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/search_failed_button_height"
-        app:layout_constraintBottom_toTopOf="@id/tryAgainLayout"
+        android:layout_height="@dimen/big_bottom_button_height"
+        app:layout_constraintBottom_toTopOf="@id/tryAgainButton"
         android:layout_marginHorizontal="@dimen/search_failed_button_margin_horizontal"
-        android:layout_marginBottom="@dimen/search_failed_button_spacing">
+        android:layout_marginBottom="@dimen/search_failed_button_spacing"
+        android:text="@string/unbind_device"
+        style="@style/PositiveBigCornerButton" />
 
-        <com.konami.ailens.main.CutCornerView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:fillColor="?attr/appPrimary"
-            app:cornerCut="@dimen/search_failed_button_corner_cut" />
-
-        <Button
-            android:id="@+id/unbindButton"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="#00000000"
-            android:textSize="@dimen/search_failed_button_text_size"
-            android:textColor="?attr/appTextButton"
-            style="@style/Bold"
-            android:text="@string/unbind_device" />
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/tryAgainLayout"
+    <com.konami.ailens.main.CutCornerButton
+        android:id="@+id/tryAgainButton"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/search_failed_button_height"
+        android:layout_height="@dimen/big_bottom_button_height"
         app:layout_constraintBottom_toBottomOf="parent"
         android:layout_marginHorizontal="@dimen/search_failed_button_margin_horizontal"
-        android:layout_marginBottom="@dimen/search_failed_button_margin_bottom">
-
-        <com.konami.ailens.main.CutCornerView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:borderColor="?attr/appPrimary"
-            app:borderWidth="1dp"
-            app:cornerCut="@dimen/search_failed_button_corner_cut" />
-
-        <Button
-            android:id="@+id/tryAgainButton"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="#00000000"
-            android:textSize="@dimen/search_failed_button_text_size"
-            android:textColor="?attr/appPrimary"
-            style="@style/Bold"
-            android:text="@string/try_again" />
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
+        android:layout_marginBottom="@dimen/search_failed_button_margin_bottom"
+        android:text="@string/try_again"
+        style="@style/NegativeBigCornerButton" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

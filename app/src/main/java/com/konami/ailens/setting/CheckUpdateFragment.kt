@@ -51,6 +51,8 @@ class CheckUpdateFragment: Fragment() {
 
     private val serviceConnection = object : ServiceConnection {
         override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
+            if (!isAdded || view == null) return
+
             serviceConnected = true
             val binder = service as FirmwareUpdateService.LocalBinder
             updateService = binder.getService()
@@ -66,7 +68,7 @@ class CheckUpdateFragment: Fragment() {
             updateService?.let { srv ->
                 val currentState = srv.state.value
                 val currentProgress = srv.progress.value
-                
+
                 when (currentState) {
                     is FirmwareUpdateService.UpdateState.Updating -> {
                         LoadingDialogFragment.dismiss(requireActivity())
@@ -159,6 +161,7 @@ class CheckUpdateFragment: Fragment() {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 launch {
                     viewModel.firmwareInfo.collect { version ->
+                        version ?: return@collect
                         this@CheckUpdateFragment.version = version
                         binding.versionTextView.text = "V" + version.newestVersion
                         binding.completionVersionTextView.text = "V" + version.newestVersion
@@ -248,6 +251,7 @@ class CheckUpdateFragment: Fragment() {
     }
 
     private fun bindUpdateService() {
+        if (!isAdded || view == null) return
         val service = updateService ?: return
 
         viewLifecycleOwner.lifecycleScope.launch {
@@ -308,6 +312,13 @@ class CheckUpdateFragment: Fragment() {
         }
         serviceConnected = false
         updateService = null
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        if (updateService?.state?.value !is FirmwareUpdateService.UpdateState.Updating) {
+            FirmwareManager.reset()
+        }
     }
 }
 

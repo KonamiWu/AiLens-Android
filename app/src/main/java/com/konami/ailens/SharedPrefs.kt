@@ -40,6 +40,7 @@ object SharedPrefs {
     private const val DIALOG_TARGET_LANGUAGE = "twoWayTarget"
     private const val DIALOG_BILINGUAL = "bilingual"
     private const val KEY_NAVIGATION_TERMS_ACCEPTED = "navigationTermsAccepted"
+    private const val KEY_DEVICE_NAME = "deviceName"
     private const val MAX_HISTORY_SIZE = 5
     private val tokenManager = TokenManager()
     private lateinit var prefs: SharedPreferences
@@ -214,6 +215,16 @@ object SharedPrefs {
         set(value) {
             prefs.edit {
                 putString(DIALOG_TARGET_LANGUAGE, value.code)
+            }
+        }
+
+    var deviceName: String?
+        get() {
+            return prefs.getString(KEY_DEVICE_NAME, null)
+        }
+        set(value) {
+            prefs.edit {
+                putString(KEY_DEVICE_NAME, value)
             }
         }
 

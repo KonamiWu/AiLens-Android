@@ -48,7 +48,7 @@ class NavigationService(private val context: Context) : NavigationCapability, Na
                 synchronized(this) {
                     if (_instance == null) {
                         _instance = NavigationService(context.applicationContext)
-                        Log.d(TAG, "BLEService initialized (no permissions required at this stage)")
+                        Log.e(TAG, "NavigationService initialized (no permissions required at this stage)")
                     }
                 }
             }
@@ -75,26 +75,20 @@ class NavigationService(private val context: Context) : NavigationCapability, Na
     private var isInitializing = false
 
     fun initializeNavigator(activity: Activity) {
-        Log.e("NavigationService", "initializeNavigator called")
         if (navigator != null) {
-            Log.e("NavigationService", "Navigator already exists, skipping initialization")
             return
         }
 
         if (isInitializing) {
-            Log.e("NavigationService", "Already initializing, skipping")
             return
         }
 
         isInitializing = true
 
-        // 檢查用戶是否已經接受過 Terms
         val termsAccepted = SharedPrefs.navigationTermsAccepted
         val termsCheckOption = if (termsAccepted) {
-            Log.e("NavigationService", "Terms already accepted, using SKIPPED option")
             TermsAndConditionsCheckOption.SKIPPED
         } else {
-            Log.e("NavigationService", "Terms not accepted yet, using ENABLED option")
             TermsAndConditionsCheckOption.ENABLED
         }
 
@@ -399,17 +393,14 @@ class NavigationService(private val context: Context) : NavigationCapability, Na
 
     // NavigationApi.NavigatorListener implementation
     override fun onNavigatorReady(nav: Navigator) {
-        Log.e("NavigationService", "onNavigatorReady called")
-        Log.e("NavigationService", "Current navigator: $navigator, new nav: $nav")
+        Log.e("NavigationService", "onNavigatorReady called onNavigatorReady called onNavigatorReady called onNavigatorReady called")
 
-        // 如果已經有 navigator 且是同一個實例，跳過
         if (navigator != null && navigator === nav) {
             Log.e("NavigationService", "Navigator already initialized (same instance), skipping")
             isInitializing = false
             return
         }
 
-        // 如果是不同的 navigator 實例，清理舊的
         if (navigator != null && navigator !== nav) {
             Log.e("NavigationService", "New navigator instance detected, cleaning up old one")
             try {
@@ -423,9 +414,7 @@ class NavigationService(private val context: Context) : NavigationCapability, Na
         navigator = nav
         isInitializing = false
 
-        // 用戶已經接受 Terms（否則不會到達這裡），保存狀態
         if (!SharedPrefs.navigationTermsAccepted) {
-            Log.e("NavigationService", "Saving terms acceptance state")
             SharedPrefs.navigationTermsAccepted = true
         }
 
@@ -433,7 +422,6 @@ class NavigationService(private val context: Context) : NavigationCapability, Na
         // This ensures voice prompts work from the start
         nav.setAudioGuidance(Navigator.AudioGuidance.VOICE_ALERTS_AND_GUIDANCE)
 
-        // 只在第一次初始化時創建 NavigationView
         if (navigationView == null) {
             navigationView = NavigationView(context.applicationContext).also { nv ->
                 nv.onCreate(Bundle())
@@ -483,7 +471,6 @@ class NavigationService(private val context: Context) : NavigationCapability, Na
         try {
             val intent = android.content.Intent(context, com.konami.ailens.ble.AppForegroundService::class.java)
             context.startService(intent)
-            Log.d(TAG, "AppForegroundService notification restored")
         } catch (e: Exception) {
             Log.e(TAG, "Failed to restore AppForegroundService notification: ${e.message}", e)
         }

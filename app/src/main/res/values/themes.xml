@@ -60,4 +60,26 @@
         <item name="android:activityCloseExitAnimation">@anim/slide_out_right</item>
     </style>
 
+    <style name="PositiveBigCornerButton" parent="@style/Bold">
+        <item name="android:textSize">@dimen/big_bottom_button_text_size</item>
+        <item name="android:textColor">?attr/appTextButton</item>
+        <item name="cornerCut">@dimen/big_bottom_button_corner_cut</item>
+        <item name="fillColor">?attr/appPrimary</item>
+        <item name="disableFillColor">?attr/appButtonDisable</item>
+        <item name="disableTextColor">?attr/appTextDisable</item>
+        <item name="borderWidth">0dp</item>
+        <item name="borderColor">@android:color/transparent</item>
+        <item name="android:includeFontPadding">false</item>
+    </style>
+
+    <style name="NegativeBigCornerButton" parent="@style/Bold">
+        <item name="android:textSize">@dimen/big_bottom_button_text_size</item>
+        <item name="android:textColor">?attr/appPrimary</item>
+        <item name="cornerCut">@dimen/big_bottom_button_corner_cut</item>
+        <item name="fillColor">?attr/appBackground</item>
+        <item name="borderWidth">1dp</item>
+        <item name="borderColor">?attr/appPrimary</item>
+        <item name="android:includeFontPadding">false</item>
+    </style>
+
 </resources>

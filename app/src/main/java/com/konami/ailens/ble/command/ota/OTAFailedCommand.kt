@@ -7,7 +7,7 @@ class OTAFailedCommand : VoidCommand() {
     private fun getData(): ByteArray {
         return byteArrayOf(
             0x45, 0x4D,
-            0x7C, 0x00,
+            0x7E, 0x00,
             0x00, 0x00,
             0x00, 0x00,
         )
