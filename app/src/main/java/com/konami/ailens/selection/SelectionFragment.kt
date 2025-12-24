@@ -19,7 +19,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.konami.ailens.R
 import com.konami.ailens.databinding.FragmentSelectionBinding
-import com.konami.ailens.navigation.VerticalDivider
+import com.konami.ailens.view.VerticalDivider
 import com.konami.ailens.resolveAttrColor
 
 class SelectionFragment<T : SelectionItem> : BottomSheetDialogFragment() {

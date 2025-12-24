@@ -12,16 +12,15 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
 
-class DialogTranslationService(private val context: Context, private val sourceLanguage: Orchestrator.Language,
-    targetLanguage: Orchestrator.Language, private val sourceRecorder: Recorder, private val targetRecorder: Recorder) {
+class DialogTranslationService(private val context: Context, private val sourceRecorder: Recorder, private val targetRecorder: Recorder) {
     enum class MicSide {
         SOURCE,
         TARGET
     }
 
     private val scope = CoroutineScope(Dispatchers.IO)
-    private var sourceTranslationService = InterpretationService(context, sourceLanguage, targetLanguage, sourceRecorder)
-    private var targetTranslationService = InterpretationService(context, targetLanguage, sourceLanguage, targetRecorder)
+    private var sourceTranslationService = InterpretationService(context, sourceRecorder)
+    private var targetTranslationService = InterpretationService(context, targetRecorder)
     
     private val _isStart = MutableSharedFlow<Boolean>(extraBufferCapacity = 1)
     val isStart = _isStart.asSharedFlow()
@@ -38,17 +37,17 @@ class DialogTranslationService(private val context: Context, private val sourceL
 
     }
 
-    fun start(side: MicSide) {
+    fun start(sourceLanguage: Orchestrator.Language, targetLanguage: Orchestrator.Language, side: MicSide) {
         when (side) {
             MicSide.SOURCE -> {
-                sourceTranslationService.start()
+                sourceTranslationService.start(sourceLanguage, targetLanguage)
                 sourceTranslationService.startRecording()
-                targetTranslationService.start()
+                targetTranslationService.start(targetLanguage, sourceLanguage)
             }
             MicSide.TARGET -> {
-                targetTranslationService.start()
+                targetTranslationService.start(targetLanguage, sourceLanguage)
                 targetTranslationService.startRecording()
-                sourceTranslationService.start()
+                sourceTranslationService.start(sourceLanguage, targetLanguage)
             }
         }
 
@@ -85,10 +84,5 @@ class DialogTranslationService(private val context: Context, private val sourceL
         scope.launch {
             _isStart.emit(false)
         }
-    }
-
-    fun config(sourceLanguage: Orchestrator.Language, targetLanguage: Orchestrator.Language) {
-        sourceTranslationService.config(sourceLanguage, targetLanguage)
-        targetTranslationService.config(targetLanguage, sourceLanguage)
     }
 }

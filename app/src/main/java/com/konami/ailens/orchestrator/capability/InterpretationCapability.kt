@@ -5,9 +5,8 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
 
 interface InterpretationCapability {
-    fun start()
+    fun start(sourceLanguage: Orchestrator.Language, targetLanguage: Orchestrator.Language)
     fun stop()
-    fun config(sourceLanguage: Orchestrator.Language, targetLanguage: Orchestrator.Language)
     val isStart: SharedFlow<Boolean>
     val partialFlow: SharedFlow<Pair<String, String>>
     val resultFlow: SharedFlow<Pair<String, String>>

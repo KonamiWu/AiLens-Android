@@ -49,7 +49,6 @@
     <com.konami.ailens.main.CutCornerButton
         android:id="@+id/returnButton"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/connection_failed_button_height"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"

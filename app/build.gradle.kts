@@ -19,6 +19,25 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
+    flavorDimensions += "product"
+
+    productFlavors {
+        create("AiLens") {
+            dimension = "product"
+            applicationIdSuffix = ".AiLens"
+            versionNameSuffix = "-AiLens"
+            // 可選：添加 BuildConfig 欄位
+            // buildConfigField("String", "PRODUCT_NAME", "\"Product A\"")
+        }
+
+        create("Despacito1") {
+            dimension = "product"
+            applicationIdSuffix = ".Despacito1"
+            versionNameSuffix = "-Despacito1"
+            // buildConfigField("String", "PRODUCT_NAME", "\"Product B\"")
+        }
+    }
+
     buildTypes {
         release {
             isMinifyEnabled = false
@@ -52,20 +71,10 @@ dependencies {
 
     implementation(libs.gson)
 
-    implementation(libs.camerax.core)
-    implementation(libs.camerax.camera2)
-    implementation(libs.camerax.lifecycle)
-    implementation(libs.camerax.view)
-
-    implementation(libs.mlkit.face.detection)
-    implementation(libs.onnxruntime.android)
-    implementation(libs.opencv)
-
     implementation(libs.socketio)
     implementation(libs.okhttp)
     implementation(libs.kotlinx.serialization.json)
 
-//    implementation(libs.maps.navigation)
     implementation(libs.lifecycle.viewmodel.ktx)
     implementation(libs.lifecycle.runtime.ktx)
     implementation(libs.azure.speech.sdk)
@@ -75,7 +84,9 @@ dependencies {
 
     coreLibraryDesugaring(libs.desugar.jdk.libs)
 
-    implementation(libs.bundles.google.maps.navigation)
+    // Google Maps and Navigation - only for AiLens flavor
+    add("AiLensImplementation", libs.bundles.google.maps.navigation)
+
     implementation(libs.bundles.coroutines)
     implementation(libs.androidx.security.crypto)
     implementation(libs.markwon.core)

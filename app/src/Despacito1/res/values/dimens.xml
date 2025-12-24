@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="big_bottom_button_corner_cut">26dp</dimen>
+    <dimen name="dialog_translation_item_corner_cut">20dp</dimen>
+
+    <dimen name="home_logo_width">163dp</dimen>
+    <dimen name="home_logo_margin_top">16dp</dimen>
+    <dimen name="home_logo_margin_left">16dp</dimen>
+
+    <dimen name="home_device_button_margin_top">40dp</dimen>
+    <dimen name="home_device_button_icon_size">24dp</dimen>
+    <dimen name="home_device_button_padding_horizontal">16dp</dimen>
+    <dimen name="home_device_button_padding_vertical">12dp</dimen>
+    <dimen name="home_device_button_text_size">12sp</dimen>
+    <dimen name="home_device_button_text_margin_left">4dp</dimen>
+    <dimen name="home_device_button_ring_blur_">10dp</dimen>
+    <dimen name="home_device_button_ring_blur_alpha">0.6</dimen>
+    <dimen name="home_device_button_ring_blur_down_sample">0.25</dimen>
+    <dimen name="home_device_button_ring_blur_inner_shadow_alpha">0.1</dimen>
+    <dimen name="home_device_button_ring_blur_inner_shadow_blur">42dp</dimen>
+    <dimen name="home_device_button_ring_blur_inner_shadow_blur_offsetX">20dp</dimen>
+    <dimen name="home_device_button_ring_blur_inner_shadow_blur_offsetY">-40dp</dimen>
+
+    <dimen name="home_device_button_glasses_margin_left">8dp</dimen>
+    <dimen name="home_device_button_glasses_blur_alpha">0.8</dimen>
+    <dimen name="home_device_button_glasses_blur_inner_shadow_blur_offsetY">-40dp</dimen>
+
+    <dimen name="home_translate_layout_margin_start">16dp</dimen>
+    <dimen name="home_translate_layout_margin_end">32dp</dimen>
+    <dimen name="home_translate_layout_margin_top">60dp</dimen>
+
+    <dimen name="home_teleprompt_layout_margin_top">16dp</dimen>
+
+    <dimen name="home_glow_figma_layer_width">905dp</dimen>
+    <dimen name="home_glow_figma_blur">411.39dp</dimen>
+    <dimen name="home_glow_center_x_norm">-0.08</dimen>
+    <dimen name="home_glow_center_y_norm">0.5</dimen>
+    <dimen name="home_glow_radius_factor">0.7</dimen>
+    <dimen name="home_glow_center_alpha">0.70</dimen>
+    <dimen name="home_glow_edge_alpha">0.0</dimen>
+
+    <dimen name="home_white_glow_radius_factor">0.2</dimen>
+    <dimen name="home_white_glow_center_alpha">0.20</dimen>
+
+    <dimen name="home_translate_corner_radius">32dp</dimen>
+    <dimen name="home_translate_background_blur">12dp</dimen>
+    <dimen name="home_translate_fill_alpha">0.2</dimen>
+    <dimen name="home_translate_down_sample">0.25</dimen>
+    <dimen name="home_translate_inner_shadow_alpha">0.6</dimen>
+    <dimen name="home_translate_inner_shadow_offset_y">-10dp</dimen>
+    <dimen name="home_translate_inner_shadow_blur">50dp</dimen>
+    <dimen name="home_translate_stroke_width">1dp</dimen>
+    <dimen name="home_translate_stroke_start_alpha">0.2</dimen>
+    <dimen name="home_translate_stroke_end_alpha">0.0</dimen>
+    <dimen name="home_blur_view_padding">24dp</dimen>
+    <dimen name="home_translation_icon_size">56dp</dimen>
+    <dimen name="home_translation_title_text_size">18sp</dimen>
+    <dimen name="home_translation_title_margin_left">12dp</dimen>
+    <dimen name="home_right_arrow_size">24dp</dimen>
+
+    <dimen name="home_tutorial_text_size">16sp</dimen>
+    <dimen name="home_tutorial_text_margin_top">40dp</dimen>
+    <dimen name="home_tutorial_text_margin_right">8dp</dimen>
+
+    <dimen name="home_bottom_button_size">86dp</dimen>
+    <dimen name="home_bottom_button_spacing">16dp</dimen>
+    <dimen name="home_bottom_button_margin_bottom">24dp</dimen>
+
+    <dimen name="home_setting_button_size">48dp</dimen>
+    <dimen name="home_setting_icon_size">24dp</dimen>
+    <dimen name="home_setting_button_blur_corner_radius">24dp</dimen>
+</resources>

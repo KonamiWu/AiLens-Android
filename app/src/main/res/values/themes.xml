@@ -32,8 +32,6 @@
         <item name="appIconDark">@color/app_icon_dark</item>
         <item name="appWhite">@color/app_white</item>
         <item name="appRed">@color/app_red</item>
-        <item name="appGrey01">@color/app_grey01</item>
-        <item name="appGrey02">@color/app_grey02</item>
     </style>
 
     <style name="AiLensAlertDialog" parent="ThemeOverlay.MaterialComponents.Dialog">
@@ -61,6 +59,7 @@
     </style>
 
     <style name="PositiveBigCornerButton" parent="@style/Bold">
+        <item name="android:layout_height">@dimen/big_bottom_button_height</item>
         <item name="android:textSize">@dimen/big_bottom_button_text_size</item>
         <item name="android:textColor">?attr/appTextButton</item>
         <item name="cornerCut">@dimen/big_bottom_button_corner_cut</item>
@@ -73,6 +72,7 @@
     </style>
 
     <style name="NegativeBigCornerButton" parent="@style/Bold">
+        <item name="android:layout_height">@dimen/big_bottom_button_height</item>
         <item name="android:textSize">@dimen/big_bottom_button_text_size</item>
         <item name="android:textColor">?attr/appPrimary</item>
         <item name="cornerCut">@dimen/big_bottom_button_corner_cut</item>
@@ -82,4 +82,22 @@
         <item name="android:includeFontPadding">false</item>
     </style>
 
+    <style name="RightTranslationItem">
+        <item name="fillColor">?attr/appSurface1</item>
+        <item name="cornerStyle">round</item>
+        <item name="borderWidth">0dp</item>
+        <item name="cornerCut">@dimen/dialog_translation_item_corner_cut</item>
+        <item name="borderColor">@android:color/transparent</item>
+        <item name="fillColorAlpha">0.5</item>
+    </style>
+
+    <style name="LeftTranslationItem">
+        <item name="fillColor">?attr/appPrimaryDark</item>
+        <item name="cornerStyle">round</item>
+        <item name="borderWidth">0dp</item>
+        <item name="cornerCut">@dimen/dialog_translation_item_corner_cut</item>
+        <item name="borderColor">@android:color/transparent</item>
+        <item name="fillColorAlpha">0.5</item>
+        <item name="cutCorners">topLeft|topRight|bottomRight</item>
+    </style>
 </resources>

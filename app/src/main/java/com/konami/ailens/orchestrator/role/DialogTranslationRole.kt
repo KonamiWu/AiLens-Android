@@ -12,7 +12,7 @@ import kotlinx.coroutines.flow.SharedFlow
 
 
 class DialogTranslationRole(private val context: Context, val sourceRecorder: Recorder, val targetRecorder: Recorder): Role, DialogTranslationCapability {
-    private val service = DialogTranslationService(context, Orchestrator.instance.interpretationSourceLanguage, Orchestrator.instance.interpretationTargetLanguage, sourceRecorder, targetRecorder)
+    private val service = DialogTranslationService(context, sourceRecorder, targetRecorder)
 
     override val isStart: SharedFlow<Boolean>
         get() = service.isStart
@@ -34,13 +34,13 @@ class DialogTranslationRole(private val context: Context, val sourceRecorder: Re
         sink.setDialogTranslation(this)
     }
 
-    override fun start(side: DialogTranslationCapability.MicSide) {
+    override fun start(sourceLanguage: Orchestrator.Language, targetLanguage: Orchestrator.Language, side: DialogTranslationCapability.MicSide) {
         when (side) {
             DialogTranslationCapability.MicSide.SOURCE -> {
-                service.start(DialogTranslationService.MicSide.SOURCE)
+                service.start(sourceLanguage, targetLanguage, DialogTranslationService.MicSide.SOURCE)
             }
             DialogTranslationCapability.MicSide.TARGET -> {
-                service.start(DialogTranslationService.MicSide.TARGET)
+                service.start(sourceLanguage, targetLanguage, DialogTranslationService.MicSide.TARGET)
             }
         }
     }
@@ -69,9 +69,5 @@ class DialogTranslationRole(private val context: Context, val sourceRecorder: Re
 
     override fun stop() {
         service.stop()
-    }
-
-    override fun config(sourceLanguage: Orchestrator.Language, targetLanguage: Orchestrator.Language) {
-        service.config(sourceLanguage, targetLanguage)
     }
 }

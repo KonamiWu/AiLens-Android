@@ -22,7 +22,7 @@ class AnimatedSwitch @JvmOverloads constructor(
         setThumbResource(R.drawable.switch_thumb)
         setTrackResource(R.drawable.switch_track)
 
-        val initialThumbColor = context.resolveAttrColor(R.attr.appSurface1)
+        val initialThumbColor = context.getColor(R.color.toggle_thumb_color)
         val initialTrackColor = if (isChecked) {
             context.resolveAttrColor(R.attr.appPrimary)
         } else {
@@ -50,7 +50,7 @@ class AnimatedSwitch @JvmOverloads constructor(
         val thumb = thumbDrawable?.mutate() ?: return
         val track = trackDrawable?.mutate() ?: return
 
-        val thumbColor = context.resolveAttrColor(R.attr.appSurface1)
+        val thumbColor = context.getColor(R.color.toggle_thumb_color)
         val fromTrackColor = if (isChecked) {
             context.resolveAttrColor(R.attr.appButtonDisable)
         } else {

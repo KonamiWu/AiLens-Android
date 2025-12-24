@@ -191,7 +191,7 @@ class Orchestrator private constructor(private val context: Context): Capability
         interpretation?.let {
             _uiNavigationEvent.tryEmit(UINavigationEvent.Interpretation)
             interpretationCoordinator = InterpretationCoordinator(it, interpretationDisplays)
-            interpretationCoordinator?.start()
+            interpretationCoordinator?.start(interpretationSourceLanguage, interpretationTargetLanguage)
         }
     }
 
@@ -205,7 +205,7 @@ class Orchestrator private constructor(private val context: Context): Capability
         dialogTranslation?.let {
             _uiNavigationEvent.tryEmit(UINavigationEvent.DialogTranslation(side))
             dialogTranslationCoordinator = DialogTranslationCoordinator(it, dialogDisplays)
-            dialogTranslationCoordinator?.start(side)
+            dialogTranslationCoordinator?.start(dialogSourceLanguage, dialogTargetLanguage, side)
         }
     }
 

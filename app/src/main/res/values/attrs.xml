@@ -12,6 +12,10 @@
             <flag name="bottomRight" value="4" />
             <flag name="bottomLeft" value="8" />
         </attr>
+        <attr name="cornerStyle" format="enum">
+            <enum name="bevel" value="0" />
+            <enum name="round" value="1" />
+        </attr>
     </declare-styleable>
 
     <declare-styleable name="DashedLineView">
@@ -42,6 +46,7 @@
         <attr name="disableFillColor" format="color"/>
         <attr name="disableTextColor" format="color"/>
         <attr name="cutCorners" />
+        <attr name="cornerStyle" />
     </declare-styleable>
 
     <attr name="appPrimary" format="color" />
@@ -63,4 +68,34 @@
     <attr name="appRed" format="color" />
     <attr name="appGrey01" format="color" />
     <attr name="appGrey02" format="color" />
+
+    <declare-styleable name="GlowView">
+        <attr name="glowBaseColor" format="color" />
+        <attr name="glowCenterAlpha" format="float" />
+        <attr name="glowEdgeAlpha" format="float" />
+        <attr name="glowCenterXNorm" format="float" />
+        <attr name="glowCenterYNorm" format="float" />
+        <attr name="glowRadiusFactor" format="float" />
+        <attr name="glowFigmaLayerWidthPx" format="dimension" />
+        <attr name="glowFigmaBlurPx" format="dimension" />
+        <attr name="glowBlurEnabled" format="boolean" />
+    </declare-styleable>
+
+    <declare-styleable name="BlurBorderView">
+        <attr name="blurCornerRadius" format="dimension" />
+        <attr name="blurFillColor" format="color" />
+        <attr name="blurFillAlpha" format="float" />
+        <attr name="blurInnerShadowColor" format="color" />
+        <attr name="blurInnerShadowAlpha" format="float" />
+        <attr name="blurInnerShadowOffsetX" format="dimension" />
+        <attr name="blurInnerShadowOffsetY" format="dimension" />
+        <attr name="blurInnerShadowBlur" format="dimension" />
+        <attr name="blurStrokeWidth" format="dimension" />
+        <attr name="blurStrokeColor" format="color" />
+        <attr name="blurStrokeStartAlpha" format="float" />
+        <attr name="blurStrokeEndAlpha" format="float" />
+        <attr name="blurBackgroundRadius" format="dimension" />
+        <attr name="blurDownsample" format="float" />
+        <attr name="blurUpdateInterval" format="integer" />
+    </declare-styleable>
 </resources>

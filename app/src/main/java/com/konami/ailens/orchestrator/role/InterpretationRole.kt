@@ -9,7 +9,7 @@ import com.konami.ailens.translation.interpretation.InterpretationService
 import kotlinx.coroutines.flow.SharedFlow
 
 class InterpretationRole(private val context: Context, private val recorder: Recorder): Role, InterpretationCapability {
-    private val service = InterpretationService(context, Orchestrator.instance.interpretationSourceLanguage, Orchestrator.instance.interpretationTargetLanguage, recorder)
+    private val service = InterpretationService(context, recorder)
 
     override val isStart: SharedFlow<Boolean>
         get() = service.isStart
@@ -24,16 +24,12 @@ class InterpretationRole(private val context: Context, private val recorder: Rec
         sink.setInterpretation(this)
     }
 
-    override fun start() {
-        service.start()
+    override fun start(sourceLanguage: Orchestrator.Language, targetLanguage: Orchestrator.Language) {
+        service.start(sourceLanguage, targetLanguage)
         service.startRecording()
     }
 
     override fun stop() {
         service.stop()
-    }
-
-    override fun config(sourceLanguage: Orchestrator.Language, targetLanguage: Orchestrator.Language) {
-        service.config(sourceLanguage, targetLanguage)
     }
 }

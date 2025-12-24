@@ -20,18 +20,18 @@ import androidx.core.app.ServiceCompat
 import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
+import com.konami.ailens.AiLensApplication
 import com.konami.ailens.R
 import com.konami.ailens.agent.AgentConnectionWorker
 import com.konami.ailens.agent.AgentService
 import com.konami.ailens.agent.Environment
 import com.konami.ailens.ble.command.ReadBatteryCommand
-import com.konami.ailens.navigation.NavigationService
 import com.konami.ailens.orchestrator.Orchestrator
 import com.konami.ailens.orchestrator.role.AgentRole
 import com.konami.ailens.orchestrator.role.BluetoothRole
 import com.konami.ailens.orchestrator.role.DialogTranslationRole
 import com.konami.ailens.orchestrator.role.InterpretationRole
-import com.konami.ailens.orchestrator.role.NavigationRole
+import com.konami.ailens.orchestrator.role.NavigationRoleProvider
 import com.konami.ailens.recorder.BluetoothRecorder
 import com.konami.ailens.recorder.PhoneRecorder
 import kotlinx.coroutines.CoroutineScope
@@ -53,7 +53,8 @@ class AppForegroundService : Service() {
     }
 
     val bleService = BLEService.instance
-    val navigationService = NavigationService.instance
+
+
     val agentService = AgentService.instance
 
     private val serviceScope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
@@ -91,7 +92,6 @@ class AppForegroundService : Service() {
 
     override fun onCreate() {
         super.onCreate()
-
         // Acquire Wake Lock to keep service alive
         acquireWakeLock()
 
@@ -193,12 +193,16 @@ class AppForegroundService : Service() {
                             )
                             val bluetoothRole = BluetoothRole(session, orchestrator)
                             val agentRole = AgentRole(orchestrator, BluetoothRecorder(session, true))
-                            val navigationRole = NavigationRole()
+
                             val interpretationRole = InterpretationRole(applicationContext, BluetoothRecorder(session, false))
                             val dialogRole = DialogTranslationRole(applicationContext, BluetoothRecorder(session, false), PhoneRecorder())
                             orchestrator.register(bluetoothRole)
                             orchestrator.register(agentRole)
-                            orchestrator.register(navigationRole)
+
+                            // Register NavigationRole if available in this flavor
+                            NavigationRoleProvider.getInstance()?.createNavigationRole()?.let { navigationRole ->
+                                orchestrator.register(navigationRole)
+                            }
                             orchestrator.register(interpretationRole)
                             orchestrator.register(dialogRole)
                         }

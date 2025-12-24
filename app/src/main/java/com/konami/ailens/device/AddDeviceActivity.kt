@@ -59,7 +59,6 @@ class AddDeviceActivity : AppCompatActivity() {
                 R.anim.slide_in_right,
                 R.anim.slide_out_left
             )
-
             startActivity(intent, options.toBundle())
             return
         }

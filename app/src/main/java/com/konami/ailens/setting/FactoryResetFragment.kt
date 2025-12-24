@@ -114,7 +114,7 @@ class FactoryResetFragment: Fragment() {
         val fillColorAnimator = ValueAnimator.ofObject(ArgbEvaluator(), fromFillColor, toFillColor)
         fillColorAnimator.duration = 300
         fillColorAnimator.addUpdateListener { animator ->
-            binding.cutCornerView.fillColor = animator.animatedValue as Int
+            binding.resetButton.fillColor = animator.animatedValue as Int
         }
 
         val textColorAnimator = ValueAnimator.ofObject(ArgbEvaluator(), fromTextColor, toTextColor)

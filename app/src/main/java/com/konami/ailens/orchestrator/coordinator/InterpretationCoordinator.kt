@@ -45,8 +45,8 @@ class InterpretationCoordinator(private val interpretation: InterpretationCapabi
         }
     }
 
-    fun start() {
-        interpretation.start()
+    fun start(sourceLanguage: Orchestrator.Language, targetLanguage: Orchestrator.Language) {
+        interpretation.start(sourceLanguage, targetLanguage)
     }
 
     fun stop() {
@@ -55,9 +55,5 @@ class InterpretationCoordinator(private val interpretation: InterpretationCapabi
         interpretationDisplays.forEach {
             it.displayStop()
         }
-    }
-
-    fun config(sourceLanguage: Orchestrator.Language, targetLanguage: Orchestrator.Language) {
-        interpretation.config(sourceLanguage, targetLanguage)
     }
 }

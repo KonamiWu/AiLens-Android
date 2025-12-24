@@ -8,14 +8,14 @@ import com.konami.ailens.recorder.Recorder
 import com.konami.ailens.translation.AzureTranslator
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
 
-class InterpretationService(private val context: Context, private val sourceLanguage: Orchestrator.Language,
-    targetLanguage: Orchestrator.Language, private val recorder: Recorder) {
+class InterpretationService(private val context: Context, private val recorder: Recorder) {
     private val scope = CoroutineScope(Dispatchers.IO)
-    private var translator = AzureTranslator(scope, sourceLanguage.code, targetLanguage.code, context.getString(R.string.azure_token))
+    private var translator: AzureTranslator? = null
     private val _isStart = MutableSharedFlow<Boolean>(extraBufferCapacity = 1)
     val isStart = _isStart.asSharedFlow()
     private val _partialFlow = MutableSharedFlow<Pair<String, String>>(extraBufferCapacity = 1)
@@ -27,7 +27,8 @@ class InterpretationService(private val context: Context, private val sourceLang
     private val _speechEnd = MutableSharedFlow<Unit>()
     val speechEnd = _speechEnd.asSharedFlow()
 
-    init {
+    fun start(sourceLanguage: Orchestrator.Language, targetLanguage: Orchestrator.Language) {
+        val translator = AzureTranslator(scope, context.getString(R.string.azure_token))
         scope.launch {
             translator.partialFlow.collect {
                 _partialFlow.emit(it)
@@ -51,21 +52,20 @@ class InterpretationService(private val context: Context, private val sourceLang
                 translator.push(it)
             }
         }
-    }
 
-    fun start() {
-        translator.start()
+        translator.start(sourceLanguage.code, targetLanguage.code)
         scope.launch {
             _isStart.emit(true)
         }
     }
 
     fun stop() {
-        translator.stop()
+        translator?.stop()
         recorder.stopRecording()
         scope.launch {
             _isStart.emit(false)
         }
+        scope.cancel()
     }
 
     fun startRecording() {
@@ -74,10 +74,5 @@ class InterpretationService(private val context: Context, private val sourceLang
 
     fun stopRecording() {
         recorder.stopRecording()
-    }
-
-    fun config(sourceLanguage: Orchestrator.Language, targetLanguage: Orchestrator.Language) {
-        translator.stop()
-        translator = AzureTranslator(scope, sourceLanguage.code, targetLanguage.code, context.getString(R.string.azure_token))
     }
 }

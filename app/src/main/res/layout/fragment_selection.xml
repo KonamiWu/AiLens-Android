@@ -17,7 +17,7 @@
         app:borderColor="?attr/appBorderDarkGray"
         app:cornerCut="@dimen/language_selection_corner_cut"
         app:cutCorners="topLeft|topRight"
-        app:fillColor="?attr/appBackground"/>
+        app:fillColor="@color/bottom_sheet_background"/>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/topLayout"
@@ -40,6 +40,7 @@
         android:id="@+id/recycleView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@color/bottom_sheet_background"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"

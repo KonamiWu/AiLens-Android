@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.activity.addCallback
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
@@ -14,12 +15,9 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.libraries.navigation.internal.agn.`is`
-import com.google.android.libraries.navigation.internal.agn.po
-import com.google.android.libraries.navigation.internal.aid.me
 import com.konami.ailens.R
 import com.konami.ailens.databinding.FragmentDialogTranslationBinding
-import com.konami.ailens.navigation.VerticalDivider
+import com.konami.ailens.view.VerticalDivider
 import com.konami.ailens.orchestrator.Orchestrator
 import com.konami.ailens.orchestrator.capability.DialogTranslationCapability
 import com.konami.ailens.orchestrator.capability.DialogTranslationCapability.MicSide
@@ -148,6 +146,11 @@ class DialogTranslationFragment: Fragment() {
                 }
             }
         }
+
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
+            Orchestrator.instance.stopDialogTranslation()
+        }
+
         return binding.root
     }
 

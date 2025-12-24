@@ -1,0 +1,103 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="Base.Theme.AiLens" parent="Theme.Material3.DayNight.NoActionBar">
+        <!-- Customize your light theme here. -->
+        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+    </style>
+
+    <style name="Theme.AiLens" parent="Base.Theme.AiLens">
+        <!-- Set window background to match app background -->
+        <item name="android:windowBackground">@color/app_background</item>
+
+        <!-- Activity transition animation -->
+        <item name="android:windowAnimationStyle">@style/ActivityAnimation</item>
+
+        <item name="appPrimary">@color/app_primary</item>
+        <item name="appPrimaryDark">@color/app_primary_dark</item>
+        <item name="appBackground">@color/app_background</item>
+        <item name="appSurface1">@color/app_surface1</item>
+
+        <item name="appBorderLightGray">@color/app_border_light_gray</item>
+        <item name="appBorderMediumGray">@color/app_border_medium_gray</item>
+        <item name="appBorderDarkGray">@color/app_border_dark_gray</item>
+
+        <item name="appTextPrimary">@color/app_text_primary</item>
+        <item name="appTextSecondary">@color/app_text_secondary</item>
+        <item name="appTextButton">@color/app_text_button</item>
+        <item name="appTextCaption">@color/app_text_caption</item>
+        <item name="appTextPlaceholder">@color/app_text_placeholder</item>
+        <item name="appTextDisable">@color/app_text_disable</item>
+
+        <item name="appButtonDisable">@color/app_button_disable</item>
+        <item name="appIconDark">@color/app_icon_dark</item>
+        <item name="appWhite">@color/app_white</item>
+        <item name="appRed">@color/app_red</item>
+    </style>
+
+    <style name="AiLensAlertDialog" parent="ThemeOverlay.MaterialComponents.Dialog">
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowIsFloating">false</item>
+    </style>
+
+<!--    <style name="AiLensLoading" parent="ThemeOverlay.MaterialComponents.Dialog">-->
+<!--        <item name="android:windowBackground">@android:color/transparent</item>-->
+<!--        <item name="android:windowIsTranslucent">true</item>-->
+<!--    </style>-->
+
+    <style name="AiLensLoadingDialog" parent="ThemeOverlay.MaterialComponents.Dialog">
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:backgroundDimEnabled">true</item>
+        <item name="android:backgroundDimAmount">0.35</item>
+    </style>
+
+    <style name="ActivityAnimation" parent="@android:style/Animation.Activity">
+        <item name="android:activityOpenEnterAnimation">@anim/slide_in_right</item>
+        <item name="android:activityOpenExitAnimation">@anim/slide_out_left</item>
+        <item name="android:activityCloseEnterAnimation">@anim/slide_in_left</item>
+        <item name="android:activityCloseExitAnimation">@anim/slide_out_right</item>
+    </style>
+
+    <style name="PositiveBigCornerButton" parent="@style/Bold">
+        <item name="android:layout_height">@dimen/big_bottom_button_height</item>
+        <item name="android:textSize">@dimen/big_bottom_button_text_size</item>
+        <item name="android:textColor">?attr/appTextButton</item>
+        <item name="cornerCut">@dimen/big_bottom_button_corner_cut</item>
+        <item name="fillColor">?attr/appPrimary</item>
+        <item name="disableFillColor">?attr/appButtonDisable</item>
+        <item name="disableTextColor">?attr/appTextDisable</item>
+        <item name="borderWidth">0dp</item>
+        <item name="cornerStyle">round</item>
+        <item name="borderColor">@android:color/transparent</item>
+        <item name="android:includeFontPadding">false</item>
+    </style>
+
+    <style name="NegativeBigCornerButton" parent="@style/Bold">
+        <item name="android:layout_height">@dimen/big_bottom_button_height</item>
+        <item name="android:textSize">@dimen/big_bottom_button_text_size</item>
+        <item name="android:textColor">?attr/appPrimary</item>
+        <item name="cornerCut">@dimen/big_bottom_button_corner_cut</item>
+        <item name="fillColor">?attr/appBackground</item>
+        <item name="borderWidth">1dp</item>
+        <item name="cornerStyle">round</item>
+        <item name="borderColor">?attr/appPrimary</item>
+        <item name="android:includeFontPadding">false</item>
+    </style>
+
+    <style name="RightTranslationItem">
+        <item name="fillColor">?attr/appSurface1</item>
+        <item name="cornerStyle">round</item>
+        <item name="borderWidth">0dp</item>
+        <item name="cornerCut">@dimen/dialog_translation_item_corner_cut</item>
+        <item name="borderColor">@android:color/transparent</item>
+    </style>
+
+    <style name="LeftTranslationItem">
+        <item name="fillColor">?attr/appPrimaryDark</item>
+        <item name="cornerStyle">round</item>
+        <item name="borderWidth">0dp</item>
+        <item name="cornerCut">@dimen/dialog_translation_item_corner_cut</item>
+        <item name="borderColor">@android:color/transparent</item>
+    </style>
+
+</resources>

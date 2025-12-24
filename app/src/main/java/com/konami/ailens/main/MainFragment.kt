@@ -24,28 +24,38 @@ import com.konami.ailens.databinding.FragmentMainBinding
 import com.konami.ailens.orchestrator.Orchestrator
 import kotlinx.coroutines.launch
 
+interface TabBarConfigurable {
+    fun shouldShowTabBar(): Boolean
+}
+
 class MainFragment: Fragment() {
     private lateinit var binding: FragmentMainBinding
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         binding = FragmentMainBinding.inflate(inflater, container, false)
-        ViewCompat.setOnApplyWindowInsetsListener(binding.root) { view, insets ->
-            val bottomInset = insets.getInsets(WindowInsetsCompat.Type.systemBars()).bottom
-            binding.main.setPadding(
-                view.paddingLeft,
-                view.paddingTop,
-                view.paddingRight,
-                bottomInset
-            )
-            insets
-        }
+//        ViewCompat.setOnApplyWindowInsetsListener(binding.root) { view, insets ->
+//            val bottomInset = insets.getInsets(WindowInsetsCompat.Type.systemBars()).bottom
+//            binding.main.setPadding(
+//                view.paddingLeft,
+//                view.paddingTop,
+//                view.paddingRight,
+//                bottomInset
+//            )
+//            insets
+//        }
         val value = resources.displayMetrics.density
         val tabLayout = binding.tabLayout
         val viewPager = binding.viewPager
 
-
         val adapter = MainPagerAdapter(this)
         viewPager.adapter = adapter
+
+        // Check if first page wants to hide TabBar
+        val firstFragment = adapter.createFragment(0)
+        if (firstFragment is TabBarConfigurable && !firstFragment.shouldShowTabBar()) {
+            tabLayout.visibility = View.GONE
+            viewPager.isUserInputEnabled = false
+        }
 
         TabLayoutMediator(tabLayout, viewPager) { tab, position ->
 

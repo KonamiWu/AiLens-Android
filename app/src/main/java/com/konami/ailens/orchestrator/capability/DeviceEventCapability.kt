@@ -1,6 +1,6 @@
 package com.konami.ailens.orchestrator.capability
 
-import com.google.android.gms.maps.model.LatLng
+import com.konami.ailens.orchestrator.Location
 import com.konami.ailens.orchestrator.Orchestrator
 
 interface DeviceEventCapability {
@@ -17,7 +17,7 @@ interface DeviceEventCapability {
             val travelMode: Orchestrator.TravelMode
         ) : DeviceEvent()
         data class EnterNavigation2D(
-            val destination: LatLng,
+            val destination: Location,
             val travelMode: Orchestrator.TravelMode
         ) : DeviceEvent()
         data object LeaveNavigation : DeviceEvent()

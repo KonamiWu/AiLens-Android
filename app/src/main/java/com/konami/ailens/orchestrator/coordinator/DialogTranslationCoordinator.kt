@@ -69,9 +69,9 @@ class DialogTranslationCoordinator(private val dialog: DialogTranslationCapabili
         dialogDisplays = new
     }
 
-    fun start(side: DialogTranslationCapability.MicSide) {
+    fun start(sourceLanguage: Orchestrator.Language, targetLanguage: Orchestrator.Language, side: DialogTranslationCapability.MicSide) {
         isStarted = true
-        dialog.start(side)
+        dialog.start(sourceLanguage, targetLanguage, side)
         dialogDisplays.forEach {
             it.displayMicSwitch(side)
         }
@@ -95,9 +95,5 @@ class DialogTranslationCoordinator(private val dialog: DialogTranslationCapabili
 
     fun stopRecording(side: DialogTranslationCapability.MicSide) {
         dialog.stopRecording(side)
-    }
-
-    fun config(sourceLanguage: Orchestrator.Language, targetLanguage: Orchestrator.Language) {
-        dialog.config(sourceLanguage, targetLanguage)
     }
 }

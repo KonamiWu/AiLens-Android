@@ -1,0 +1,431 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:ignore="ContentDescription"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/main"
+    android:background="?attr/appBackground">
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintDimensionRatio="1500:2068"
+        android:src="@drawable/img_main_glasses"
+        app:layout_constraintTop_toTopOf="parent"
+        android:alpha="0.7"/>
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintDimensionRatio="1500:1716"
+        android:src="@drawable/img_main_ring"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:alpha="0.8"/>
+
+    <com.konami.ailens.view.GlowView
+        android:id="@+id/glow"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:glowBaseColor="?attr/appPrimary"
+        app:glowCenterXNorm="@dimen/home_glow_center_x_norm"
+        app:glowCenterYNorm="@dimen/home_glow_center_y_norm"
+        app:glowRadiusFactor="@dimen/home_glow_radius_factor"
+        app:glowCenterAlpha="@dimen/home_glow_center_alpha"
+        app:glowEdgeAlpha="@dimen/home_glow_edge_alpha"
+        app:glowFigmaLayerWidthPx="@dimen/home_glow_figma_layer_width"
+        app:glowFigmaBlurPx="@dimen/home_glow_figma_blur"
+        android:alpha="0.7"
+        app:glowBlurEnabled="true" />
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fitsSystemWindows="true">
+
+        <ImageView
+            android:id="@+id/logoImageView"
+            android:layout_width="@dimen/home_logo_width"
+            android:layout_height="0dp"
+            app:layout_constraintDimensionRatio="163:38"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginTop="@dimen/home_logo_margin_top"
+            android:layout_marginStart="@dimen/home_logo_margin_left"
+            android:src="@drawable/logo" />
+        
+        <FrameLayout
+            android:id="@+id/settingLayout"
+            android:layout_width="@dimen/home_setting_button_size"
+            android:layout_height="@dimen/home_setting_button_size"
+            android:layout_marginTop="@dimen/home_logo_margin_top"
+            android:layout_marginEnd="@dimen/home_logo_margin_left"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
+
+            <com.konami.ailens.view.BlurBorderView
+                android:id="@+id/settingBlurView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:blurCornerRadius="@dimen/home_translate_corner_radius"
+                app:blurFillColor="?attr/appWhite"
+                app:blurFillAlpha="@dimen/home_device_button_ring_blur_alpha"
+                app:blurDownsample="@dimen/home_device_button_ring_blur_down_sample"
+                app:blurInnerShadowBlur="@dimen/home_device_button_ring_blur_inner_shadow_blur"
+                app:blurInnerShadowColor="?attr/appWhite"
+                app:blurInnerShadowAlpha="@dimen/home_device_button_ring_blur_inner_shadow_alpha"
+                app:blurInnerShadowOffsetX="@dimen/home_device_button_ring_blur_inner_shadow_blur_offsetX"
+                app:blurInnerShadowOffsetY="@dimen/home_device_button_ring_blur_inner_shadow_blur_offsetY"
+                app:blurStrokeWidth="@dimen/home_translate_stroke_width"
+                app:blurStrokeColor="?attr/appWhite"
+                app:blurStrokeStartAlpha="@dimen/home_translate_stroke_start_alpha"
+                app:blurStrokeEndAlpha="@dimen/home_translate_stroke_end_alpha"
+                app:blurBackgroundRadius="@dimen/home_setting_button_blur_corner_radius" />
+
+            <ImageView
+                android:layout_width="@dimen/home_setting_icon_size"
+                android:layout_height="@dimen/home_setting_icon_size"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_home_setting"/>
+
+        </FrameLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/ringLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/logoImageView"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginTop="@dimen/home_device_button_margin_top"
+            android:layout_marginStart="@dimen/home_logo_margin_left">
+
+            <com.konami.ailens.view.BlurBorderView
+                android:id="@+id/ringBlurView"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:blurCornerRadius="@dimen/home_translate_corner_radius"
+                app:blurFillColor="?attr/appWhite"
+                app:blurFillAlpha="@dimen/home_device_button_ring_blur_alpha"
+                app:blurDownsample="@dimen/home_device_button_ring_blur_down_sample"
+                app:blurInnerShadowBlur="@dimen/home_device_button_ring_blur_inner_shadow_blur"
+                app:blurInnerShadowColor="?attr/appWhite"
+                app:blurInnerShadowAlpha="@dimen/home_device_button_ring_blur_inner_shadow_alpha"
+                app:blurInnerShadowOffsetX="@dimen/home_device_button_ring_blur_inner_shadow_blur_offsetX"
+                app:blurInnerShadowOffsetY="@dimen/home_device_button_ring_blur_inner_shadow_blur_offsetY"
+                app:blurStrokeWidth="@dimen/home_translate_stroke_width"
+                app:blurStrokeColor="?attr/appWhite"
+                app:blurStrokeStartAlpha="@dimen/home_translate_stroke_start_alpha"
+                app:blurStrokeEndAlpha="@dimen/home_translate_stroke_end_alpha"
+                app:blurBackgroundRadius="@dimen/home_device_button_ring_blur_" />
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:paddingVertical="@dimen/home_device_button_padding_vertical"
+                android:paddingHorizontal="@dimen/home_device_button_padding_horizontal">
+
+                <ImageView
+                    android:id="@+id/ringImageView"
+                    android:layout_width="@dimen/home_device_button_icon_size"
+                    android:layout_height="@dimen/home_device_button_icon_size"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    android:src="@drawable/ic_home_ring" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintStart_toEndOf="@id/ringImageView"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    android:layout_marginStart="@dimen/home_device_button_text_margin_left"
+                    android:textSize="@dimen/home_device_button_text_size"
+                    style="@style/Regular"
+                    android:text="@string/disconnected"
+                    android:textColor="?attr/appTextPrimary" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/glassesLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/logoImageView"
+            app:layout_constraintStart_toEndOf="@id/ringLayout"
+            android:layout_marginTop="@dimen/home_device_button_margin_top"
+            android:layout_marginStart="@dimen/home_device_button_glasses_margin_left">
+
+            <com.konami.ailens.view.BlurBorderView
+                android:id="@+id/glassesBlurView"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:blurCornerRadius="@dimen/home_translate_corner_radius"
+                app:blurFillColor="?attr/appWhite"
+                app:blurFillAlpha="@dimen/home_device_button_glasses_blur_alpha"
+                app:blurDownsample="@dimen/home_device_button_ring_blur_down_sample"
+                app:blurInnerShadowBlur="@dimen/home_device_button_ring_blur_inner_shadow_blur"
+                app:blurInnerShadowColor="?attr/appWhite"
+                app:blurInnerShadowAlpha="@dimen/home_device_button_ring_blur_inner_shadow_alpha"
+                app:blurInnerShadowOffsetX="@dimen/home_device_button_ring_blur_inner_shadow_blur_offsetX"
+                app:blurInnerShadowOffsetY="@dimen/home_device_button_glasses_blur_inner_shadow_blur_offsetY"
+                app:blurStrokeWidth="@dimen/home_translate_stroke_width"
+                app:blurStrokeColor="?attr/appWhite"
+                app:blurStrokeStartAlpha="@dimen/home_translate_stroke_start_alpha"
+                app:blurStrokeEndAlpha="@dimen/home_translate_stroke_end_alpha"
+                app:blurBackgroundRadius="@dimen/home_device_button_ring_blur_" />
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:paddingVertical="@dimen/home_device_button_padding_vertical"
+                android:paddingHorizontal="@dimen/home_device_button_padding_horizontal">
+
+                <ImageView
+                    android:id="@+id/glassesImageView"
+                    android:layout_width="@dimen/home_device_button_icon_size"
+                    android:layout_height="@dimen/home_device_button_icon_size"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    android:src="@drawable/ic_home_glasses" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintStart_toEndOf="@id/glassesImageView"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    android:layout_marginStart="@dimen/home_device_button_text_margin_left"
+                    android:textSize="@dimen/home_device_button_text_size"
+                    style="@style/Regular"
+                    android:text="@string/disconnected"
+                    android:textColor="?attr/appTextPrimary" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/translateLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/ringLayout"
+            android:layout_marginStart="@dimen/home_translate_layout_margin_start"
+            android:layout_marginEnd="@dimen/home_translate_layout_margin_end"
+            android:layout_marginTop="@dimen/home_translate_layout_margin_top" >
+
+            <com.konami.ailens.view.BlurBorderView
+                android:id="@+id/translateBlueView"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:blurCornerRadius="@dimen/home_translate_corner_radius"
+                app:blurFillColor="?attr/appWhite"
+                app:blurFillAlpha="@dimen/home_translate_fill_alpha"
+                app:blurDownsample="@dimen/home_translate_down_sample"
+                app:blurInnerShadowColor="?attr/appWhite"
+                app:blurInnerShadowAlpha="@dimen/home_translate_inner_shadow_alpha"
+                app:blurInnerShadowOffsetY="@dimen/home_translate_inner_shadow_offset_y"
+                app:blurInnerShadowBlur="@dimen/home_translate_inner_shadow_blur"
+                app:blurStrokeWidth="@dimen/home_translate_stroke_width"
+                app:blurStrokeColor="?attr/appWhite"
+                app:blurStrokeStartAlpha="@dimen/home_translate_stroke_start_alpha"
+                app:blurStrokeEndAlpha="@dimen/home_translate_stroke_end_alpha"
+                app:blurBackgroundRadius="@dimen/home_translate_background_blur" />
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/home_blur_view_padding"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent">
+
+                <ImageView
+                    android:id="@+id/translationImageView"
+                    android:layout_width="@dimen/home_translation_icon_size"
+                    android:layout_height="@dimen/home_translation_icon_size"
+                    android:background="@android:color/transparent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:src="@drawable/ic_home_translate" />
+
+                <TextView
+                    android:id="@+id/translationTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintStart_toEndOf="@id/translationImageView"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    android:layout_marginStart="@dimen/home_translation_title_margin_left"
+                    android:text="@string/translate"
+                    android:textSize="@dimen/home_translation_title_text_size"
+                    style="@style/Medium" />
+
+                <ImageView
+                    android:layout_width="@dimen/home_right_arrow_size"
+                    android:layout_height="@dimen/home_right_arrow_size"
+                    android:src="@drawable/ic_home_right_arrow"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/teleprompterLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/translateLayout"
+            android:layout_marginStart="@dimen/home_translate_layout_margin_start"
+            android:layout_marginEnd="@dimen/home_translate_layout_margin_end"
+            android:layout_marginTop="@dimen/home_teleprompt_layout_margin_top" >
+
+            <com.konami.ailens.view.BlurBorderView
+                android:id="@+id/teleprompterBlurView"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:blurCornerRadius="@dimen/home_translate_corner_radius"
+                app:blurFillColor="?attr/appWhite"
+                app:blurFillAlpha="@dimen/home_translate_fill_alpha"
+                app:blurDownsample="@dimen/home_translate_down_sample"
+                app:blurInnerShadowColor="?attr/appWhite"
+                app:blurInnerShadowAlpha="@dimen/home_translate_inner_shadow_alpha"
+                app:blurInnerShadowOffsetY="@dimen/home_translate_inner_shadow_offset_y"
+                app:blurInnerShadowBlur="@dimen/home_translate_inner_shadow_blur"
+                app:blurStrokeWidth="@dimen/home_translate_stroke_width"
+                app:blurStrokeColor="?attr/appWhite"
+                app:blurStrokeStartAlpha="@dimen/home_translate_stroke_start_alpha"
+                app:blurStrokeEndAlpha="@dimen/home_translate_stroke_end_alpha"
+                app:blurBackgroundRadius="@dimen/home_translate_background_blur" />
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/home_blur_view_padding"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent">
+
+                <ImageView
+                    android:id="@+id/teleprompterImageView"
+                    android:layout_width="@dimen/home_translation_icon_size"
+                    android:layout_height="@dimen/home_translation_icon_size"
+                    android:background="@android:color/transparent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:src="@drawable/ic_home_teleprompter" />
+
+                <TextView
+                    android:id="@+id/teleprompterTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintStart_toEndOf="@id/teleprompterImageView"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    android:layout_marginStart="@dimen/home_translation_title_margin_left"
+                    android:text="@string/teleprompter"
+                    android:textSize="@dimen/home_translation_title_text_size"
+                    style="@style/Medium" />
+
+                <ImageView
+                    android:layout_width="@dimen/home_right_arrow_size"
+                    android:layout_height="@dimen/home_right_arrow_size"
+                    android:src="@drawable/ic_home_right_arrow"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <LinearLayout
+            android:id="@+id/tutorialLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/teleprompterLayout"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="@dimen/home_tutorial_text_margin_top">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/home_tutorial_text_margin_right"
+                android:text="@string/user_tutorial"
+                android:textColor="?attr/appTextPrimary"
+                android:textSize="@dimen/home_tutorial_text_size"
+                style="@style/Bold" />
+
+            <ImageView
+                android:layout_width="@dimen/home_right_arrow_size"
+                android:layout_height="@dimen/home_right_arrow_size"
+                android:src="@drawable/ic_home_right_arrow"
+                android:layout_gravity="center_vertical"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginBottom="@dimen/home_bottom_button_margin_bottom">
+
+            <ImageButton
+                android:id="@+id/homeButton"
+                android:layout_width="@dimen/home_bottom_button_size"
+                android:layout_height="@dimen/home_bottom_button_size"
+                android:layout_marginEnd="@dimen/check_update_bottom_button_spacing"
+                android:background="@android:color/transparent"
+                android:src="@drawable/ic_home"
+                android:scaleType="fitCenter" />
+
+            <ImageButton
+                android:id="@+id/meButton"
+                android:layout_width="@dimen/home_bottom_button_size"
+                android:layout_height="@dimen/home_bottom_button_size"
+                android:background="@android:color/transparent"
+                android:src="@drawable/ic_home_me"
+                android:scaleType="fitCenter" />
+
+        </LinearLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

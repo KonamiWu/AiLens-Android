@@ -40,7 +40,6 @@
     <com.konami.ailens.main.CutCornerButton
         android:id="@+id/addButton"
         android:layout_width="0dp"
-        android:layout_height="@dimen/big_bottom_button_height"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"

@@ -8,11 +8,10 @@ interface DialogTranslationCapability {
         SOURCE,
         TARGET
     }
-    fun start(side: MicSide)
+    fun start(sourceLanguage: Orchestrator.Language, targetLanguage: Orchestrator.Language, side: MicSide)
     fun switchRecorder(side: MicSide)
     fun stopRecording(side: MicSide)
     fun stop()
-    fun config(sourceLanguage: Orchestrator.Language, targetLanguage: Orchestrator.Language)
     val isStart: SharedFlow<Boolean>
     val sourcePartialFlow: SharedFlow<Pair<String, String>>
     val sourceResultFlow: SharedFlow<Pair<String, String>>

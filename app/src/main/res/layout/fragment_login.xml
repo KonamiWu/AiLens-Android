@@ -10,7 +10,7 @@
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        app:layout_constraintDimensionRatio="1500:874"
+        app:layout_constraintDimensionRatio="5:8"
         app:layout_constraintTop_toTopOf="parent"
         android:src="@drawable/img_nav_bg" />
 
@@ -125,7 +125,6 @@
             <com.konami.ailens.main.CutCornerButton
                 android:id="@+id/loginButton"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/big_bottom_button_height"
                 app:layout_constraintTop_toBottomOf="@id/forgetPasswordTextView"
                 android:layout_marginTop="@dimen/login_button_margin_top"
                 android:text="@string/log_in"

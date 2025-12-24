@@ -77,6 +77,9 @@
     <string name="error">Error</string>
     <string name="cancel">Cancel</string>
     <string name="save">Save</string>
+    <string name="translate">Translate</string>
+    <string name="teleprompter">Teleprompter</string>
+    <string name="user_tutorial">User Tutorial</string>
 
 <!--    language selection-->
     <string name="japanes">日文</string>

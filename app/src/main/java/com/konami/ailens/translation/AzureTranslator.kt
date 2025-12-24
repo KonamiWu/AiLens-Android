@@ -16,13 +16,13 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 class AzureTranslator(
-    scope: CoroutineScope,
-    val source: String,
-    val target: String,
-    token: String
+    val scope: CoroutineScope,
+
+    val token: String
 ) {
     val TAG = "MainViewModel"
-    private val translator: TranslationRecognizer
+    private val region = "southeastasia"
+    private var translator: TranslationRecognizer? = null
     private val pushStream: PushAudioInputStream
     private val _isReady = MutableSharedFlow<Boolean>()
     val isReady = _isReady.asSharedFlow()
@@ -35,20 +35,23 @@ class AzureTranslator(
     private val _speechEnd = MutableSharedFlow<Unit>()
     val speechEnd = _speechEnd.asSharedFlow()
 
+
+
     init {
-        val speechKey = token
-        val region = "southeastasia"
+
         val audioFormat = AudioStreamFormat.getWaveFormatPCM(16000, 16, 1)
         pushStream = AudioInputStream.createPushStream(audioFormat)
-        val config = SpeechTranslationConfig.fromSubscription(speechKey.trim(), region)
-        config.setProperty(
-            "SpeechServiceConnection_EndSilenceTimeoutMs",
-            "1000"
-        )
+
+    }
+
+    fun start(source: String, target: String) {
+        translator?.startContinuousRecognitionAsync()
+        val config = SpeechTranslationConfig.fromSubscription(token.trim(), region)
+        config.setProperty("SpeechServiceConnection_EndSilenceTimeoutMs", "1000")
 
         config.speechRecognitionLanguage = source
         config.addTargetLanguage(target)
-        translator = TranslationRecognizer(config, AudioConfig.fromStreamInput(pushStream))
+        val translator = TranslationRecognizer(config, AudioConfig.fromStreamInput(pushStream))
 
 
         translator.sessionStarted.addEventListener { _, e ->
@@ -81,14 +84,12 @@ class AzureTranslator(
                 _resultFlow.emit(Pair(event.result.text, translation))
             }
         }
-    }
 
-    fun start() {
-        translator.startContinuousRecognitionAsync()
+        this.translator = translator
     }
 
     fun stop() {
-        translator.stopContinuousRecognitionAsync()
+        translator?.stopContinuousRecognitionAsync()
     }
 
     fun push(pcm: ByteArray) {

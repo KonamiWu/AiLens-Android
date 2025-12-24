@@ -20,7 +20,7 @@ import com.konami.ailens.ble.command.UnbindCommand
 import com.konami.ailens.databinding.FragmentSettingBinding
 import com.konami.ailens.device.AddDeviceActivity
 import com.konami.ailens.login.LoginActivity
-import com.konami.ailens.navigation.VerticalDivider
+import com.konami.ailens.view.VerticalDivider
 import com.konami.ailens.resolveAttrColor
 import com.konami.ailens.setting.item.SettingItem
 import com.konami.ailens.setting.item.SettingViewHolder
