@@ -11,7 +11,7 @@
         android:id="@+id/navBgImageView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        app:layout_constraintDimensionRatio="1500:874"
+        app:layout_constraintDimensionRatio="5:8"
         app:layout_constraintTop_toTopOf="parent"
         android:src="@drawable/img_nav_bg" />
 
@@ -156,57 +156,19 @@
                 android:orientation="vertical"
                 android:animateLayoutChanges="true">
 
-                <FrameLayout
-                    android:id="@+id/updateLayout"
+                <com.konami.ailens.main.CutCornerButton
+                    android:id="@+id/updateButton"
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/big_bottom_button_height">
+                    android:text="@string/check_update_update_now"
+                    app:disableTextColor="?attr/appTextButton"
+                    style="@style/PositiveBigCornerButton" />
 
-                    <com.konami.ailens.main.CutCornerView
-                        android:id="@+id/updateCornerView"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        app:borderWidth="0dp"
-                        app:borderColor="@android:color/transparent"
-                        app:cornerCut="@dimen/add_device_button_corner_cut"
-                        app:fillColor="?attr/appPrimary" />
-
-                    <Button
-                        android:id="@+id/updateButton"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:background="#00000000"
-                        android:text="@string/check_update_update_now"
-                        android:textColor="?attr/appTextButton"
-                        style="@style/Bold"/>
-
-                </FrameLayout>
-
-                <FrameLayout
-                    android:id="@+id/cancelLayout"
+                <com.konami.ailens.main.CutCornerButton
+                    android:id="@+id/cancelButton"
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/big_bottom_button_height"
                     android:layout_marginTop="@dimen/check_update_bottom_button_spacing"
-                    android:visibility="gone">
-
-                    <com.konami.ailens.main.CutCornerView
-                        android:id="@+id/cutCornerView"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        app:borderWidth="1dp"
-                        app:borderColor="?attr/appPrimary"
-                        app:cornerCut="@dimen/add_device_button_corner_cut"
-                        app:fillColor="?attr/appBackground" />
-
-                    <Button
-                        android:id="@+id/cancelButton"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:background="#00000000"
-                        android:text="@string/cancel"
-                        android:textColor="?attr/appPrimary"
-                        style="@style/Bold"/>
-
-                </FrameLayout>
+                    android:text="@string/check_update_update_now"
+                    style="@style/NegativeBigCornerButton" />
 
             </LinearLayout>
 

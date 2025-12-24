@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
     android:id="@+id/main"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -11,7 +12,7 @@
         android:id="@+id/navBgImageView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        app:layout_constraintDimensionRatio="1500:874"
+        app:layout_constraintDimensionRatio="5:8"
         app:layout_constraintTop_toTopOf="parent"
         android:src="@drawable/img_nav_bg" />
 
@@ -71,6 +72,7 @@
             <ImageView
                 android:layout_width="@dimen/setting_glasses_icon_size"
                 android:layout_height="@dimen/setting_glasses_icon_size"
+                app:tint="?attr/appPrimary"
                 android:src="@drawable/ic_setting_glasses" />
 
             <TextView
@@ -78,7 +80,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/setting_name_text_size"
-                android:textColor="?attr/appTextPrimary"
+                android:textColor="?attr/appPrimary"
                 style="@style/SemiBold"
                 android:includeFontPadding="false"
                 android:layout_marginHorizontal="@dimen/setting_name_margin_horizontal"/>
@@ -103,17 +105,13 @@
         <com.konami.ailens.main.CutCornerButton
             android:id="@+id/unbindButton"
             android:layout_width="0dp"
-            android:layout_height="@dimen/big_bottom_button_height"
+            style="@style/PositiveBigCornerButton"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             android:layout_marginHorizontal="@dimen/add_device_button_margin_horizontal"
             android:layout_marginBottom="@dimen/add_device_button_margin_bottom"
-            app:cornerCut="@dimen/add_device_button_corner_cut"
-            app:fillColor="?attr/appPrimary"
-            android:text="@string/unbind_device"
-            android:textColor="?attr/appTextButton"
-            style="@style/Bold"/>
+            android:text="@string/unbind_device" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -12,6 +12,10 @@
             <flag name="bottomRight" value="4" />
             <flag name="bottomLeft" value="8" />
         </attr>
+        <attr name="cornerStyle" format="enum">
+            <enum name="bevel" value="0" />
+            <enum name="round" value="1" />
+        </attr>
     </declare-styleable>
 
     <declare-styleable name="DashedLineView">
@@ -42,6 +46,7 @@
         <attr name="disableFillColor" format="color"/>
         <attr name="disableTextColor" format="color"/>
         <attr name="cutCorners" />
+        <attr name="cornerStyle" />
     </declare-styleable>
 
     <attr name="appPrimary" format="color" />

@@ -15,6 +15,11 @@ class CutCornerButton @JvmOverloads constructor(
     defStyleAttr: Int = 0
 ) : AppCompatButton(context, attrs, defStyleAttr) {
 
+    enum class CornerStyle {
+        BEVEL,
+        ROUND
+    }
+
     var cornerCut = 12f
     var borderColor: Int = Color.TRANSPARENT
     var borderWidth: Float = 0f
@@ -41,7 +46,22 @@ class CutCornerButton @JvmOverloads constructor(
     private var colorAnimator: ValueAnimator? = null
     var cutCorners: Int =
         CUT_TOP_LEFT or CUT_TOP_RIGHT or CUT_BOTTOM_RIGHT or CUT_BOTTOM_LEFT
+    var cornerStyle: CornerStyle = CornerStyle.BEVEL
+        set(value) {
+            field = value
+            invalidate()
+        }
     var backgroundImage: Bitmap? = null
+        set(value) {
+            field = value
+            invalidate()
+        }
+    var progress: Float = 0f
+        set(value) {
+            field = value.coerceIn(0f, 1f)
+            invalidate()
+        }
+    var progressColor: Int = Color.WHITE
         set(value) {
             field = value
             invalidate()
@@ -59,7 +79,9 @@ class CutCornerButton @JvmOverloads constructor(
 
     private val shapePath = Path()
     private val borderPath = Path()
+    private val progressPath = Path()
     private val fillPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply { style = Paint.Style.FILL }
+    private val progressPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply { style = Paint.Style.FILL }
     private val borderPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         style = Paint.Style.STROKE
         strokeCap = Paint.Cap.BUTT
@@ -85,6 +107,10 @@ class CutCornerButton @JvmOverloads constructor(
                     R.styleable.CutCornerButton_cutCorners,
                     CUT_TOP_LEFT or CUT_TOP_RIGHT or CUT_BOTTOM_RIGHT or CUT_BOTTOM_LEFT
                 )
+                cornerStyle = when (getInt(R.styleable.CutCornerButton_cornerStyle, 0)) {
+                    1 -> CornerStyle.ROUND
+                    else -> CornerStyle.BEVEL
+                }
 
                 enabledFillColor = fillColor
                 enabledTextColor = currentTextColor
@@ -161,26 +187,112 @@ class CutCornerButton @JvmOverloads constructor(
         val cBR = cornerProgress[2]
         val cBL = cornerProgress[3]
 
+        val isRound = cornerStyle == CornerStyle.ROUND
+
         shapePath.reset()
         shapePath.moveTo(if (cTL > 0) cTL else 0f, 0f)
-        shapePath.lineTo(if (cTR > 0) w - cTR else w, 0f)
-        if (cTR > 0) shapePath.lineTo(w, cTR)
-        shapePath.lineTo(w, if (cBR > 0) h - cBR else h)
-        if (cBR > 0) shapePath.lineTo(w - cBR, h)
-        shapePath.lineTo(if (cBL > 0) cBL else 0f, h)
-        if (cBL > 0) shapePath.lineTo(0f, h - cBL)
-        shapePath.lineTo(0f, if (cTL > 0) cTL else 0f)
+
+        if (cTR > 0) {
+            shapePath.lineTo(w - cTR, 0f)
+            if (isRound) {
+                val rect = RectF(w - cTR * 2, 0f, w, cTR * 2)
+                shapePath.arcTo(rect, 270f, 90f)
+            } else {
+                shapePath.lineTo(w, cTR)
+            }
+        } else {
+            shapePath.lineTo(w, 0f)
+        }
+
+        if (cBR > 0) {
+            shapePath.lineTo(w, h - cBR)
+            if (isRound) {
+                val rect = RectF(w - cBR * 2, h - cBR * 2, w, h)
+                shapePath.arcTo(rect, 0f, 90f)
+            } else {
+                shapePath.lineTo(w - cBR, h)
+            }
+        } else {
+            shapePath.lineTo(w, h)
+        }
+
+        if (cBL > 0) {
+            shapePath.lineTo(cBL, h)
+            if (isRound) {
+                val rect = RectF(0f, h - cBL * 2, cBL * 2, h)
+                shapePath.arcTo(rect, 90f, 90f)
+            } else {
+                shapePath.lineTo(0f, h - cBL)
+            }
+        } else {
+            shapePath.lineTo(0f, h)
+        }
+
+        if (cTL > 0) {
+            shapePath.lineTo(0f, cTL)
+            if (isRound) {
+                val rect = RectF(0f, 0f, cTL * 2, cTL * 2)
+                shapePath.arcTo(rect, 180f, 90f)
+            } else {
+                shapePath.lineTo(cTL, 0f)
+            }
+        } else {
+            shapePath.lineTo(0f, 0f)
+        }
+
         shapePath.close()
 
         borderPath.reset()
         borderPath.moveTo(if (cTL > 0) cTL + inset else inset, inset)
-        borderPath.lineTo(if (cTR > 0) w - cTR - inset else w - inset, inset)
-        if (cTR > 0) borderPath.lineTo(w - inset, cTR + inset)
-        borderPath.lineTo(w - inset, if (cBR > 0) h - cBR - inset else h - inset)
-        if (cBR > 0) borderPath.lineTo(w - cBR - inset, h - inset)
-        borderPath.lineTo(if (cBL > 0) cBL + inset else inset, h - inset)
-        if (cBL > 0) borderPath.lineTo(inset, h - cBL - inset)
-        borderPath.lineTo(inset, if (cTL > 0) cTL + inset else inset)
+
+        if (cTR > 0) {
+            borderPath.lineTo(w - cTR - inset, inset)
+            if (isRound) {
+                val rect = RectF(w - cTR * 2 + inset, inset, w - inset, cTR * 2 - inset)
+                borderPath.arcTo(rect, 270f, 90f)
+            } else {
+                borderPath.lineTo(w - inset, cTR + inset)
+            }
+        } else {
+            borderPath.lineTo(w - inset, inset)
+        }
+
+        if (cBR > 0) {
+            borderPath.lineTo(w - inset, h - cBR - inset)
+            if (isRound) {
+                val rect = RectF(w - cBR * 2 + inset, h - cBR * 2 + inset, w - inset, h - inset)
+                borderPath.arcTo(rect, 0f, 90f)
+            } else {
+                borderPath.lineTo(w - cBR - inset, h - inset)
+            }
+        } else {
+            borderPath.lineTo(w - inset, h - inset)
+        }
+
+        if (cBL > 0) {
+            borderPath.lineTo(cBL + inset, h - inset)
+            if (isRound) {
+                val rect = RectF(inset, h - cBL * 2 + inset, cBL * 2 - inset, h - inset)
+                borderPath.arcTo(rect, 90f, 90f)
+            } else {
+                borderPath.lineTo(inset, h - cBL - inset)
+            }
+        } else {
+            borderPath.lineTo(inset, h - inset)
+        }
+
+        if (cTL > 0) {
+            borderPath.lineTo(inset, cTL + inset)
+            if (isRound) {
+                val rect = RectF(inset, inset, cTL * 2 - inset, cTL * 2 - inset)
+                borderPath.arcTo(rect, 180f, 90f)
+            } else {
+                borderPath.lineTo(cTL + inset, inset)
+            }
+        } else {
+            borderPath.lineTo(inset, inset)
+        }
+
         borderPath.close()
     }
 
@@ -206,6 +318,16 @@ class CutCornerButton @JvmOverloads constructor(
         fillPaint.alpha = (combinedAlpha * 255).toInt()
         canvas.drawPath(shapePath, fillPaint)
 
+        if (progress > 0f) {
+            val progressWidth = w * progress
+            progressPath.reset()
+            progressPath.addRect(0f, 0f, progressWidth, h, Path.Direction.CW)
+            progressPath.op(shapePath, Path.Op.INTERSECT)
+
+            progressPaint.color = progressColor
+            canvas.drawPath(progressPath, progressPaint)
+        }
+
         borderPaint.color = borderColor
         borderPaint.strokeWidth = borderWidth
         canvas.drawPath(borderPath, borderPaint)
@@ -214,6 +336,21 @@ class CutCornerButton @JvmOverloads constructor(
         canvas.clipPath(shapePath)
         super.onDraw(canvas)
         canvas.restoreToCount(saveCount)
+    }
+
+    fun animateProgress(targetProgress: Float, duration: Long = 300L) {
+        val startProgress = progress
+        val endProgress = targetProgress.coerceIn(0f, 1f)
+
+        ValueAnimator.ofFloat(0f, 1f).apply {
+            this.duration = duration
+            interpolator = android.view.animation.DecelerateInterpolator()
+            addUpdateListener {
+                val f = it.animatedFraction
+                progress = startProgress + (endProgress - startProgress) * f
+            }
+            start()
+        }
     }
 
     companion object {

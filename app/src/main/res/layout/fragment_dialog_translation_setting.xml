@@ -12,7 +12,7 @@
         android:id="@+id/navBgImageView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        app:layout_constraintDimensionRatio="1500:874"
+        app:layout_constraintDimensionRatio="5:8"
         app:layout_constraintTop_toTopOf="parent"
         android:src="@drawable/img_nav_bg" />
 
@@ -63,7 +63,7 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             app:layout_constraintTop_toBottomOf="@id/navLayout"
-            app:layout_constraintBottom_toTopOf="@id/buttonLayout"
+            app:layout_constraintBottom_toTopOf="@id/startButton"
             android:layout_marginTop="@dimen/dialog_translation_content_margin_top"
             android:layout_marginHorizontal="@dimen/dialog_translation_content_margin_horizontal"
             android:layout_marginBottom="@dimen/dialog_translation_content_margin_bottom">
@@ -77,32 +77,16 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <FrameLayout
-            android:id="@+id/buttonLayout"
+        <com.konami.ailens.main.CutCornerButton
+            android:id="@+id/startButton"
             android:layout_width="0dp"
-            android:layout_height="@dimen/big_bottom_button_height"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
+            android:text="@string/start"
             android:layout_marginHorizontal="@dimen/add_device_button_margin_horizontal"
-            android:layout_marginBottom="@dimen/add_device_button_margin_bottom">
-
-            <com.konami.ailens.main.CutCornerView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                app:cornerCut="@dimen/add_device_button_corner_cut"
-                app:fillColor="?attr/appPrimary" />
-
-            <Button
-                android:id="@+id/startButton"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="#00000000"
-                android:text="@string/start"
-                android:textColor="?attr/appTextButton"
-                android:textSize="@dimen/big_bottom_button_text_size"
-                style="@style/Bold"/>
-        </FrameLayout>
+            android:layout_marginBottom="@dimen/add_device_button_margin_bottom"
+            style="@style/PositiveBigCornerButton" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

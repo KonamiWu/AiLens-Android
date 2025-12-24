@@ -74,12 +74,12 @@ class CheckUpdateFragment: Fragment() {
                         LoadingDialogFragment.dismiss(requireActivity())
                         binding.infoLayout.animate().alpha(1f).start()
                         binding.updateButton.isEnabled = false
-                        binding.updateCornerView.progress = currentProgress
+                        binding.updateButton.progress = currentProgress
 
                         val percentage = currentProgress * 100
                         binding.updateButton.text = getString(R.string.check_update_updating).format(percentage)
 
-                        binding.cancelLayout.visibility = View.VISIBLE
+                        binding.cancelButton.visibility = View.VISIBLE
                     }
                     else -> {
                         LoadingDialogFragment.show(requireActivity())
@@ -98,6 +98,7 @@ class CheckUpdateFragment: Fragment() {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        FirmwareManager.cleanupDownloadedFile()
         binding = FragmentCheckUpdateBinding.inflate(inflater, container, false)
 
         markwon = Markwon.create(requireContext())
@@ -114,7 +115,7 @@ class CheckUpdateFragment: Fragment() {
                 }
                 is FirmwareManager.DownloadState.DownloadCompleted -> {
                     startFirmwareUpdate()
-                    binding.cancelLayout.visibility = View.VISIBLE
+                    binding.cancelButton.visibility = View.VISIBLE
                 }
                 else -> {}
             }
@@ -123,22 +124,23 @@ class CheckUpdateFragment: Fragment() {
         binding.cancelButton.setOnClickListener {
             isCancelUpdate = true
             updateService?.cancelUpdate()
-            binding.cancelLayout.visibility = View.GONE
+            binding.cancelButton.visibility = View.GONE
 
-            binding.updateCornerView.fillColor = requireContext().resolveAttrColor(R.attr.appPrimary)
+            binding.updateButton.fillColor = requireContext().resolveAttrColor(R.attr.appPrimary)
             binding.updateButton.text = getString(R.string.check_update_update_now)
-            binding.updateCornerView.progress = 0f
+            binding.updateButton.progress = 0f
             binding.updateButton.isEnabled = true
         }
 
         binding.completionLayout.alpha = 0f
         binding.infoLayout.alpha = 0f
-        binding.cancelLayout.visibility = View.GONE
+        binding.cancelButton.visibility = View.GONE
         bind()
 
-        binding.updateCornerView.fillColor = requireContext().resolveAttrColor(R.attr.appPrimaryDark)
-        binding.updateCornerView.progressColor = requireContext().resolveAttrColor(R.attr.appPrimary)
-        binding.updateCornerView.progress = 1f
+        binding.updateButton.fillColor = requireContext().resolveAttrColor(R.attr.appPrimaryDark)
+        binding.updateButton.progressColor = requireContext().resolveAttrColor(R.attr.appPrimary)
+        binding.updateButton.progress = 1f
+
 
         return binding.root
     }
@@ -174,7 +176,7 @@ class CheckUpdateFragment: Fragment() {
                         if (viewModel.state.value is FirmwareManager.DownloadState.Downloading) {
                             val percentage = progress * 100
                             binding.updateButton.text = getString(R.string.check_update_downloading).format(percentage)
-                            binding.updateCornerView.progress = progress
+                            binding.updateButton.progress = progress
                         }
                     }
                 }
@@ -204,7 +206,7 @@ class CheckUpdateFragment: Fragment() {
             }
             is FirmwareManager.DownloadState.Downloading -> {
                 binding.updateButton.isEnabled = false
-                binding.updateCornerView.progress = 0f
+                binding.updateButton.progress = 0f
             }
 
             is FirmwareManager.DownloadState.DownloadCompleted -> {
@@ -212,7 +214,7 @@ class CheckUpdateFragment: Fragment() {
                 binding.updateButton.isEnabled = true
                 binding.infoLayout.animate().alpha(1f).start()
                 binding.updateButton.text = getString(R.string.check_update_update_now)
-                binding.updateCornerView.progress = 1f
+                binding.updateButton.progress = 1f
             }
             is FirmwareManager.DownloadState.CheckFailed -> {
                 LoadingDialogFragment.dismiss(requireActivity())
@@ -226,7 +228,7 @@ class CheckUpdateFragment: Fragment() {
                 binding.completionImageView.setImageResource(R.drawable.ic_check_update_failed)
                 binding.completionLayout.animate().alpha(1f).start()
                 binding.infoLayout.animate().alpha(0f).start()
-                binding.updateCornerView.progress = 1f
+                binding.updateButton.progress = 1f
                 binding.updateButton.text = getString(R.string.check_update_download)
             }
 
@@ -266,7 +268,7 @@ class CheckUpdateFragment: Fragment() {
                     service.progress.collect { progress ->
                         if (isCancelUpdate)
                             return@collect
-                        binding.updateCornerView.progress = progress
+                        binding.updateButton.progress = progress
                         val percentage = progress * 100
                         binding.updateButton.text = getString(R.string.check_update_updating).format(percentage)
                     }
@@ -288,7 +290,7 @@ class CheckUpdateFragment: Fragment() {
                 binding.completionLayout.animate().alpha(1f).start()
                 binding.infoLayout.animate().alpha(0f).start()
                 binding.completionVersionTextView.visibility = View.VISIBLE
-                binding.cancelLayout.visibility = View.GONE
+                binding.cancelButton.visibility = View.GONE
             }
             is FirmwareUpdateService.UpdateState.Failed -> {
                 binding.updateButton.isEnabled = true
@@ -296,7 +298,7 @@ class CheckUpdateFragment: Fragment() {
                 binding.completionImageView.setImageResource(R.drawable.ic_check_update_failed)
                 binding.completionLayout.animate().alpha(1f).start()
                 binding.infoLayout.animate().alpha(0f).start()
-                binding.cancelLayout.visibility = View.GONE
+                binding.cancelButton.visibility = View.GONE
             }
         }
     }

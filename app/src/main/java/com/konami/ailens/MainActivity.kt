@@ -1,12 +1,9 @@
 package com.konami.ailens
 
-import android.content.Intent
-import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -16,9 +13,6 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import com.konami.ailens.databinding.ActivityMainBinding
 import com.konami.ailens.orchestrator.Orchestrator
-import com.google.android.libraries.navigation.NavigationApi
-import com.google.android.libraries.navigation.Navigator
-import com.konami.ailens.ble.BLEService
 import com.konami.ailens.navigation.NavigationService
 import kotlinx.coroutines.launch
 
@@ -33,8 +27,8 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        Log.e("TAG", "MainActivity MainActivity MainActivity MainActivity MainActivity")
-        NavigationService.instance.initializeNavigator(this)
+        if (AiLensApplication.instance.navigationEnable)
+            NavigationService.instance.initializeNavigator(this)
 
         lifecycleScope.launch {
             lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {

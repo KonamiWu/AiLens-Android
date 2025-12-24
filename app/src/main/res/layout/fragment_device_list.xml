@@ -10,7 +10,7 @@
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        app:layout_constraintDimensionRatio="1500:874"
+        app:layout_constraintDimensionRatio="5:8"
         app:layout_constraintTop_toTopOf="parent"
         android:src="@drawable/img_nav_bg" />
 
@@ -65,7 +65,6 @@
         <com.konami.ailens.main.CutCornerButton
             android:id="@+id/tryAgainButton"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/device_list_try_again_button_height"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"

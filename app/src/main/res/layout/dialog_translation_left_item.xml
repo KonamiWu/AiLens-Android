@@ -13,11 +13,7 @@
         app:layout_constraintTop_toTopOf="@id/container"
         app:layout_constraintEnd_toEndOf="@id/container"
         app:layout_constraintBottom_toBottomOf="@id/container"
-        app:cutCorners="topLeft|topRight|bottomRight"
-        app:cornerCut="@dimen/dialog_translation_item_corner_cut"
-        app:borderColor="#00000000"
-        app:fillColor="?attr/appPrimaryDark"
-        app:fillColorAlpha="0.5"/>
+        style="@style/LeftTranslationItem"/>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/container"

@@ -20,6 +20,7 @@ import androidx.core.app.ServiceCompat
 import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
+import com.konami.ailens.AiLensApplication
 import com.konami.ailens.R
 import com.konami.ailens.agent.AgentConnectionWorker
 import com.konami.ailens.agent.AgentService
@@ -53,7 +54,8 @@ class AppForegroundService : Service() {
     }
 
     val bleService = BLEService.instance
-    val navigationService = NavigationService.instance
+
+
     val agentService = AgentService.instance
 
     private val serviceScope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
@@ -91,7 +93,9 @@ class AppForegroundService : Service() {
 
     override fun onCreate() {
         super.onCreate()
-
+        Log.e("TAG", "com.konami.ailens.AiLensApplication.instance.navigationEnable = ${AiLensApplication.instance.navigationEnable}")
+        if (AiLensApplication.instance.navigationEnable)
+            NavigationService.instance
         // Acquire Wake Lock to keep service alive
         acquireWakeLock()
 
@@ -193,12 +197,16 @@ class AppForegroundService : Service() {
                             )
                             val bluetoothRole = BluetoothRole(session, orchestrator)
                             val agentRole = AgentRole(orchestrator, BluetoothRecorder(session, true))
-                            val navigationRole = NavigationRole()
+
                             val interpretationRole = InterpretationRole(applicationContext, BluetoothRecorder(session, false))
                             val dialogRole = DialogTranslationRole(applicationContext, BluetoothRecorder(session, false), PhoneRecorder())
                             orchestrator.register(bluetoothRole)
                             orchestrator.register(agentRole)
-                            orchestrator.register(navigationRole)
+
+                            if (AiLensApplication.instance.navigationEnable) {
+                                val navigationRole = NavigationRole()
+                                orchestrator.register(navigationRole)
+                            }
                             orchestrator.register(interpretationRole)
                             orchestrator.register(dialogRole)
                         }

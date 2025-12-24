@@ -12,7 +12,7 @@
         android:id="@+id/navBgImageView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        app:layout_constraintDimensionRatio="1500:874"
+        app:layout_constraintDimensionRatio="5:8"
         app:layout_constraintTop_toTopOf="parent"
         android:src="@drawable/img_nav_bg" />
 
@@ -96,18 +96,12 @@
             android:layout_marginHorizontal="@dimen/add_device_button_margin_horizontal"
             android:layout_marginBottom="@dimen/add_device_button_margin_bottom">
 
-            <com.konami.ailens.main.CutCornerView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                app:cornerCut="@dimen/add_device_button_corner_cut"
-                app:fillColor="?attr/appPrimary" />
-
-            <Button
+            <com.konami.ailens.main.CutCornerButton
                 android:id="@+id/actionButton"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="#00000000"
-                style="@style/Bold"/>
+                style="@style/PositiveBigCornerButton"/>
 
             <LinearLayout
                 android:layout_width="wrap_content"

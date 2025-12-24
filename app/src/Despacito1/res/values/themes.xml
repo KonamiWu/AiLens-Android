@@ -67,6 +67,7 @@
         <item name="disableFillColor">?attr/appButtonDisable</item>
         <item name="disableTextColor">?attr/appTextDisable</item>
         <item name="borderWidth">0dp</item>
+        <item name="cornerStyle">round</item>
         <item name="borderColor">@android:color/transparent</item>
         <item name="android:includeFontPadding">false</item>
     </style>
@@ -78,6 +79,7 @@
         <item name="cornerCut">@dimen/big_bottom_button_corner_cut</item>
         <item name="fillColor">?attr/appBackground</item>
         <item name="borderWidth">1dp</item>
+        <item name="cornerStyle">round</item>
         <item name="borderColor">?attr/appPrimary</item>
         <item name="android:includeFontPadding">false</item>
     </style>
@@ -88,7 +90,6 @@
         <item name="borderWidth">0dp</item>
         <item name="cornerCut">@dimen/dialog_translation_item_corner_cut</item>
         <item name="borderColor">@android:color/transparent</item>
-        <item name="fillColorAlpha">0.5</item>
     </style>
 
     <style name="LeftTranslationItem">
@@ -97,7 +98,6 @@
         <item name="borderWidth">0dp</item>
         <item name="cornerCut">@dimen/dialog_translation_item_corner_cut</item>
         <item name="borderColor">@android:color/transparent</item>
-        <item name="fillColorAlpha">0.5</item>
-        <item name="cutCorners">topLeft|topRight|bottomRight</item>
     </style>
+
 </resources>
